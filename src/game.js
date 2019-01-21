@@ -11,7 +11,7 @@ class Game {
 
     //Creating the Menu Manager
     this.mManager = new MenuManager();
-
+    this.mManager.addScene("Game Scene", new GameScene());
     //Need to add a scene to the menu manager to stop the error
   }
 
@@ -36,7 +36,7 @@ class Game {
 
   render() {
     //Call draw on the menu manager and pass the context over as canvas is not needed?
-    this.mManager.draw(this.canvas.context2D);
+    this.mManager.draw(this.ctx);
   }
 
   calculateDt() {
