@@ -1,0 +1,15 @@
+[submodule "modules/RWM1819-Menu-A"]
+	path = modules/RWM1819-Menu-A
+	url = https://github.com/itcgames/RWM1819-Menu-A.git
+[submodule "modules/RWM1819-Camera-A"]
+	path = modules/RWM1819-Camera-A
+	url = https://github.com/itcgames/RWM1819-Camera-A.git
+[submodule "modules/RWM1819-Input-B"]
+	path = modules/RWM1819-Input-B
+	url = https://github.com/itcgames/RWM1819-Input-B.git
+[submodule "modules/RWM1819-Projectile-A"]
+	path = modules/RWM1819-Projectile-A
+	url = https://github.com/itcgames/RWM1819-Projectile-A.git
+[submodule "modules/RWM1819-Audio-A"]
+	path = modules/RWM1819-Audio-A
+	url = https://github.com/itcgames/RWM1819-Audio-A.git
