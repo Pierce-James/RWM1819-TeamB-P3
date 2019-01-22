@@ -12,6 +12,8 @@ class Game {
     //Creating the Menu Manager
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
+    this.mManager.addScene("Scoreboard", new ScoreboardScene());
+    this.mManager.setCurrentScene("Scoreboard");
     //Need to add a scene to the menu manager to stop the error
   }
 
