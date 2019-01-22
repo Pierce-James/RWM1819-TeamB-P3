@@ -41,13 +41,13 @@ class Tilemap {
                         else if (element[i][j] == 0)
                         {
                             this.tiles.push(new Tile(j * 32, i * 32, 32, 32, false));
-                        }   
+                        }
                     }
                 }
         });
     }
 
-    render()
+    render(ctx)
     {
         if (this.isLoaded)
         {
@@ -57,7 +57,7 @@ class Tilemap {
             // }
 
             this.tiles.forEach(element => {
-                element.render();
+                element.render(ctx);
             });
         }
     }
