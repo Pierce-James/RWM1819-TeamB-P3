@@ -1,6 +1,6 @@
 
 
-class Map {
+class Tilemap {
     constructor(filepath){
         this.tileData = {};
         this.tiles = [];
@@ -36,7 +36,6 @@ class Map {
                     {
                         if (element[i][j] == 1)
                         {
-                            console.log("Hit this");
                             this.tiles.push(new Tile(j * 32, i * 32, 32, 32, true));
                         }
                         else if (element[i][j] == 0)
