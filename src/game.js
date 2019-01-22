@@ -8,7 +8,7 @@ class Game {
     this.canvas.height = window.innerHeight;
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
-    this.player = new Player(100, 500, 50, 60, 1);
+    this.ctx.imageSmoothingEnabled = false;
     //Creating the Menu Manager
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
@@ -36,7 +36,7 @@ class Game {
 
   render() {
     //Call draw on the menu manager and pass the context over as canvas is not needed?
-    this.player.render(this.canvas.context2D);
+   
     this.mManager.draw(this.ctx);
   }
 
