@@ -16,9 +16,6 @@ class Game {
     this.mManager.setCurrentScene("Game Scene");
     document.body.style.backgroundColor = "#000000";
 
-
-    //Need to add a scene to the menu manager to stop the errorgi
-
     this.keyboard = new Keyboard();
 
     var img = new Image(18166, 3509);
@@ -40,7 +37,7 @@ class Game {
 
   update() {
     const dt = this.calculateDt();
-    //this.player.handleInput(this.keyboard);
+
     this.mManager.current.value.handleInput(this.keyboard);
 
     //Update the menu manager and pass in dt for any time related functions
@@ -50,7 +47,6 @@ class Game {
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    //this.mManager.draw(this.ctx);
     //Call draw on the menu manager and pass the context over as canvas is not needed?
     this.mManager.draw(this.ctx);
     this.spr.draw();
