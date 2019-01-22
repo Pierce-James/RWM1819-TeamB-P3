@@ -15,6 +15,8 @@ class ScoreboardScene
     //Initialise the board and dont clear the existing one
     this.initBoard(false);
 
+    this.defaultScore = ["---", 0];
+
     addEventListener("mousemove", this.mouseMove.bind(this));
   }
 
@@ -56,15 +58,21 @@ class ScoreboardScene
     //If there are values in the scoreboard, display them
     if(this.sortedScoreboard.length > 0)
     {
-
       for(var i = 0; i < 10; i++)
       {
         if(this.sortedScoreboard.length > i)
         {
           ctx.fillText(this.sortedScoreboard[i][1]["name"], this.textPositions[i].x, this.textPositions[i].y);
-          ctx.fillText(this.sortedScoreboard[i][1]["score"], this.textPositions[i].x + 320, this.textPositions[i].y);
+          var scorePadded = this.sortedScoreboard[i][1]["score"].toString().padStart(5, "0"); //Pad the score with 0's
+          ctx.fillText(scorePadded, this.textPositions[i].x + 320, this.textPositions[i].y);
         }
       }
+    }
+    //Else if the scoreboard isnt populate dyet, display a defualt text
+    else {
+      ctx.fillText(this.defaultScore[0], this.textPositions[0].x, this.textPositions[0].y);
+      var scorePadded = this.defaultScore[1].toString().padStart(5, "0"); //Pad the score with 0's
+      ctx.fillText(scorePadded, this.textPositions[0].x + 320, this.textPositions[0].y);
     }
 
     ctx.restore(); //Restore it
