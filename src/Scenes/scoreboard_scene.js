@@ -9,15 +9,25 @@ class ScoreboardScene
     this.textPositions = [];
     for(var i = 0; i < 10; i++)
     {
-      this.textPositions.push(new Vector2(1280 / 2 - 320 / 2, 150 + (i * 50)));
+      this.textPositions.push(new Vector2(1280 / 2 - 320 / 2, 200 + (i * 50)));
     }
+
+    this.pointerPosition = new Vector2(1280/ 2 - 100, 800);
 
     //Initialise the board and dont clear the existing one
     this.initBoard(false);
 
     this.defaultScore = ["---", 0];
 
-    addEventListener("mousemove", this.mouseMove.bind(this));
+    //Loading the font for the game
+    const font = new FontFace("Joystix", "url(src/ASSETS/Joystix.ttf)");
+    document.fonts.add(font);
+    document.body.classList.add("Joystix");
+
+
+    this.flashSpeed = .2;
+    this.timeTillFlash = .2;
+    this.drawIndicator = false;
   }
 
   initBoard(deleteExistingBoard)
@@ -40,20 +50,40 @@ class ScoreboardScene
 
   update(dt)
   {
+    //Add to our time to flash
+    this.timeTillFlash += dt;
 
+    //If its time to flash, flip our bool
+    if(this.timeTillFlash >= this.flashSpeed)
+    {
+      this.timeTillFlash = 0;
+      this.drawIndicator = !this.drawIndicator; //Flip the bool
+    }
   }
 
-  mouseMove(e)
+  handleInput(input)
   {
-    this.mousePos = new Vector2(e.clientX, e.clientY);
+    //If enter is pressed, return to the main menu
+    if(input.isButtonPressed("Enter")){
+        console.log("Pressed Enter SCOREBOARD");
+    }
   }
 
   draw(ctx)
   {
     ctx.save(); //Save the ctx
+    ctx.fillstyle = "#000000";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
     ctx.textAlign = "center"; //Allign text to draw from its centre
     ctx.fillStyle = "#3b71c6"; //Set to blue text
-    ctx.font = "30px Arial";
+    ctx.font = "30px Joystix";
+
+
+    ctx.fillText("scoreboard", 1280 / 2, 50);
+    ctx.fillText("Rank/Name", 1280 / 2 - 340 / 2, 125);
+    ctx.fillText("Score", 1280 / 2 + 320 / 2, 125);
+
 
     //If there are values in the scoreboard, display them
     if(this.sortedScoreboard.length > 0)
@@ -62,18 +92,28 @@ class ScoreboardScene
       {
         if(this.sortedScoreboard.length > i)
         {
+          ctx.fillText((i + 1).toString() + ":", this.textPositions[i].x - 70, this.textPositions[i].y);
+
           ctx.fillText(this.sortedScoreboard[i][1]["name"], this.textPositions[i].x, this.textPositions[i].y);
           var scorePadded = this.sortedScoreboard[i][1]["score"].toString().padStart(5, "0"); //Pad the score with 0's
           ctx.fillText(scorePadded, this.textPositions[i].x + 320, this.textPositions[i].y);
         }
       }
     }
-    //Else if the scoreboard isnt populate dyet, display a defualt text
+    //Else if the scoreboard isnt populated yet, display a defualt text
     else {
       ctx.fillText(this.defaultScore[0], this.textPositions[0].x, this.textPositions[0].y);
       var scorePadded = this.defaultScore[1].toString().padStart(5, "0"); //Pad the score with 0's
       ctx.fillText(scorePadded, this.textPositions[0].x + 320, this.textPositions[0].y);
     }
+
+    //Draw the return string
+    ctx.fillText("return", 1280/ 2, this.pointerPosition.y);
+
+    if(this.drawIndicator){
+          ctx.fillText(">", this.pointerPosition.x, this.pointerPosition.y);
+    }
+
 
     ctx.restore(); //Restore it
   }

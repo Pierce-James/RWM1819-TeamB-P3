@@ -14,7 +14,9 @@ class Game {
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Game Scene");
-    
+    document.body.style.backgroundColor = "#000000";
+
+    this.keyboard = new Keyboard();
 
     var img = new Image(256, 32);
     img.src = "ASSETS/SPRITES/Pacman72.png";
@@ -37,6 +39,8 @@ class Game {
   update() {
     const dt = this.calculateDt();
 
+    this.mManager.current.value.handleInput(this.keyboard);
+
     //Update the menu manager and pass in dt for any time related functions
     this.mManager.update(dt);
   }
@@ -44,7 +48,7 @@ class Game {
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-
+    //Call draw on the menu manager and pass the context over as canvas is not needed?
     this.mManager.draw(this.ctx);
     this.spr.draw();
   }

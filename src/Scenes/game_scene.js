@@ -3,7 +3,7 @@ class GameScene {
   constructor() {
     //Add game objects here, player, ghosts etc.
     this.player = new Player();
-
+    this.tileMap = new Tilemap("src/tilemap.json");
     this.testGhost = new Ghost("Follow");
 
     this.topBar = new topUI();
@@ -22,13 +22,19 @@ class GameScene {
     //        console.log(lis[btn], "Pressed");
     //    }
    // }
-   
+
 
     this.testGhost.update(dt);
   }
 
+  handleInput(input)
+  {
+    this.player.handleInput(input);
+  }
+
   draw(ctx) {
     //Draw using ctx
+    this.tileMap.render();
     this.player.render(ctx);
     this.testGhost.draw(ctx);
     
