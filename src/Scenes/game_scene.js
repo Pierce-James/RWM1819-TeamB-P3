@@ -3,7 +3,7 @@ class GameScene {
   constructor() {
     //Add game objects here, player, ghosts etc.
 
-    this.testGhost = new Ghost();
+    this.testGhost = new Ghost("Follow");
   }
 
   update(dt) {
