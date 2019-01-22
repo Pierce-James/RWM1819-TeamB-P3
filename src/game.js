@@ -13,8 +13,7 @@ class Game {
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
-    this.mManager.setCurrentScene("Game Scene");
-    //Need to add a scene to the menu manager to stop the error
+    this.mManager.setCurrentScene("Scoreboard");
   }
 
   run() {
