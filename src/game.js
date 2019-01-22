@@ -42,12 +42,9 @@ class Game {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     //Call draw on the menu manager and pass the context over as canvas is not needed?
-<<<<<<< HEAD
     var c = document.getElementById("mycanvas")
     c.getContext("2d").clearRect(0,0, c.width, c.height);
-=======
    
->>>>>>> master
     this.mManager.draw(this.ctx);
     this.spr.draw();
   }
