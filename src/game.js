@@ -14,11 +14,12 @@ class Game {
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Game Scene");
-    //Need to add a scene to the menu manager to stop the error
+    
+    
     var img = new Image(18166, 3509);
     img.src = "ASSETS/SPRITES/Pacmanfix.png";
 
-    this.spr = new Sprite(50, 50, 3475, 3509, img, 50, 50, true, 8);
+    this.spr = new Sprite(50, 100, 3475, 3509, img, 50, 50, true, 8);
   }
 
   run() {

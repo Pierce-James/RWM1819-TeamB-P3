@@ -5,6 +5,11 @@ class GameScene {
     this.player = new Player();
 
     this.testGhost = new Ghost("Follow");
+
+    this.topBar = new topUI();
+    this.botBar = new bottomUI();
+
+
   }
 
   update(dt) {
@@ -26,5 +31,8 @@ class GameScene {
     //Draw using ctx
     this.player.render(ctx);
     this.testGhost.draw(ctx);
+    
+    this.topBar.draw();
+    this.botBar.draw();
   }
 }
