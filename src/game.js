@@ -13,9 +13,14 @@ class Game {
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
-    this.mManager.setCurrentScene("Scoreboard");
+    this.mManager.setCurrentScene("Game Scene");
+    document.body.style.backgroundColor = "#000000";
 
     this.keyboard = new Keyboard();
+
+    var img = new Image(18166, 3509);
+    img.src = "ASSETS/SPRITES/Pacmanfix.png";
+    this.spr = new Sprite(50, 50, 3475, 3509, img, true, 8, 50, 50);
   }
 
   run() {
@@ -33,7 +38,6 @@ class Game {
   update() {
     const dt = this.calculateDt();
 
-    //Handle input for each scene an d pass the keyboard to it
     this.mManager.current.value.handleInput(this.keyboard);
 
     //Update the menu manager and pass in dt for any time related functions
@@ -44,8 +48,8 @@ class Game {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     //Call draw on the menu manager and pass the context over as canvas is not needed?
-
     this.mManager.draw(this.ctx);
+    this.spr.draw();
   }
 
   calculateDt() {
