@@ -12,6 +12,8 @@ class Game {
     //Creating the Menu Manager
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
+    this.mManager.addScene("Scoreboard", new ScoreboardScene());
+    this.mManager.setCurrentScene("Game Scene");
     //Need to add a scene to the menu manager to stop the error
     var img = new Image(18166, 3509);
     img.src = "ASSETS/SPRITES/Pacmanfix.png";
@@ -41,10 +43,7 @@ class Game {
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    //Call draw on the menu manager and pass the context over as canvas is not needed?
-    var c = document.getElementById("mycanvas")
-    c.getContext("2d").clearRect(0,0, c.width, c.height);
-   
+
     this.mManager.draw(this.ctx);
     this.spr.draw();
   }
