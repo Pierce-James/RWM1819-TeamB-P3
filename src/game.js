@@ -13,7 +13,7 @@ class Game {
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
-    this.mManager.setCurrentScene("Scoreboard");
+    this.mManager.setCurrentScene("Game Scene");
     //Need to add a scene to the menu manager to stop the error
   }
 
@@ -40,7 +40,7 @@ class Game {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     //Call draw on the menu manager and pass the context over as canvas is not needed?
-   
+
     this.mManager.draw(this.ctx);
   }
 
