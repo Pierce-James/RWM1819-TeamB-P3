@@ -14,6 +14,8 @@ class Game {
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Scoreboard");
+
+    this.keyboard = new Keyboard();
   }
 
   run() {
@@ -30,6 +32,9 @@ class Game {
 
   update() {
     const dt = this.calculateDt();
+
+    //Handle input for each scene an d pass the keyboard to it
+    this.mManager.current.value.handleInput(this.keyboard);
 
     //Update the menu manager and pass in dt for any time related functions
     this.mManager.update(dt);

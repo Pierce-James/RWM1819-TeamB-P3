@@ -63,7 +63,10 @@ class ScoreboardScene
 
   handleInput(input)
   {
-    //To Do
+    //If enter is pressed, return to the main menu
+    if(input.isButtonPressed("Enter")){
+        console.log("Pressed Enter SCOREBOARD");
+    }
   }
 
   draw(ctx)
