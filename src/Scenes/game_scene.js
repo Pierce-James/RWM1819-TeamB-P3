@@ -5,6 +5,11 @@ class GameScene {
     this.player = new Player();
     this.tileMap = new Tilemap("src/tilemap.json");
     this.testGhost = new Ghost("Follow");
+
+    this.topBar = new topUI();
+    this.botBar = new bottomUI();
+
+
   }
 
   update(dt) {
@@ -32,5 +37,8 @@ class GameScene {
     this.tileMap.render();
     this.player.render(ctx);
     this.testGhost.draw(ctx);
+    
+    this.topBar.draw();
+    this.botBar.draw();
   }
 }

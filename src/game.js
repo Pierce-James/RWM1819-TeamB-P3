@@ -18,9 +18,10 @@ class Game {
 
     this.keyboard = new Keyboard();
 
-    var img = new Image(18166, 3509);
-    img.src = "ASSETS/SPRITES/Pacmanfix.png";
-    this.spr = new Sprite(50, 50, 3475, 3509, img, true, 8, 50, 50);
+    var img = new Image(256, 32);
+    img.src = "ASSETS/SPRITES/Pacman72.png";
+
+    this.spr = new Sprite(50, 100, 32, 32, img, 50, 50, true, 8);
   }
 
   run() {
