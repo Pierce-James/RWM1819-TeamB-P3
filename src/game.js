@@ -35,6 +35,8 @@ class Game {
   }
 
   render() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     //Call draw on the menu manager and pass the context over as canvas is not needed?
    
     this.mManager.draw(this.ctx);
@@ -42,7 +44,7 @@ class Game {
 
   calculateDt() {
     const now = Date.now();
-    const dt = now - this.prevDt;
+    const dt = (now - this.prevDt) / 1000;
     this.prevDt = now;
     return dt;
   }

@@ -3,6 +3,8 @@ class GameScene {
   constructor() {
     //Add game objects here, player, ghosts etc.
     this.player = new Player();
+
+    this.testGhost = new Ghost("Follow");
   }
 
   update(dt) {
@@ -16,10 +18,13 @@ class GameScene {
     //    }
    // }
    
+
+    this.testGhost.update(dt);
   }
 
   draw(ctx) {
     //Draw using ctx
     this.player.render(ctx);
+    this.testGhost.draw(ctx);
   }
 }
