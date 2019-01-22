@@ -17,7 +17,7 @@ class Sprite{
             var ctx = c.getContext("2d");
             ctx.drawImage(this.src,(this.w*this.currentFrame),0,this.w,this.h,this.x,this.y, this.dw, this.dh);
         }
-    constructor(X = 0, Y = 0, W = 0, H = 0, img = new Image(), animating = false, frames = 1, DW = 50, DH = 50){
+    constructor(X = 0, Y = 0, W = 0, H = 0, img = new Image(), DW = 50, DH = 50, animating = false, frames = 1){
         this.x = X;
         this.y = Y;
         this.w = W;

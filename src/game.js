@@ -18,7 +18,7 @@ class Game {
     var img = new Image(18166, 3509);
     img.src = "ASSETS/SPRITES/Pacmanfix.png";
 
-    this.spr = new Sprite(50, 50, 3475, 3509, img, true, 8, 50, 50);
+    this.spr = new Sprite(50, 50, 3475, 3509, img, 50, 50, true, 8);
   }
 
   run() {
