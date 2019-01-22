@@ -15,11 +15,11 @@ class Game {
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Game Scene");
     
-    
-    var img = new Image(18166, 3509);
-    img.src = "ASSETS/SPRITES/Pacmanfix.png";
 
-    this.spr = new Sprite(50, 100, 3475, 3509, img, 50, 50, true, 8);
+    var img = new Image(256, 32);
+    img.src = "ASSETS/SPRITES/Pacman72.png";
+
+    this.spr = new Sprite(50, 100, 32, 32, img, 50, 50, true, 8);
   }
 
   run() {

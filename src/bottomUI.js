@@ -22,17 +22,17 @@ class bottomUI{
     this.lives = 5;
     this.lifeIcons = [];
 
-    var img = new Image(18166, 3509);
-    img.src = "ASSETS/SPRITES/Pacmanfix.png";
-    var life1 = new Sprite(50, 20, 3475, 3509, img, 50, 50, false, 1);
+    var img = new Image(256, 32);
+    img.src = "ASSETS/SPRITES/Pacman72.png";
+    var life1 = new Sprite(50, 20, 32, 32, img, 50, 50, false, 1);
     life1.setFrame(3);
-    var life2 = new Sprite(100, 20, 3475, 3509, img, 50, 50, false, 1);
+    var life2 = new Sprite(100, 20, 32, 32, img, 50, 50, false, 1);
     life2.setFrame(3);
-    var life3 = new Sprite(150, 20, 3475, 3509, img, 50, 50, false, 1);
+    var life3 = new Sprite(150, 20, 32, 32, img, 50, 50, false, 1);
     life3.setFrame(3);
-    var life4 = new Sprite(200, 20, 3475, 3509, img, 50, 50, false, 1);
+    var life4 = new Sprite(200, 20, 32, 32, img, 50, 50, false, 1);
     life4.setFrame(3);
-    var life5 = new Sprite(250, 20, 3475, 3509, img, 50, 50, false, 1);
+    var life5 = new Sprite(250, 20, 32, 32, img, 50, 50, false, 1);
     life5.setFrame(3);
 
     this.lifeIcons.push(life1);
