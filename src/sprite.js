@@ -30,8 +30,6 @@ class Sprite{
         this.currentFrame = 0;
         this.lastFrame = Date.now();
         this.frameTime = 100;
-
-        //needs a time delay or something maybe probably
         
     }
 }
