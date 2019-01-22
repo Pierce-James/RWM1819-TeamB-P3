@@ -13,6 +13,7 @@ class Game {
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
     //Need to add a scene to the menu manager to stop the error
+    this.keyboard = new Keyboard();
   }
 
   run() {
@@ -29,6 +30,8 @@ class Game {
 
   update() {
     const dt = this.calculateDt();
+
+    this.mManager.current.value.handleInput(this.keyboard);
 
     //Update the menu manager and pass in dt for any time related functions
     this.mManager.update(dt);
