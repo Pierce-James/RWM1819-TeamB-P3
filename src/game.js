@@ -8,7 +8,7 @@ class Game {
     this.canvas.height = window.innerHeight;
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
-
+    this.ctx.imageSmoothingEnabled = false;
     //Creating the Menu Manager
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
@@ -39,16 +39,22 @@ class Game {
   }
 
   render() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     //Call draw on the menu manager and pass the context over as canvas is not needed?
+<<<<<<< HEAD
     var c = document.getElementById("mycanvas")
     c.getContext("2d").clearRect(0,0, c.width, c.height);
+=======
+   
+>>>>>>> master
     this.mManager.draw(this.ctx);
     this.spr.draw();
   }
 
   calculateDt() {
     const now = Date.now();
-    const dt = now - this.prevDt;
+    const dt = (now - this.prevDt) / 1000;
     this.prevDt = now;
     return dt;
   }
