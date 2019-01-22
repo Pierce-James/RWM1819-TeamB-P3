@@ -22,6 +22,11 @@ class GameScene {
     this.testGhost.update(dt);
   }
 
+  handleInput(input)
+  {
+    this.player.handleInput(input);
+  }
+
   draw(ctx) {
     //Draw using ctx
     this.player.render(ctx);
