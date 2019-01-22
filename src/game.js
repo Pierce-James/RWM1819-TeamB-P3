@@ -8,20 +8,17 @@ class Game {
     this.canvas.height = window.innerHeight;
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
-<<<<<<< HEAD
     this.ctx.imageSmoothingEnabled = false;
     //Creating the Menu Manager
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Game Scene");
-=======
     document.body.style.backgroundColor = "#000000";
     //Creating the Menu Manager
     //this.mManager = new MenuManager();
     //this.mManager.addScene("Game Scene", new GameScene());
     this.map = new Map("src/tilemap.json");
->>>>>>> map
     //Need to add a scene to the menu manager to stop the error
 
     this.keyboard = new Keyboard();
