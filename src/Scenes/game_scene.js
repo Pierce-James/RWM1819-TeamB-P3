@@ -22,7 +22,7 @@ class GameScene {
     //        console.log(lis[btn], "Pressed");
     //    }
    // }
-
+    this.player.update(dt);
 
     this.testGhost.update(dt);
   }
@@ -38,7 +38,7 @@ class GameScene {
     this.player.render(ctx);
     this.testGhost.draw(ctx);
     
-    this.topBar.draw();
-    this.botBar.draw();
+    //this.topBar.draw();
+    //this.botBar.draw();
   }
 }
