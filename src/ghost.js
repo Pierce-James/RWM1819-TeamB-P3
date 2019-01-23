@@ -2,7 +2,7 @@ class Ghost
 {
   constructor(ghostType, x, y, grid){
     this.moveDistance = 32; //32 pixels per move
-    this.moveSpeed = .4; //Moves a cell every .2 seconds
+    this.moveSpeed = .3; //Moves a cell every .3 seconds
     this.timeTillMove = 0; //Time till the ghost can move cell
 
     this.moveDirection = new Vector2(1,0);
