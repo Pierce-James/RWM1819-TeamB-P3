@@ -17,6 +17,8 @@ class Ghost
     this.eyes = new Sprite(this.position.x, this.position.y, 32, 32, eyeImg, 32, 32, false, 4);
 
     this.ghostType = ghostType;
+
+    this.collider = new CollisionCircle(this.position)
   }
 
   update(dt){
