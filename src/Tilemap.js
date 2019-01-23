@@ -29,36 +29,28 @@ class Tilemap {
     createTiles()
     {
         this.tileData["layers"].forEach((element) => {
-
-            for (var i = 0; i < 31; i++)
+            for (let i = 0; i < 31; i++)
+            {
+                for (let j = 0; j < 28; j++)
                 {
-                    for (var j = 0; j < 28; j++)
-                    {
-                        if (element[i][j] == 1)
-                        {
-                            this.tiles.push(new Tile(j * 32, i * 32, 32, 32, true));
-                        }
-                        else if (element[i][j] == 0)
-                        {
-                            this.tiles.push(new Tile(j * 32, i * 32, 32, 32, false));
-                        }
-                    }
+                    this.tiles[new Vector2(j, i)] = new Tile(j * 32, i * 32, 32, 32, element[i][j] == 1 ? true : false);
                 }
-        });
+            }
+        })
     }
 
     render(ctx)
     {
         if (this.isLoaded)
         {
-            // for (let i = 0; i < Object.keys(this.tiles).length; i++)
-            // {
-            //     this.tiles[i].render();
-            // }
-
-            this.tiles.forEach(element => {
-                element.render(ctx);
+            Object.keys(this.tiles).forEach(element =>{
+                this.tiles[element].render(ctx);
             });
         }
+    }
+
+    IsLoaded()
+    {
+        return this.isLoaded;
     }
 }
