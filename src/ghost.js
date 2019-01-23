@@ -21,6 +21,8 @@ class Ghost
 
   update(dt){
     this.checkIfGhostMoved(dt); //Check if the ghost has moved
+    this.setGhostEyes(); //Set the ghost eyes sprite
+    
   }
 
   checkIfGhostMoved(dt){
@@ -32,6 +34,27 @@ class Ghost
       this.timeTillMove = 0;
       //Add our movement to the ghost
       this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+    }
+  }
+
+  //Sets the ghosts eyes depending on the direction they are going
+  setGhostEyes()
+  {
+    if(this.moveDirection.x === -1)
+    {
+        this.eyes.setFrame(0);
+    }
+    if(this.moveDirection.y === 1)
+    {
+        this.eyes.setFrame(1);
+    }
+    if(this.moveDirection.y === -1)
+    {
+        this.eyes.setFrame(2);
+    }
+    if(this.moveDirection.x === 1)
+    {
+        this.eyes.setFrame(3);
     }
   }
 
