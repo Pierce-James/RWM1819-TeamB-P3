@@ -44,14 +44,8 @@ class topUI{
     
         ctx.fillText("score", 1280 / 2, 50);
         ctx.fillText("1up", 100, 50);
-
-        var scoreTXT = this.score.toString(10);
-        while(scoreTXT.length < 9)
-        {
-            scoreTXT = '0'+scoreTXT;
-        }
-
-        ctx.fillText(scoreTXT, 1280 / 2, 75);
+        
+        ctx.fillText(this.score.toString(10).padStart(9, '0'), 1280 / 2, 75);
         
         ctx.restore(); //Restore it
 
