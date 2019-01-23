@@ -17,7 +17,8 @@ class GameScene {
 
     if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider))
     {
-      //Decrement player health
+      //Check if player has powerup
+      //Kill either ghost or player
     }
   }
 
