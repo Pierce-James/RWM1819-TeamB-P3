@@ -45,9 +45,9 @@ class Player {
             if(this.halt>= this.speed)
             {
                 this.halt = 0;
-                this.moveDirction = new Vector2(0,-1);
-                this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));
-                this.gridPosition.plusEquals(this.moveDirction);
+                this.moveDirection = new Vector2(0,-1);
+                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+                this.gridPosition.plusEquals(this.moveDirection);
             }
         }
         else if(input.isButtonPressed("ArrowDown"))
@@ -55,9 +55,9 @@ class Player {
             if(this.halt>= this.speed)
             {
                 this.halt = 0;
-                this.moveDirction = new Vector2(0,1);
-                this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));  
-                this.gridPosition.plusEquals(this.moveDirction);  
+                this.moveDirection = new Vector2(0,1);
+                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));  
+                this.gridPosition.plusEquals(this.moveDirection);  
             }
         }
         
@@ -66,9 +66,9 @@ class Player {
             if(this.halt>= this.speed)
             {
                 this.halt = 0;
-                this.moveDirction = new Vector2(-1,0);
-                this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));
-                this.gridPosition.plusEquals(this.moveDirction);
+                this.moveDirection = new Vector2(-1,0);
+                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+                this.gridPosition.plusEquals(this.moveDirection);
             }  
         }
         else if(input.isButtonPressed("ArrowRight"))
@@ -76,9 +76,9 @@ class Player {
             if(this.halt>= this.speed)
             {
                 this.halt = 0;
-                this.moveDirction = new Vector2(1,0);
-                this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));
-                this.gridPosition.plusEquals(this.moveDirction);
+                this.moveDirection = new Vector2(1,0);
+                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+                this.gridPosition.plusEquals(this.moveDirection);
             }
         }
     }
@@ -86,26 +86,6 @@ class Player {
     update(dt)
     {
         this.halt += dt;
-
-        
-      
-
-        if(this.moveD === true)
-        {
-            this.position.y += this.speed;
-        }
-
-
-        if(this.moveL === true)
-        {
-            this.position.x -= this.speed;
-        }
-
-
-        if(this.moveR === true)
-        {
-            this.position.x += this.speed;
-        }
 
         //Set collider position every frame
         this.collider.setPosition(this.x, this.y);
