@@ -14,7 +14,11 @@ class Player {
 
         this.loop = true;
 
-        this.speed = 5;
+        this.moveDistance = 32;
+        this.moveDirection = new Vector2(1,0);
+        this.speed = .4;
+        this.halt = 0;
+        this.position = new Vector2(this.x,this.y);
         this.moveU = false;
         this.moveD = false;
         this.moveL = false;
@@ -30,7 +34,7 @@ class Player {
 
     render(ctx)
     {
-      ctx.drawImage(this.image, 0,0,3633.2, 3509, this.x, this.y, this.width, this.height);
+      ctx.drawImage(this.image, 0,0,3633.2, 3509, this.position.x, this.position.y, this.width, this.height);
     }
 
   
@@ -38,10 +42,21 @@ class Player {
     {
         if(input.isButtonPressed("ArrowUp"))
         {
-            this.moveD = false;
-            this.moveL = false;
-            this.moveR = false;
-            this.moveU = true;
+          //  this.moveD = false;
+          //  this.moveL = false;
+          //  this.moveR = false;
+          //  this.moveU = true;
+
+          //  if(this.moveU === true)
+       // {
+            if(this.halt>= this.speed)
+            {
+                this.halt = 0;
+                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+            }
+           
+            //this.y -= this.speed;
+       // }
            
         }
         else if(input.isButtonPressed("ArrowDown"))
@@ -74,27 +89,26 @@ class Player {
 
     update(dt)
     {
-        if(this.moveU === true)
-        {
-            this.y -= this.speed;
-        }
+        this.halt += dt;
+
+        
       
 
         if(this.moveD === true)
         {
-            this.y += this.speed;
+            this.position.y += this.speed;
         }
 
 
         if(this.moveL === true)
         {
-            this.x -= this.speed;
+            this.position.x -= this.speed;
         }
 
 
         if(this.moveR === true)
         {
-            this.x += this.speed;
+            this.position.x += this.speed;
         }
     }
 }
