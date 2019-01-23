@@ -30,7 +30,6 @@ class Sprite{
             }
 
         }  
-        
         var ctx = canvas.getContext("2d");
         ctx.drawImage(this.src,(this.w*this.currentFrame),0,this.w,this.h,x,y, this.dw, this.dh);
     }

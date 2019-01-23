@@ -1,6 +1,6 @@
 class Ghost
 {
-  constructor(ghostType, x, y, grid){
+  constructor(ghostType, x, y, grid, scatterTile){
     this.moveDistance = 32; //32 pixels per move
     this.moveSpeed = .3; //Moves a cell every .3 seconds
     this.timeTillMove = 0; //Time till the ghost can move cell
@@ -13,14 +13,20 @@ class Ghost
     this.gridPosition = new Vector2(x / 32, y / 32);
 
     this.gridRef = grid;
+    this.scatterTile = scatterTile; //Ste the scatter tile
+    this.scatterTime = 3;
+    this.timeTillScatter = 0;
+
+    //Setting the image of the ghost
     var img = new Image(256, 32);
-    img.src = "ASSETS/SPRITES/Red_ghost_72.png";
+    img.src = "ASSETS/SPRITES/"+ghostType+"_ghost_72.png";
     this.spr = new Sprite(this.position.x, this.position.y, 32, 32, img, 32, 32, true, 4);
     var eyeImg = new Image(256, 32);
     eyeImg.src = "ASSETS/SPRITES/Eyes_72.png";
     this.eyes = new Sprite(this.position.x, this.position.y, 32, 32, eyeImg, 32, 32, false, 4);
 
     this.ghostType = ghostType;
+    this.state = "Chase";
 
     this.alive = true;
     this.eyesSpeed = 224; //Move 224 pixels a second
@@ -31,8 +37,37 @@ class Ghost
   update(dt){
     if(this.alive) //If alive, do movement and set ghost eyes
     {
-      this.checkIfGhostMoved(dt); //Check if the ghost has moved
-      this.setGhostEyes(); //Set the ghost eyes sprite
+      if(this.state === "Chase") //If our state is chasing
+      {
+        this.checkIfGhostMoved(dt); //Check if the ghost has moved
+        this.setGhostEyes(); //Set the ghost eyes sprite
+
+        this.timeTillScatter += dt;
+
+        if(this.timeTillScatter >= this.scatterTime)
+        {
+          this.timeTillScatter = 0;
+          this.state === "Scatter";
+          console.log("SCATTERING");
+          //Pathfind to the scatter position
+        }
+
+      }
+      else if(this.state === "Scatter") //If our state is scattering
+      {
+        this.timeTillScatter += dt; //Add to scatter
+
+        if(this.timeTillScatter >= this.scatterTime) //If its time to switch from scatter, return to chase mode
+        {
+          this.timeTillScatter = 0;
+          this.state === "Chase";
+          console.log("CHASING");
+
+          //Pathfind to the players position
+        }
+      }
+
+
     }
     else //Else move our ghost eyes to the start position
     {
