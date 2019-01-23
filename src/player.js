@@ -9,7 +9,7 @@ class Player {
         this.height = 32;
         this.position = new Vector2(this.x,this.y);
         //Create circle collider
-        this.collider = new CollisionCircle(this.position.x, this.position.y * 32, this.width / 2);
+        this.collider = new CollisionCircle(this.position.x, this.position.y, this.width / 2);
         this.load();
 
         this.frameIndex = 0;
@@ -22,6 +22,15 @@ class Player {
         this.moveDirection = new Vector2(0,0);
         this.speed = .4;
         this.halt = 0;
+
+        this.p = new Projectile("bullet", "simple");
+        this.p.setPosition(this.position.x, this.position.y);
+        this.p.setSpeed(5);
+        this.p.setAngle(90);
+        this.p.setVelocity(2, 2);
+
+        this.pm = new ProjectileManager();
+        this.pm.addProjectile(this.p);
 
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
@@ -39,6 +48,8 @@ class Player {
     {
         this.pS.draw(this.position.x, this.position.y);
         this.collider.draw(ctx);
+
+       // this.pm.render();
     }
 
     handleInput(input)
@@ -84,6 +95,12 @@ class Player {
                 this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
                 this.gridPosition.plusEquals(this.moveDirection);
             }
+        }
+
+        if (input.isButtonPressed("Space"))
+        {
+            console.log("Fire!");
+            this.pm.fireProjectiles();
         }
     }
 

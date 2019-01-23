@@ -19,7 +19,6 @@ class Game {
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Game Scene");
     document.body.style.backgroundColor = "#000000";
-   
 
     this.keyboard = new Keyboard();
 
