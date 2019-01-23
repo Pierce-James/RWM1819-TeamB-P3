@@ -13,6 +13,7 @@ class bottomUI{
     this.UICanvas = document.createElement('canvas');
     this.UICanvas.id = 'bottomCanvas';
     this.UICanvas.style.top = this.uiDivBot.style.top;
+    //this.UICanvas.width = document.getElementById('mycanvas').offsetWidth;
     this.UICanvas.width = window.innerWidth;
     this.UICanvas.height = window.innerHeight;
     this.uiDivBot.appendChild(this.UICanvas);
@@ -41,6 +42,9 @@ class bottomUI{
     this.lifeIcons.push(life4);
     this.lifeIcons.push(life5);
 
+    this.fruits = [];
+    this.fruits.push(new Fruit(1,2, 'cherry'));
+
     }
 
     draw(){
@@ -50,6 +54,13 @@ class bottomUI{
         for(var i = 0; i < this.lives; i++)
         {
             this.lifeIcons[i].draw(undefined, undefined, this.UICanvas);
+        }
+
+        var rightSide = this.UICanvas.width;
+        for(var j = 0; j < this.fruits.length; j++)
+        {
+            rightSide-=50;
+            this.fruits[j].draw(rightSide, 0, this.UICanvas);
         }
     }
 }

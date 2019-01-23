@@ -2,9 +2,9 @@
 class GameScene {
   constructor() {
     //Add game objects here, player, ghosts etc.
-    this.player = new Player();
     this.tileMap = new Tilemap("src/tilemap.json");
 
+    this.player = new Player(32, 32, this.tileMap);
     this.testGhost = new Ghost("Red", 384, 416, this.tileMap, new Vector2(1,1));
 
     this.topBar = new topUI();
