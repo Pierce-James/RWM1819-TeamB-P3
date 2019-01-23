@@ -17,7 +17,7 @@ class Sprite{
         
     }
 
-    draw(canvas = document.getElementById("mycanvas")){
+    draw(x = this.x, y = this.y, canvas = document.getElementById("mycanvas")){
         if(this.animating){
             if(Date.now() > this.lastFrame + this.frameTime)
             {
@@ -32,7 +32,7 @@ class Sprite{
         }  
         
         var ctx = canvas.getContext("2d");
-        ctx.drawImage(this.src,(this.w*this.currentFrame),0,this.w,this.h,this.x,this.y, this.dw, this.dh);
+        ctx.drawImage(this.src,(this.w*this.currentFrame),0,this.w,this.h,x,y, this.dw, this.dh);
     }
 
     setFrame(frameNo){

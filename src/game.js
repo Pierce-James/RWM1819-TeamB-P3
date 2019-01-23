@@ -5,7 +5,11 @@ class Game {
     this.canvas = document.createElement("canvas");
     this.canvas.id = 'mycanvas';
     this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    this.canvas.height = window.innerHeight+25;
+    this.canvas.style.position  ='absolute';
+    this.canvas.style.top = '10%';
+    this.canvas.style.height = '80%';
+    this.canvas.style.width = '80%';
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
     this.ctx.imageSmoothingEnabled = false;
@@ -15,6 +19,7 @@ class Game {
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Game Scene");
     document.body.style.backgroundColor = "#000000";
+   
 
     this.keyboard = new Keyboard();
 
@@ -55,9 +60,12 @@ class Game {
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    //Call draw on the menu manager and pass the context over as canvas is not needed?
+
     this.mManager.draw(this.ctx);
     this.spr.draw();
+    //Call draw on the menu manager and pass the context over as canvas is not needed?
+   // this.mManager.draw(this.ctx);
+ 
   }
 
   calculateDt() {

@@ -7,7 +7,7 @@ class bottomUI{
     this.uiDivBot.style.bottom = '0%';
     this.uiDivBot.style.width = '100%';
     this.uiDivBot.style.height = '10%';
-    this.uiDivBot.style.backgroundColor = '#393838';
+    this.uiDivBot.style.backgroundColor = '#000000';
     document.body.appendChild(this.uiDivBot);
 
     this.UICanvas = document.createElement('canvas');

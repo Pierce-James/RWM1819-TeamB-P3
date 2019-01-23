@@ -9,6 +9,13 @@ class Ghost
     this.position = new Vector2(x, y);
 
     this.gridRef = grid;
+    var img = new Image(256, 32);
+    img.src = "ASSETS/SPRITES/Red_ghost_72.png";
+    this.spr = new Sprite(this.position.x, this.position.y, 32, 32, img, 32, 32, true, 4);
+    var eyeImg = new Image(256, 32);
+    eyeImg.src = "ASSETS/SPRITES/Eyes_72.png";
+    this.eyes = new Sprite(this.position.x, this.position.y, 32, 32, eyeImg, 32, 32, false, 4);
+
     this.ghostType = ghostType;
   }
 
@@ -30,11 +37,7 @@ class Ghost
 
 
   draw(ctx){
-    ctx.save();
-    ctx.beginPath();
-    ctx.strokeStyle = "#f46842";
-    ctx.arc(this.position.x, this.position.y, 16, 0, 2* Math.PI);
-    ctx.stroke();
-    ctx.restore();
+    this.spr.draw(this.position.x, this.position.y);
+    this.eyes.draw(this.position.x, this.position.y);
   }
 }
