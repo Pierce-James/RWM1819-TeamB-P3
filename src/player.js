@@ -8,6 +8,8 @@ class Player {
         this.width = 32;
         this.height = 32;
 
+        //Create circle collider
+        this.collider = new CollisionCircle(this.x, this.y, this.width);
         this.load();
 
         this.frameIndex = 0;
@@ -26,17 +28,24 @@ class Player {
         this.gridPosition = new Vector2(this.position.x/ 32, this.position.y /32);
     }
 
-
     load()
     {
+<<<<<<< HEAD
         this.image.src = "./ASSETS/SPRITES/Pacman72.png"
 
+=======
+        this.image.src = "ASSETS/SPRITES/Pacman72.png"
+>>>>>>> collisions
     }
 
     render(ctx)
     {
+<<<<<<< HEAD
         this.pS.draw(this.position.x, this.position.y);
       //ctx.drawImage(this.image, 0,0,32,32, this.position.x, this.position.y, this.width, this.height, true, 5);
+=======
+      ctx.drawImage(this.image, 0,0,32, 32, this.x, this.y, this.width, this.height);
+>>>>>>> collisions
     }
 
     handleInput(input)
@@ -107,6 +116,9 @@ class Player {
         {
             this.position.x += this.speed;
         }
+
+        //Set collider position every frame
+        this.collider.setPosition(this.x, this.y);
     }
 }
 

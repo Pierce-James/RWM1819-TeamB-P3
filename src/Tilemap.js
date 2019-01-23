@@ -5,7 +5,7 @@ class Tilemap {
         this.tileData = {};
         this.tiles = [];
         this.filepath = filepath;
-        this.rows = 31;
+        this.rows = 30;
         this.cols = 28;
         this.isLoaded = false;
         this.GetJSON();
