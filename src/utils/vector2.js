@@ -28,6 +28,11 @@ class Vector2
     }
   }
 
+  equals(v)
+  {
+    return this.x === v.x && v.y === v.y;
+  }
+
   multiply(val)
   {
     if(val instanceof Vector2){
@@ -81,7 +86,7 @@ class Vector2
 
   sqrdMagnitude()
   {
-    return Math.pow(this.x, 2) + Math.pow(this.y);
+    return Math.pow(this.x, 2) + Math.pow(this.y, 2);
   }
 
   //Converts vector to string

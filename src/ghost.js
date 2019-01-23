@@ -17,6 +17,8 @@ class Ghost
     this.scatterTime = 3;
     this.timeTillScatter = 0;
 
+    this.seekPath = []; //Our seek path
+
     //Setting the image of the ghost
     var img = new Image(256, 32);
     img.src = "ASSETS/SPRITES/"+ghostType+"_ghost_72.png";
@@ -37,33 +39,38 @@ class Ghost
   update(dt){
     if(this.alive) //If alive, do movement and set ghost eyes
     {
+      this.checkIfGhostMoved(dt); //Check if the ghost has moved
+      this.setGhostEyes(); //Set the ghost eyes sprite
+
       if(this.state === "Chase") //If our state is chasing
       {
-        this.checkIfGhostMoved(dt); //Check if the ghost has moved
-        this.setGhostEyes(); //Set the ghost eyes sprite
-
-        this.timeTillScatter += dt;
-
-        if(this.timeTillScatter >= this.scatterTime)
+        if(this.checkToSwapBehaviour(dt, "Scatter"))
         {
-          this.timeTillScatter = 0;
-          this.state === "Scatter";
-          console.log("SCATTERING");
-          //Pathfind to the scatter position
+          this.state = "Scatter";
+          this.target = new Vector2(this.scatterTile.x, this.scatterTile.y); //Set our target
+        }
+
+        //If our seek path is not populated, populate it
+        if(this.seekPath.length === 0)
+        {
+          this.seekPath = this.gridRef.BFS(this.gridPosition, this.scatterTile,  0);
+          this.targetPos = this.seekPath.shift(); //Get the first element in the array, and remove it from the path
+
+          if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
+          else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
+          else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
+          else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
+          else {this.moveDirection = new Vector2(0, 0);}
         }
 
       }
       else if(this.state === "Scatter") //If our state is scattering
       {
-        this.timeTillScatter += dt; //Add to scatter
-
-        if(this.timeTillScatter >= this.scatterTime) //If its time to switch from scatter, return to chase mode
+        //If the time to swap behaviour or the distance to the scatter position is there
+        if(this.checkToSwapBehaviour(dt, "Chase") || this.targetPos.distance(this.position) <= 8)
         {
-          this.timeTillScatter = 0;
-          this.state === "Chase";
-          console.log("CHASING");
-
-          //Pathfind to the players position
+          this.timeTillScatter = 0; //Reset time to scatter
+          this.state = "Chase"; //Set the state as chase
         }
       }
 
@@ -73,6 +80,19 @@ class Ghost
     {
       this.deadUpdate(dt);
     } 
+  }
+
+  checkToSwapBehaviour(dt, theState)
+  {
+    this.timeTillScatter += dt; //Add to scatter
+
+    if(this.timeTillScatter >= this.scatterTime) //If its time to switch from scatter, return to chase mode
+    {
+      this.timeTillScatter = 0;
+      return true;
+    }
+
+    return false;
   }
 
   deadUpdate(dt)
@@ -101,20 +121,33 @@ class Ghost
       this.timesMoved++; //Add to our times moved
       if(this.timesMoved >= 10)
       {
-        this.die();
+        //this.die();
         this.timesMoved = 0;
-      }
+      } 
 
-      //Check if we can continue in our direction
-      if(this.mustTurn()) //If we have to turn
-      {
-        //Temp until behaviours are done
-        if(this.canMoveUp() && this.moveDirection.y !== 1){this.moveDirection = new Vector2(0, -1);}
-        else if(this.canMoveDown() && this.moveDirection.y !== -1){this.moveDirection = new Vector2(0, 1);}
-        else if(this.canMoveLeft() && this.moveDirection.x !== 1){this.moveDirection = new Vector2(-1, 0);}
-        else if(this.canMoveRight() && this.moveDirection.x !== -1){this.moveDirection = new Vector2(1, 0);}
-      }
+     // if(this.state === "Scatter")
+     // {
+        //If we have reached our grid position
+        if(this.targetPos.equals(this.gridPosition))
+        {
+          if(this.seekPath.length > 0)
+          {
+            this.targetPos = this.seekPath.shift();
+            if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
+            else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
+            else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
+            else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
+            else {this.moveDirection = new Vector2(0, 0);}
+          }
+        }
+      //}
     }
+  }
+
+  removeElement(array, element)
+  {
+    const index = array.indexOf(element);
+    array.splice(index, 1);
   }
 
   //Kills the ghost, and sets the ghost to move back to its spawn location

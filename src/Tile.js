@@ -2,11 +2,14 @@
 class Tile{
     constructor(x, y, w, h, type){
         this.x = x;
-        this.y =y;
+        this.y = y;
         this.width = w;
         this.height = h;
         this.isCollidable = type;
-        this.gridPosition = new Vector2(this.y / this.height, this.x / this.width);
+        this.previous = undefined;
+        this.cost = 0;
+        this.isVisisted = false;
+        this.gridPosition = new Vector2(this.x / this.width, this.y / this.height);
     }
 
     getRow()
@@ -33,7 +36,7 @@ class Tile{
       ctx.font = "8px Joystix";
 
       //Draw the grids position
-      //var gridPos = "(" + this.getCol().toString() + "," + this.getRow().toString() + ")";
+      //var gridPos = "(" + this.gridPosition + ")";
 
       //ctx.fillText(gridPos, this.x + 16, this.y + 16);
     }
