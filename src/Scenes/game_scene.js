@@ -38,7 +38,7 @@ class GameScene {
     this.player.render(ctx);
     this.testGhost.draw(ctx);
     
-    this.topBar.draw();
-    this.botBar.draw();
+    //this.topBar.draw();
+    //this.botBar.draw();
   }
 }
