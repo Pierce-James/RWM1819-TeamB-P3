@@ -15,10 +15,10 @@ class GameScene {
     this.testGhost.update(dt);
     this.player.update(dt);
 
-    if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider))
-    {
+   // if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider))
+   // {
       //Decrement player health
-    }
+   // }
   }
 
   handleInput(input)
