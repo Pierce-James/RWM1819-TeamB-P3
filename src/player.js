@@ -153,26 +153,6 @@ class Player {
     {
         this.halt += dt;
 
-        
-      
-
-        if(this.moveD === true)
-        {
-            this.position.y += this.speed;
-        }
-
-
-        if(this.moveL === true)
-        {
-            this.position.x -= this.speed;
-        }
-
-
-        if(this.moveR === true)
-        {
-            this.position.x += this.speed;
-        }
-
         //Set collider position every frame
         this.collider.setPosition(this.x, this.y);
     }
