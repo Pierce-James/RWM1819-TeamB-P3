@@ -30,13 +30,12 @@ class Player {
 
     load()
     {
-        this.image.src = "./ASSETS/SPRITES/Pacman72.png"
+        this.image.src = "ASSETS/SPRITES/Pacman72.png"
     }
 
     render(ctx)
     {
         this.pS.draw(this.position.x, this.position.y);
-      //ctx.drawImage(this.image, 0,0,32,32, this.position.x, this.position.y, this.width, this.height, true, 5);
     }
 
     handleInput(input)
