@@ -24,6 +24,12 @@ class ScoreboardScene
     document.fonts.add(font);
     document.body.classList.add("Joystix");
 
+    //Input variables
+    this.escapedPressed = false;
+    this.wasEscapedPressed = false;
+    this.changeSceneStr = "this.mManager.setCurrentScene('Game Scene')";
+    document.addEventListener("keydown", this.keyDown.bind(this));
+    document.addEventListener("keyup", this.keyUp.bind(this));
 
     this.flashSpeed = .2;
     this.timeTillFlash = .2;
@@ -61,12 +67,38 @@ class ScoreboardScene
     }
   }
 
+  //Input handle
   handleInput(input)
-  {
-    //If enter is pressed, return to the main menu
-    if(input.isButtonPressed("Enter")){
-        console.log("Pressed Enter SCOREBOARD");
+  { 
+    //If escaped was pressed, return to main menu (game scene for now)
+    if(this.escapedPressed && !this.wasEscapedPressed)
+    {
+      this.escapedPressed = false;
+      this.wasEscapedPressed = false;
+      return this.changeSceneStr;
     }
+  }
+
+  keyDown(e)
+  {
+    this.wasEscapedPressed = this.escapedPressed; //Set previous
+
+    //If enter is pressed, set the bool to true
+    if(e.code === "Enter")
+    {
+      this.escapedPressed = true;
+    }
+  }
+
+  keyUp(e)
+  {
+    //If enter is pressed, set the bool to true
+    if(e.code === "Enter")
+    {
+      this.escapedPressed = false;
+    }
+
+    this.wasEscapedPressed = this.escapedPressed; //Set previous
   }
 
   draw(ctx)

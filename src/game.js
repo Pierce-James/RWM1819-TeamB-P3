@@ -39,10 +39,17 @@ class Game {
   update() {
     const dt = this.calculateDt();
 
-    this.mManager.current.value.handleInput(this.keyboard);
+    this.handleInput(); //Handle input in the current scenes
 
     //Update the menu manager and pass in dt for any time related functions
     this.mManager.update(dt);
+  }
+
+  handleInput()
+  {
+    var returned = this.mManager.current.value.handleInput(this.keyboard);
+
+    eval(returned);
   }
 
   render() {
