@@ -106,35 +106,43 @@ class Player {
         }
         else if(input.isButtonPressed("ArrowDown"))
         {
-            if(this.halt>= this.speed)
+            if(this.canMoveDown())
             {
-                this.halt = 0;
-                this.moveDirction = new Vector2(0,1);
-                this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));  
-                this.gridPosition.plusEquals(this.moveDirction); 
-                this.down = true; 
-                this.up = false;
-                this.left = false;
-                this.right = false;
+                if(this.halt>= this.speed)
+                {
+                    this.halt = 0;
+                    this.moveDirction = new Vector2(0,1);
+                    this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));  
+                    this.gridPosition.plusEquals(this.moveDirction); 
+                    this.down = true; 
+                    this.up = false;
+                    this.left = false;
+                    this.right = false;
+                }
             }
         }
         
         else if(input.isButtonPressed("ArrowLeft"))
         {
-            if(this.halt>= this.speed)
+            if(this.canMoveLeft())
             {
-                this.halt = 0;
-                this.moveDirction = new Vector2(-1,0);
-                this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));
-                this.gridPosition.plusEquals(this.moveDirction);
-                this.left = true;
-                this.down = false;
-                this.up = false;
-                this.right = false;
-            }  
+                if(this.halt>= this.speed)
+                {
+                    this.halt = 0;
+                    this.moveDirction = new Vector2(-1,0);
+                    this.position.plusEquals(this.moveDirction.multiply(this.moveDistance));
+                    this.gridPosition.plusEquals(this.moveDirction);
+                    this.left = true;
+                    this.down = false;
+                    this.up = false;
+                    this.right = false;
+                 }  
+            }
         }
         else if(input.isButtonPressed("ArrowRight"))
         {
+            if(this.canMoveRight())
+            {
             if(this.halt>= this.speed)
             {
                 this.halt = 0;
@@ -143,47 +151,70 @@ class Player {
                 this.gridPosition.plusEquals(this.moveDirction);
                 this.right = true;
                 this.down = false;
-                this.left = false;
-                this.up = false;
-            }
+                    this.left = false;
+                    this.up = false;
+                }
+             }
+         }
         }
-    }
 
-    update(dt)
-    {
-        this.halt += dt;
-
-        //Set collider position every frame
-        this.collider.setPosition(this.x, this.y);
-    }
-
-    canMoveUp()
-    {
-        if(this.gridPosition.y - 1 >= 0)
+        update(dt)
         {
-            if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y +1)].isCollidable === false)
+            this.halt += dt;
+
+            //Set collider position every frame
+            this.collider.setPosition(this.x, this.y);
+        }
+
+        canMoveUp()
+        {
+            if(this.gridPosition.y - 1 >= 0)
             {
-                    return true;
+                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y +1)].isCollidable === false)
+                {
+                        return true;
+                }
+            
             }
             return false;
         }
-    }
 
+        canMoveDown()
+        {
+            if(this.gridPosition.y + 1 < 31)
+            {
+                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false)
+                {
+                return true;
+                }
+            }
+            return false;
+        }
 
+        canMoveLeft()
+        {
+            if(this.gridPosition.x - 1 >= -0)
+            {
+                if(this.gridRef.tiles[new Vector2(this.gridPosition.x -1, this.gridPosition.y)].isCollidable == false)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        canMoveRight()
+        {
+            if(this.gridPosition.x + 1 < 31)
+            {
+                if(this.gridRef.tiles[new Vector2(this.gridPosition.x +1, this.gridPosition.y)].isCollidable === false)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
 }
 
 if (typeof module !== "undefined") {
