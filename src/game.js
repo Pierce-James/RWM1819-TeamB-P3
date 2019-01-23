@@ -26,8 +26,6 @@ class Game {
 
     var img = new Image(256, 32);
     img.src = "ASSETS/SPRITES/Pacman72.png";
-
-    this.spr = new Sprite(50, 100, 32, 32, img, 50, 50, true, 8);
   }
 
   run() {
@@ -63,7 +61,6 @@ class Game {
 
 
     this.mManager.draw(this.ctx);
-    this.spr.draw();
     //Call draw on the menu manager and pass the context over as canvas is not needed?
    // this.mManager.draw(this.ctx);
  
