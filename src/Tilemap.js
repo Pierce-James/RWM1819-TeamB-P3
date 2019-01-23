@@ -76,7 +76,7 @@ class Tilemap {
             //Loop through all adjacent tiles
             for(let val of adj)
             {
-                if(val.x <= 30 && val.x >= 0 && val.y >= 0 && val.y < 28)
+                if(val.x < 28 && val.x >= 0 && val.y >= 0 && val.y < 31)
                 {   
                     //If it is not a wall and it hasnt been visite dyet, visit and set its cost
                      if(!this.tiles[val].isCollidable && !this.tiles[val].isVisited)

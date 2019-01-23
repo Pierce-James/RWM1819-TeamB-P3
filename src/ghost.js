@@ -6,7 +6,7 @@ class Ghost
     this.timeTillMove = 0; //Time till the ghost can move cell
 
     this.collider = new CollisionCircle(x, y, 16); //Create collider
-    this.moveDirection = new Vector2(1,0);
+    this.moveDirection = new Vector2(0,0);
     this.position = new Vector2(x, y);
     this.spawnGridPosition = new Vector2(x / 32, y / 32);
     this.targetPos = new Vector2(x, y);
@@ -14,72 +14,158 @@ class Ghost
 
     this.gridRef = grid;
     this.scatterTile = scatterTile; //Ste the scatter tile
-    this.scatterTime = 3;
+    this.scatterTime = .2;
     this.timeTillScatter = 0;
 
     this.seekPath = []; //Our seek path
 
     //Setting the image of the ghost
     var img = new Image(256, 32);
-    img.src = "ASSETS/SPRITES/"+ghostType+"_ghost_72.png";
+
+    if(ghostType === "Blinky")
+      img.src = "ASSETS/SPRITES/Red_ghost_72.png";
+    else if(ghostType === "Pinky")
+      img.src = "ASSETS/SPRITES/Lavande_ghost_72.png";
+    else if(ghostType === "Clyde")
+      img.src = "ASSETS/SPRITES/Orange_ghost_72.png";
+    else if(ghostType === "Inky")
+      img.src = "ASSETS/SPRITES/Blue_ghost_72.png";
     this.spr = new Sprite(this.position.x, this.position.y, 32, 32, img, 32, 32, true, 4);
     var eyeImg = new Image(256, 32);
     eyeImg.src = "ASSETS/SPRITES/Eyes_72.png";
     this.eyes = new Sprite(this.position.x, this.position.y, 32, 32, eyeImg, 32, 32, false, 4);
 
     this.ghostType = ghostType;
-    this.state = "Chase";
+    this.state = "Scatter"; //Start with scatter state, as the update swaps them immedaitely
 
     this.alive = true;
     this.eyesSpeed = 224; //Move 224 pixels a second
     this.eyesVelocity = new Vector2(0,0); //The velocity of the eyes
     this.timesMoved = 0; //Temp
+
+    this.canMove = true;
+    this.playersPosition = new Vector2(0,0);
   }
 
-  update(dt){
-    if(this.alive) //If alive, do movement and set ghost eyes
+  update(dt, playersPosition){
+    if(this.alive && this.canMove) //If alive, do movement and set ghost eyes
     {
+      this.playersPosition = playersPosition; //Set the players position
+
       this.checkIfGhostMoved(dt); //Check if the ghost has moved
       this.setGhostEyes(); //Set the ghost eyes sprite
 
-      if(this.state === "Chase") //If our state is chasing
-      {
-        if(this.checkToSwapBehaviour(dt, "Scatter"))
-        {
-          this.state = "Scatter";
-          this.target = new Vector2(this.scatterTile.x, this.scatterTile.y); //Set our target
-        }
-
-        //If our seek path is not populated, populate it
-        if(this.seekPath.length === 0)
-        {
-          this.seekPath = this.gridRef.BFS(this.gridPosition, this.scatterTile,  0);
-          this.targetPos = this.seekPath.shift(); //Get the first element in the array, and remove it from the path
-
-          if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
-          else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
-          else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
-          else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
-          else {this.moveDirection = new Vector2(0, 0);}
-        }
-
+      //Do different updates based on the ghost
+      if(this.ghostType === "Blinky"){
+        this.blinkyUpdate(dt, playersPosition);
       }
-      else if(this.state === "Scatter") //If our state is scattering
-      {
-        //If the time to swap behaviour or the distance to the scatter position is there
-        if(this.checkToSwapBehaviour(dt, "Chase") || this.targetPos.distance(this.position) <= 8)
-        {
-          this.timeTillScatter = 0; //Reset time to scatter
-          this.state = "Chase"; //Set the state as chase
-        }
+      else if(this.ghostType === "Pinky"){
+        this.pinkyUpdate(dt, playersPosition);
       }
-
 
     }
     else //Else move our ghost eyes to the start position
     {
       this.deadUpdate(dt);
     } 
+  }
+
+  pinkyUpdate(dt, playersPosition)
+  {
+    //If we are chasing the player
+    if(this.state === "Chase")
+    {
+      if(this.checkToSwapBehaviour(dt, "Scatter"))
+      {
+      }
+    }
+    else if(this.state === "Scatter")
+    {
+      if(this.checkToSwapBehaviour(dt, "Chase"))
+      {
+        this.scatterTime = 25;
+        this.seekPath = [];
+        this.timeTillScatter = 0;
+        this.state = "Chase";
+        this.moveDirection = new Vector2(0,0);
+
+        this.pinkySeek(playersPosition);
+      }
+    }
+  }
+
+  blinkyUpdate(dt, playersPosition)
+  {
+    if(this.state === "Chase") //If our state is chasing
+    {
+      if(this.checkToSwapBehaviour(dt, "Scatter"))
+      {
+        this.scatterTime = 2;
+        this.timeTillScatter = 0;
+        this.state = "Scatter";
+        this.seekPath = [];
+
+        //If our seek path is not populated, populate it
+        this.seekPath = this.gridRef.BFS(this.gridPosition, this.scatterTile,  0);
+        this.targetPos =  this.seekPath.length === 0 ? new Vector2(this.gridPosition.x, this.gridPosition.y) : this.seekPath.shift(); //Get the first element in the array, and remove it from the path
+        this.moveDirection = new Vector2(0,0);
+
+        if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
+        else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
+        else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
+        else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
+        else {this.moveDirection = new Vector2(0, 0);}
+      }
+
+    }
+    else if(this.state === "Scatter") //If our state is scattering
+    {
+      //If the time to swap behaviour or the distance to the scatter position is there
+      if(this.checkToSwapBehaviour(dt, "Chase") || this.targetPos.distance(this.position) <= 8)
+      {
+        this.scatterTime = 8;
+        this.seekPath = [];
+        this.timeTillScatter = 0; //Reset time to scatter
+        this.state = "Chase"; //Set the state as chase
+        this.moveDirection = new Vector2(0,0);
+
+        this.blinkySeek(playersPosition);
+      }
+    }
+  }
+
+  blinkySeek(targetPos)
+  {
+      //If our seek path is not populated, populate it
+      this.seekPath = this.gridRef.BFS(this.gridPosition, targetPos,  0);
+      this.targetPos =  this.seekPath.length === 0 ? new Vector2(this.gridPosition.x, this.gridPosition.y) : this.seekPath.shift(); //Get the first element in the array, and remove it from the path
+      this.moveDirection = new Vector2(0,0);
+
+      if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
+      else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
+      else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
+      else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
+      else {this.moveDirection = new Vector2(0, 0);}
+  }
+
+  pinkySeek(targetPos)
+  {
+      //If our seek path is not populated, populate it
+      this.seekPath = this.gridRef.BFS(this.gridPosition, targetPos,  0);
+      this.seekPath = this.seekPath.reverse();
+      if(this.seekPath.length > 4)
+      {
+        this.seekPath.splice(0, 4);
+        this.seekPath = this.seekPath.reverse();
+      }
+      this.targetPos =  this.seekPath.length === 0 ? new Vector2(this.gridPosition.x, this.gridPosition.y) : this.seekPath.shift(); //Get the first element in the array, and remove it from the path
+      this.moveDirection = new Vector2(0,0);
+
+      if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
+      else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
+      else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
+      else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
+      else {this.moveDirection = new Vector2(0, 0);}
   }
 
   checkToSwapBehaviour(dt, theState)
@@ -100,7 +186,7 @@ class Ghost
     if(this.position.distance(this.targetPos) <= 8){ //If our eyes are now back at our spawn position, reset the ghost
       this.position = new Vector2(this.targetPos.x, this.targetPos.y); //Set our position
       this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y); //Set our grid position
-
+      this.collider.position = new Vector2(this.targetPos.x, this.targetPos.y);
       this.alive = true;
     }
     else{
@@ -116,6 +202,7 @@ class Ghost
       this.timeTillMove = 0;
       //Add our movement to the ghost
       this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+      this.collider.position = new Vector2(this.position.x, this.position.y);
       this.gridPosition.plusEquals(this.moveDirection);
 
       this.timesMoved++; //Add to our times moved
@@ -124,23 +211,15 @@ class Ghost
         //this.die();
         this.timesMoved = 0;
       } 
-
-     // if(this.state === "Scatter")
-     // {
-        //If we have reached our grid position
-        if(this.targetPos.equals(this.gridPosition))
-        {
-          if(this.seekPath.length > 0)
-          {
-            this.targetPos = this.seekPath.shift();
-            if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
-            else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
-            else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
-            else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
-            else {this.moveDirection = new Vector2(0, 0);}
-          }
-        }
-      //}
+      
+      if(this.ghostType === "Blinky")
+      {
+        this.blinkySeek(this.state === "Chase" ? this.playersPosition : this.scatterTile);
+      }
+      else if(this.ghostType === "Pinky")
+      {
+        this.pinkySeek(this.state === "Chase" ? this.playersPosition : this.scatterTile);
+      }
     }
   }
 
