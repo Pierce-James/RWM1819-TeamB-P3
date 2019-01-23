@@ -15,10 +15,19 @@ class GameScene {
     this.testGhost.update(dt);
     this.player.update(dt);
 
-    if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider))
-    {
+    if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider) === true)
+    { 
       //Check if player has powerup
       //Kill either ghost or player
+      if (this.player.isPoweredUp)
+      {
+        //this.testGhost.die();
+      }
+      else
+      {
+        this.lives--;
+        //Respawn;
+      }
     }
   }
 

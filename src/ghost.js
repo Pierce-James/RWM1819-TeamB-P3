@@ -18,11 +18,12 @@ class Ghost
 
     this.ghostType = ghostType;
 
-    this.collider = new CollisionCircle(this.position)
+    this.collider = new CollisionCircle(this.position.x * 32, this.position.y * 32, 16);
   }
 
   update(dt){
     this.checkIfGhostMoved(dt); //Check if the ghost has moved
+    this.collider.setPosition(this.position.x, this.position.y);
   }
 
   checkIfGhostMoved(dt){
@@ -41,5 +42,6 @@ class Ghost
   draw(ctx){
     this.spr.draw(this.position.x, this.position.y);
     this.eyes.draw(this.position.x, this.position.y);
+    this.collider.draw(ctx);
   }
 }

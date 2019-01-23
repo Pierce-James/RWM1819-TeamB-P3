@@ -65,9 +65,12 @@ class Collision
   //Collision detection methods
   static CircleVsCircle(a, b)
   {
+    // var r = a.radius + b.radius;
+    // r *= r;
+    // return r < Math.pow(a.position.x + b.position.x, 2) + Math.pow(a.position.y + b.position.y, 2);
     var r = a.radius + b.radius;
     r *= r;
-    return r < Math.pow(a.position.x + b.position.x, 2) + Math.pow(a.position.y + b.position.y, 2);
+    return r < Math.pow(a.position.x - b.position.x, 2) + Math.pow(a.position.y - b.position.y, 2);
   }
 
   static AABBvsAABB(a, b)
