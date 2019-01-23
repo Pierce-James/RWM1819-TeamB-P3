@@ -2,8 +2,8 @@
 class GameScene {
   constructor() {
     //Add game objects here, player, ghosts etc.
-    this.player = new Player();
     this.tileMap = new Tilemap("src/tilemap.json");
+    this.player = new Player(32, 32, this.tileMap);
     this.testGhost = new Ghost("Follow", 100, 160, this.tileMap);
 
     this.topBar = new topUI();
@@ -15,11 +15,10 @@ class GameScene {
     this.testGhost.update(dt);
     this.player.update(dt);
 
-    if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider))
-    {
-      //Check if player has powerup
-      //Kill either ghost or player
-    }
+   // if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider))
+   // {
+      //Decrement player health
+   // }
   }
 
   handleInput(input)
