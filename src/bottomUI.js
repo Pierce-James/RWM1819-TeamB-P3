@@ -7,7 +7,7 @@ class bottomUI{
     this.uiDivBot.style.bottom = '0%';
     this.uiDivBot.style.width = '100%';
     this.uiDivBot.style.height = '10%';
-    this.uiDivBot.style.backgroundColor = '#393838';
+    this.uiDivBot.style.backgroundColor = '#000000';
     document.body.appendChild(this.uiDivBot);
 
     this.UICanvas = document.createElement('canvas');
@@ -24,15 +24,15 @@ class bottomUI{
 
     var img = new Image(256, 32);
     img.src = "ASSETS/SPRITES/Pacman72.png";
-    var life1 = new Sprite(50, 20, 32, 32, img, 50, 50, false, 1);
+    var life1 = new Sprite(50, 0, 32, 32, img, 50, 50, false, 1);
     life1.setFrame(3);
-    var life2 = new Sprite(100, 20, 32, 32, img, 50, 50, false, 1);
+    var life2 = new Sprite(100, 0, 32, 32, img, 50, 50, false, 1);
     life2.setFrame(3);
-    var life3 = new Sprite(150, 20, 32, 32, img, 50, 50, false, 1);
+    var life3 = new Sprite(150, 0, 32, 32, img, 50, 50, false, 1);
     life3.setFrame(3);
-    var life4 = new Sprite(200, 20, 32, 32, img, 50, 50, false, 1);
+    var life4 = new Sprite(200, 0, 32, 32, img, 50, 50, false, 1);
     life4.setFrame(3);
-    var life5 = new Sprite(250, 20, 32, 32, img, 50, 50, false, 1);
+    var life5 = new Sprite(250, 0, 32, 32, img, 50, 50, false, 1);
     life5.setFrame(3);
 
     this.lifeIcons.push(life1);
@@ -49,7 +49,7 @@ class bottomUI{
             this.lives = 5;
         for(var i = 0; i < this.lives; i++)
         {
-            this.lifeIcons[i].draw(this.UICanvas);
+            this.lifeIcons[i].draw(undefined, undefined, this.UICanvas);
         }
     }
 }

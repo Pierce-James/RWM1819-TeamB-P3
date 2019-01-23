@@ -1,15 +1,15 @@
 class Player {
 
-    constructor(x, y) 
+    constructor(x, y)
     {
         this.x = 200;
         this.y = 200;
         this.image = new Image();
-        this.width = 50;
-        this.height = 50;
-        
+        this.width = 32;
+        this.height = 32;
+
         this.load();
-     
+
         this.frameIndex = 0;
 
         this.loop = true;
@@ -29,7 +29,7 @@ class Player {
     load()
     {
         this.image.src = "./src/ASSETS/Pacman.png"
-        
+
     }
 
     render(ctx)
@@ -37,7 +37,7 @@ class Player {
       ctx.drawImage(this.image, 0,0,3633.2, 3509, this.position.x, this.position.y, this.width, this.height);
     }
 
-  
+
     handleInput(input)
     {
         if(input.isButtonPressed("ArrowUp"))

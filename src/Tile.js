@@ -6,11 +6,12 @@ class Tile{
         this.width = w;
         this.height = h;
         this.isCollidable = type;
+        this.gridPosition = new Vector2(this.y / this.height, this.x / this.width);
     }
 
     getRow()
     {
-        return this.x / this.width; 
+        return this.x / this.width;
     }
 
     getCol()
@@ -18,19 +19,25 @@ class Tile{
         return this.y / this.height;
     }
 
-    render()
+    render(ctx)
     {
-        let canvas = document.getElementById("mycanvas");
-        let ctx = canvas.getContext("2d");
-        if (this.isCollidable)
-        {
-            ctx.fillStyle = "#00007D";
-        }
-        else{
-            ctx.fillStyle = "#000000";
-        }
+      ctx.save();
 
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-        ctx.stroke();
+      ctx.fillStyle = this.isCollidable ? "#00007D" : "#000000";
+      ctx.fillRect(this.x, this.y, this.width, this.height)
+
+      if(this.isCollidable == false)
+      {
+      ctx.textAlign = "center"; //Allign text to draw from its centre
+      ctx.fillStyle = "#ffffff"; //Set to white text
+      ctx.font = "8px Joystix";
+
+      //Draw the grids position
+      //var gridPos = "(" + this.getCol().toString() + "," + this.getRow().toString() + ")";
+
+      //ctx.fillText(gridPos, this.x + 16, this.y + 16);
+    }
+
+      ctx.restore();
     }
 }

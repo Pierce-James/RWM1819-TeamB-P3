@@ -34,7 +34,7 @@ class Vector2
       return new Vector2(this.x * val.x, this.y * val.y);
     }
     else{
-      return new Vector2(this.x - v.x, this.y - v.y);
+      return new Vector2(this.x * val, this.y * val);
     }
   }
 

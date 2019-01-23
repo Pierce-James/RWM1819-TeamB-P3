@@ -5,7 +5,11 @@ class Game {
     this.canvas = document.createElement("canvas");
     this.canvas.id = 'mycanvas';
     this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    this.canvas.height = window.innerHeight+25;
+    this.canvas.style.position  ='absolute';
+    this.canvas.style.top = '10%';
+    this.canvas.style.height = '80%';
+    this.canvas.style.width = '80%';
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
     this.ctx.imageSmoothingEnabled = false;
@@ -40,10 +44,17 @@ class Game {
   update() {
     const dt = this.calculateDt();
 
-    this.mManager.current.value.handleInput(this.keyboard);
+    this.handleInput(); //Handle input in the current scenes
 
     //Update the menu manager and pass in dt for any time related functions
     this.mManager.update(dt);
+  }
+
+  handleInput()
+  {
+    var returned = this.mManager.current.value.handleInput(this.keyboard);
+
+    eval(returned);
   }
 
   render() {
