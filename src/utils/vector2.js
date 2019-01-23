@@ -67,16 +67,16 @@ class Vector2
 
   magnitude()
   {
-    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y));
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
   }
 
   normalise()
   {
   	if (this.x == 0 && this.y == 0)
-  		return Vector2(0,0);
+  		return new Vector2(0,0);
 
   	var len = this.magnitude();
-  	return Vector2(this.x / len, this.y / len);
+  	return new Vector2(this.x / len, this.y / len);
   }
 
   sqrdMagnitude()

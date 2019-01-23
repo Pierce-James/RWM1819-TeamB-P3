@@ -4,7 +4,7 @@ class GameScene {
     //Add game objects here, player, ghosts etc.
     //this.player = new Player();
     this.tileMap = new Tilemap("src/tilemap.json");
-    this.testGhost = new Ghost("Follow", 160, 160, this.tileMap);
+    this.testGhost = new Ghost("Follow", 160, 192, this.tileMap);
 
     this.topBar = new topUI();
     this.botBar = new bottomUI();
