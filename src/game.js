@@ -15,12 +15,15 @@ class Game {
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.setCurrentScene("Game Scene");
     document.body.style.backgroundColor = "#000000";
+   
 
     this.keyboard = new Keyboard();
 
     var img = new Image(18166, 3509);
     img.src = "ASSETS/SPRITES/Pacmanfix.png";
+
     this.spr = new Sprite(50, 50, 3475, 3509, img, true, 8, 50, 50);
+
   }
 
   run() {
@@ -47,9 +50,12 @@ class Game {
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    //Call draw on the menu manager and pass the context over as canvas is not needed?
+
     this.mManager.draw(this.ctx);
     this.spr.draw();
+    //Call draw on the menu manager and pass the context over as canvas is not needed?
+   // this.mManager.draw(this.ctx);
+ 
   }
 
   calculateDt() {

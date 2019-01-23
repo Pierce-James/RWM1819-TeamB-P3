@@ -17,7 +17,7 @@ class GameScene {
     //        console.log(lis[btn], "Pressed");
     //    }
    // }
-
+    this.player.update(dt);
 
     this.testGhost.update(dt);
   }

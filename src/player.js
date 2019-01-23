@@ -15,6 +15,10 @@ class Player {
         this.loop = true;
 
         this.speed = 5;
+        this.moveU = false;
+        this.moveD = false;
+        this.moveL = false;
+        this.moveR = false;
     }
 
 
@@ -34,25 +38,64 @@ class Player {
     {
         if(input.isButtonPressed("ArrowUp"))
         {
-            this.y -= this.speed;
+            this.moveD = false;
+            this.moveL = false;
+            this.moveR = false;
+            this.moveU = true;
+           
         }
-        if(input.isButtonPressed("ArrowDown"))
+        else if(input.isButtonPressed("ArrowDown"))
         {
-            this.y += this.speed;
+            this.moveD = true;
+            this.moveL = false;
+            this.moveR = false;
+            this.moveU = false;
+
+            
         }
-        if(input.isButtonPressed("ArrowLeft"))
+        
+        else if(input.isButtonPressed("ArrowLeft"))
         {
-            this.x -= this.speed;
+            this.moveD = false;
+            this.moveL = true;
+            this.moveR = false;
+            this.moveU = false;
+           
         }
-        if(input.isButtonPressed("ArrowRight"))
+        else if(input.isButtonPressed("ArrowRight"))
         {
-            this.x += this.speed;
+            this.moveD = false;
+            this.moveL = false;
+            this.moveR = true;
+            this.moveU = false;
+           
         }
     }
 
     update(dt)
     {
+        if(this.moveU === true)
+        {
+            this.y -= this.speed;
+        }
       
+
+        if(this.moveD === true)
+        {
+            this.y += this.speed;
+        }
+
+
+        if(this.moveL === true)
+        {
+            this.x -= this.speed;
+        }
+
+
+        if(this.moveR === true)
+        {
+            this.x += this.speed;
+        }
     }
 }
 
