@@ -39,8 +39,11 @@ class Tilemap {
         })
     }
 
-    BFS(from, goal, depth)
+    BFS(from, goal, depth, useDepth)
     {
+        let currentDepth = 1;
+        let foundGoal = goal;
+
         if(this.tiles[goal].isCollidable)
         {
             throw("Trying to pathfind to a wall");
@@ -63,6 +66,17 @@ class Tilemap {
 
         while(queue.length !== 0 && queue[0] !== this.tiles[goal])
         {
+            if(useDepth)
+            {
+                currentDepth++; //Add to current Depth
+
+                //If we have reached the 
+                if(currentDepth >= depth)
+                {
+                    foundGoal = queue[0];
+                    break;
+                }
+            }
 
             var gPos = new Vector2(queue[0].gridPosition.x, queue[0].gridPosition.y);
             var cPos = new Vector2(gPos.x, gPos.y);
@@ -93,7 +107,7 @@ class Tilemap {
         }
 
         var path = [];
-        var prev = this.tiles[goal];
+        var prev = useDepth ? foundGoal : this.tiles[goal];
 
         path.push(prev.gridPosition);
 
