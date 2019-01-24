@@ -79,8 +79,8 @@ class Tile{
       else if (this.ID === 0)
       {
         //Draw pellet
-        ctx.fillStyle = "green";
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        //ctx.fillStyle = "green";
+        //ctx.fillRect(this.x, this.y, this.width, this.height)
       }
       else{
         ctx.drawImage(this.images[this.ID - 1], this.x, this.y);
