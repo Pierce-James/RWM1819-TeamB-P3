@@ -20,7 +20,7 @@ class Pellet
         
         //ctx.fillRect(this.x, this.y, this.width, this.height)
         this.pellet.draw();
-        ctx.fillStyle = "green";
+        //ctx.fillStyle = "green";
       //  ctx.fillRect(this.x, this.y, this.width, this.height)
        // ctx.restore();
     }

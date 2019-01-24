@@ -60,7 +60,7 @@ class Game {
     this.handleInput(); //Handle input in the current scenes
 
     //Update the menu manager and pass in dt for any time related functions
-    this.mManager.update(dt);
+    this.mManager.update(dt) ;
   }
 
   handleInput()
@@ -69,7 +69,14 @@ class Game {
 
     if(returned !== undefined)
     {
+    
       this.mManager.current.value.stop();
+      if(returned === "this.mManager.setCurrentScene('Scoreboard')" && this.mManager.current.key === "Game Scene")
+      {
+        var scoreVal = this.mManager.current.value.topBar.score;
+  
+        this.mManager.scenes.get("Scoreboard").addToScoreBoard(scoreVal);
+      }
       eval(returned);
       this.mManager.current.value.start();
     }
