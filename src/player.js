@@ -11,7 +11,7 @@ class Player {
         this.frameIndex = 0;
        
         this.loop = true;
-        this.lives = 5;
+        this.lives = 3;
         //Power up state
         this.isPoweredUp = false;
         this.moveDistance = 32;
@@ -23,7 +23,11 @@ class Player {
         
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
-        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8)
+        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8, 50)
+
+        var img = new Image(320, 32);
+        img.src = "./ASSETS/SPRITES/Pacman_death_72.png";
+        this.deathSprite = new Sprite(this.position.x, this.position.y, 32, 32, img, 32, 32, false, 10, 200);
 
         this.gridPosition = new Vector2(this.position.x / 32, this.position.y /32);
         this.gridRef = grid;
@@ -41,6 +45,7 @@ class Player {
         this.wrapMap.set(this.wrapAroundPositions[1].toString(), this.wrapAroundPositions[3]);
         this.wrapMap.set(this.wrapAroundPositions[2].toString(), this.wrapAroundPositions[0]);
         this.wrapMap.set(this.wrapAroundPositions[3].toString(), this.wrapAroundPositions[1]);
+        this.alive = true;
     }
 
     ifInWrapPosition()
@@ -59,10 +64,18 @@ class Player {
     //Call this when the player dies
     spawnPlayer()
     {
-        this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
-        this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
-        this.collider.setPosition(this.position.x, this.position.y);
-        this.moveDirection = new Vector2(-1, 0);
+        if(this.lives <= 0)
+        {
+            this.alive = false;
+            this.deathSprite.animating = true;
+        }
+        else
+        {
+            this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
+            this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
+            this.collider.setPosition(this.position.x, this.position.y);
+            this.moveDirection = new Vector2(-1, 0);
+        }
     }
 
     powerUp()
@@ -92,8 +105,17 @@ class Player {
         else if(this.moveDirection.x === 1){ this.drawRotated(0, ctx); }
         else if(this.moveDirection.y === -1){ this.drawRotated(270, ctx); }
 
-        //Draw pacman sprite
-        this.pS.draw(this.position.x, this.position.y);
+        //Draw pacman sprite if alive
+        if(this.alive)
+        {
+            this.pS.draw(this.position.x, this.position.y);
+        }
+        //Draw pacman death sprite if dead
+        else
+        {
+            if(this.deathSprite.animationPlayedOnce === false)
+                this.deathSprite.draw(this.position.x, this.position.y);
+        }
         ctx.restore();
         this.pm.render();
     }
@@ -118,78 +140,84 @@ class Player {
 
     handleInput(input)
     {
-        if(input.isButtonPressed("ArrowUp") && this.canMoveUp()){this.moveDirection = new Vector2(0,-1);  }
-        if(input.isButtonPressed("ArrowDown") && this.canMoveDown()){this.moveDirection = new Vector2(0,1);  }
-        if(input.isButtonPressed("ArrowLeft") && this.canMoveLeft()){this.moveDirection = new Vector2(-1,0);  }
-        if(input.isButtonPressed("ArrowRight") && this.canMoveRight()){this.moveDirection = new Vector2(1,0);  }
-
-        if (input.isButtonPressed("Space"))
+        if(this.alive)
         {
-            this.spawnProjectile(this.moveDirection);
+            if(input.isButtonPressed("ArrowUp") && this.canMoveUp()){this.moveDirection = new Vector2(0,-1);  }
+            if(input.isButtonPressed("ArrowDown") && this.canMoveDown()){this.moveDirection = new Vector2(0,1);  }
+            if(input.isButtonPressed("ArrowLeft") && this.canMoveLeft()){this.moveDirection = new Vector2(-1,0);  }
+            if(input.isButtonPressed("ArrowRight") && this.canMoveRight()){this.moveDirection = new Vector2(1,0);  }
+
+            if (input.isButtonPressed("Space"))
+            {
+                this.spawnProjectile(this.moveDirection);
+            }
         }
     }
 
     update(dt)
     {
-        this.halt += dt;
-        
-        //Handle powerup
-        if(this.isPoweredUp)
+        if(this.alive)
         {
-            this.poweredUpTime -= dt;
-
-            if(this.poweredUpTime <= 0)
-            {
-                this.endPowerUp();
-            }
-        }
-
-        if(this.halt >= this.speed)
-        {
-            let canMove = false;
-
-            //If we can move in the direction we have set to move in, then set the bool as true
-            if((this.moveDirection.x === 1 && this.canMoveRight())
-            || (this.moveDirection.y === -1 && this.canMoveUp())
-            || (this.moveDirection.y === 1 && this.canMoveDown())
-            || this.moveDirection.x === -1 && this.canMoveLeft()
-            || this.ifInWrapPosition()) //If our position is in the wrap around positions
-            {
-                canMove = true;
-            }
+            this.halt += dt;
             
-            //If we can move, move
-            if(canMove)
+            //Handle powerup
+            if(this.isPoweredUp)
             {
-                this.halt = 0; //Reset move timer
+                this.poweredUpTime -= dt;
 
-                if(this.ifInWrapPosition())
+                if(this.poweredUpTime <= 0)
                 {
-                    if((this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 14)))
-                    || (this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 19)))
-                    || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 14)))
-                    || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 19))))
+                    this.endPowerUp();
+                }
+            }
+
+            if(this.halt >= this.speed)
+            {
+                let canMove = false;
+
+                //If we can move in the direction we have set to move in, then set the bool as true
+                if((this.moveDirection.x === 1 && this.canMoveRight())
+                || (this.moveDirection.y === -1 && this.canMoveUp())
+                || (this.moveDirection.y === 1 && this.canMoveDown())
+                || this.moveDirection.x === -1 && this.canMoveLeft()
+                || this.ifInWrapPosition()) //If our position is in the wrap around positions
+                {
+                    canMove = true;
+                }
+                
+                //If we can move, move
+                if(canMove)
+                {
+                    this.halt = 0; //Reset move timer
+
+                    if(this.ifInWrapPosition())
                     {
-                        let wrapPos = this.wrapMap.get(this.gridPosition.toString());
-                        this.gridPosition = new Vector2(wrapPos.x, wrapPos.y);
-                        this.position = new Vector2(this.gridPosition.x * 32, this.gridPosition.y * 32);
+                        if((this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 14)))
+                        || (this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 19)))
+                        || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 14)))
+                        || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 19))))
+                        {
+                            let wrapPos = this.wrapMap.get(this.gridPosition.toString());
+                            this.gridPosition = new Vector2(wrapPos.x, wrapPos.y);
+                            this.position = new Vector2(this.gridPosition.x * 32, this.gridPosition.y * 32);
+                        }
+                        else
+                        {
+                            this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
+                            this.gridPosition.plusEquals(this.moveDirection); //Update grid position
+                        }
                     }
                     else
                     {
                         this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
                         this.gridPosition.plusEquals(this.moveDirection); //Update grid position
                     }
+                    this.collider.setPosition(this.position.x, this.position.y); //Update collider position
                 }
-                else
-                {
-                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
-                    this.gridPosition.plusEquals(this.moveDirection); //Update grid position
-                }
-                this.collider.setPosition(this.position.x, this.position.y); //Update collider position
             }
+            //Update the projectile manager
+            this.pm.update();
         }
-        //Update the projectile manager
-        this.pm.update();
     }
 
     canMoveUp()
