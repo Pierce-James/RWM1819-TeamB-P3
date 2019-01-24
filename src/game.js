@@ -30,7 +30,6 @@ class Game {
     this.mManager.setCurrentScene("Main Menu");
     this.mManager.current.value.start();
     document.body.style.backgroundColor = "#000000";
-   
 
     this.keyboard = new Keyboard();
 
