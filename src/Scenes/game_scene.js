@@ -36,6 +36,10 @@ class GameScene {
   start(){
     this.isActive = true;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
+    var top = document.getElementById("Top of UI");
+    top.style.display = "block";
+    var bottom = document.getElementById("Bottom of UI");
+    bottom.style.display = "block";
     this.ctx.save();
     if(retro === false)
     {
@@ -47,15 +51,14 @@ class GameScene {
 
     }
   }
-
   
   stop(){
     this.isActive = false;
     audioOptions.manager.stopAudio();
     var top = document.getElementById("Top of UI");
-    top.parentNode.removeChild(top);
+    top.style.display = "none";
     var bottom = document.getElementById("Bottom of UI");
-    bottom.parentNode.removeChild(bottom);
+    bottom.style.display = "none";
     this.ctx.restore();
   }
 
