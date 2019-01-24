@@ -5,7 +5,7 @@
   'RIGHT':'ArrowRight',
   'SHOOT':'Space'
 }*/
-var volume = 100;
+var audioOptions = {'volume':75};
 
 class Game {
   constructor() {
@@ -21,6 +21,10 @@ class Game {
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
     this.ctx.imageSmoothingEnabled = false;
+
+    audioOptions.manager = new AudioManager();
+    audioOptions.manager.init();
+
     //Creating the Menu Manager
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
@@ -30,12 +34,8 @@ class Game {
     this.mManager.setCurrentScene("Main Menu");
     this.mManager.current.value.start();
     document.body.style.backgroundColor = "#000000";
-   
 
     this.keyboard = new Keyboard();
-
-    var img = new Image(256, 32);
-    img.src = "ASSETS/SPRITES/Pacman72.png";
   }
 
   run() {

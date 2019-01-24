@@ -27,14 +27,18 @@ class MainMenuScene {
         this.timeTillFlash = .2;
         this.drawIndicator = false;
         this.isActive = false;
+
+        audioOptions.manager.loadSoundFile('mainMenuMusic', "ASSETS/AUDIO/MainMenu.mp3");
     }
 
     start(){
       this.isActive = true;
+      audioOptions.manager.playAudio('mainMenuMusic', false, audioOptions.volume/100);
     }
 
     stop(){
         this.isActive = false;
+        audioOptions.manager.stopAudio();
     }
 
     update(dt)
