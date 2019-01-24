@@ -12,7 +12,7 @@ class ScoreboardScene
       this.textPositions.push(new Vector2(1280 / 2 - 320 / 2, 200 + (i * 50)));
     }
 
-    this.pointerPosition = new Vector2(1280/ 2 - 100, 800);
+    this.pointerPosition = new Vector2(1280/ 2 - 175, 900);
 
     //Initialise the board and dont clear the existing one
     this.initBoard(false);
@@ -26,9 +26,7 @@ class ScoreboardScene
 
     //Input variables
     this.escapedPressed = false;
-    this.wasEscapedPressed = false;
-    this.changeSceneStr = "this.mManager.setCurrentScene('Game Scene')";
-    document.addEventListener("keydown", this.keyDown.bind(this));
+    this.changeSceneStr = "this.mManager.setCurrentScene('Main Menu')";
     document.addEventListener("keyup", this.keyUp.bind(this));
 
     this.flashSpeed = .2;
@@ -43,6 +41,7 @@ class ScoreboardScene
 
   stop(){
     this.isActive = false;
+    this.escapedPressed = false;
   }
 
   initBoard(deleteExistingBoard)
@@ -82,25 +81,9 @@ class ScoreboardScene
     if(this.isActive === true)
     {
       //If escaped was pressed, return to main menu (game scene for now)
-      if(this.escapedPressed && !this.wasEscapedPressed)
+      if(this.escapedPressed)
       {
-        this.escapedPressed = false;
-        this.wasEscapedPressed = false;
         return this.changeSceneStr;
-      }
-    }
-  }
-
-  keyDown(e)
-  {
-    if(this.isActive === true)
-    {
-      this.wasEscapedPressed = this.escapedPressed; //Set previous
-
-      //If enter is pressed, set the bool to true
-      if(e.code === "Enter")
-      {
-        this.escapedPressed = true;
       }
     }
   }
@@ -112,10 +95,9 @@ class ScoreboardScene
       //If enter is pressed, set the bool to true
       if(e.code === "Enter")
       {
-        this.escapedPressed = false;
+        this.escapedPressed = true;
       }
 
-      this.wasEscapedPressed = this.escapedPressed; //Set previous
     }
   }
 
@@ -126,13 +108,17 @@ class ScoreboardScene
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ctx.textAlign = "center"; //Allign text to draw from its centre
-    ctx.fillStyle = "#3b71c6"; //Set to blue text
-    ctx.font = "30px Joystix";
+    ctx.fillStyle = "#ffffff"; //Set to white text
+    ctx.font = "60px Joystix";
 
 
     ctx.fillText("scoreboard", 1280 / 2, 50);
+
+    ctx.font = "40px Joystix";
     ctx.fillText("Rank/Name", 1280 / 2 - 340 / 2, 125);
     ctx.fillText("Score", 1280 / 2 + 320 / 2, 125);
+
+    ctx.font = "30px Joystix";
 
 
     //If there are values in the scoreboard, display them
@@ -145,7 +131,7 @@ class ScoreboardScene
           ctx.fillText((i + 1).toString() + ":", this.textPositions[i].x - 70, this.textPositions[i].y);
 
           ctx.fillText(this.sortedScoreboard[i][1]["name"], this.textPositions[i].x, this.textPositions[i].y);
-          var scorePadded = this.sortedScoreboard[i][1]["score"].toString().padStart(5, "0"); //Pad the score with 0's
+          var scorePadded = this.sortedScoreboard[i][1]["score"].toString().padStart(7, "0"); //Pad the score with 0's
           ctx.fillText(scorePadded, this.textPositions[i].x + 320, this.textPositions[i].y);
         }
       }
@@ -153,10 +139,11 @@ class ScoreboardScene
     //Else if the scoreboard isnt populated yet, display a defualt text
     else {
       ctx.fillText(this.defaultScore[0], this.textPositions[0].x, this.textPositions[0].y);
-      var scorePadded = this.defaultScore[1].toString().padStart(5, "0"); //Pad the score with 0's
+      var scorePadded = this.defaultScore[1].toString().padStart(7, "0"); //Pad the score with 0's
       ctx.fillText(scorePadded, this.textPositions[0].x + 320, this.textPositions[0].y);
     }
 
+    ctx.font = "60px Joystix";
     //Draw the return string
     ctx.fillText("return", 1280/ 2, this.pointerPosition.y);
 
