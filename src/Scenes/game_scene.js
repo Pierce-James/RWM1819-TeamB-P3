@@ -4,7 +4,7 @@ class GameScene {
     //Add game objects here, player, ghosts etc.
     this.tileMap = new Tilemap("src/tilemap.json");
 
-    this.player = new Player(32, 32, this.tileMap);
+    this.player = new Player(448, 640, this.tileMap);
     this.isActive = false;
     this.blinkyGhost = new Ghost("Blinky", 384, 416, this.tileMap, new Vector2(26,1)); //Scatters to top right
     this.pinkyGhost = new Ghost("Pinky", 448, 416, this.tileMap, new Vector2(1,1)); //Scatters to top left

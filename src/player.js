@@ -15,14 +15,9 @@ class Player {
         //Power up state
         this.isPoweredUp = false;
         this.moveDistance = 32;
-        this.moveDirection = new Vector2(1,0);
-        this.speed = .2;
+        this.moveDirection = new Vector2(-1,0);
+        this.speed = .185;
         this.halt = .2;
-        
-        this.p = new Projectile("bullet", "simple");
-        this.p.setPosition(this.position.x, this.position.y);
-        this.p.setSpeed(3);
-        this.p.setVelocity(2, 0);
 
         this.pm = new ProjectileManager();
         
@@ -30,20 +25,61 @@ class Player {
         image.src = "./ASSETS/SPRITES/Pacman72.png"
         this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8)
 
-        this.gridPosition = new Vector2(this.position.x/ 32, this.position.y /32);
+        this.gridPosition = new Vector2(this.position.x / 32, this.position.y /32);
         this.gridRef = grid;
         
         //Daryl's stuff, dont delete
+        this.spawnGridPosition = new Vector2(this.position.x / 32, this.position.y /32);
+        this.spawnPosition = new Vector2(this.position.x, this.position.y);
+        this.poweredUpTime = 6; // Powered up for 6 seconds
+        this.ghostEatenPoints = 100; //This is double when a ghost is eaten, it will reward 200 for the first one
+
+        this.wrapAroundPositions = [new Vector2(0, 14), new Vector2(0, 19), new Vector2(27, 14), new Vector2(27,19)];
+        //Set which positions we wrap around to
+        this.wrapMap = new Map();
+        this.wrapMap.set(this.wrapAroundPositions[0].toString(), this.wrapAroundPositions[2]);
+        this.wrapMap.set(this.wrapAroundPositions[1].toString(), this.wrapAroundPositions[3]);
+        this.wrapMap.set(this.wrapAroundPositions[2].toString(), this.wrapAroundPositions[0]);
+        this.wrapMap.set(this.wrapAroundPositions[3].toString(), this.wrapAroundPositions[1]);
+    }
+
+    ifInWrapPosition()
+    {
+        for(let pos of this.wrapAroundPositions)
+        {
+            if(pos.equals(this.gridPosition))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //Call this when the player dies
     spawnPlayer()
     {
+        this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
+        this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
+        this.collider.setPosition(this.position.x, this.position.y);
+        this.moveDirection = new Vector2(-1, 0);
     }
 
     powerUp()
     {
+        this.isPoweredUp = true;
+        this.poweredUpTime = 6; //Ste our time to be powered up to 6
+    }
 
+    eatGhost()
+    {
+        this.ghostEatenPoints *= 2; //Double the points for consective ghosts
+        return this.ghostEatenPoints; //Return the doubled points
+    }
+
+    endPowerUp()
+    {
+        this.ghostEatenPoints = 100;
     }
 
     render(ctx, input)
@@ -93,86 +129,119 @@ class Player {
         }
     }
 
-        update(dt)
+    update(dt)
+    {
+        this.halt += dt;
+        
+        //Handle powerup
+        if(this.isPoweredUp)
         {
-            this.halt += dt;
-            
-            if(this.halt >= this.speed)
-            {
-                let canMove = false;
+            this.poweredUpTime -= dt;
 
-                //If we can move in the direction we have set to move in, then set the bool as true
-                if((this.moveDirection.x === 1 && this.canMoveRight())
-                || (this.moveDirection.y === -1 && this.canMoveUp())
-                || (this.moveDirection.y === 1 && this.canMoveDown())
-                || this.moveDirection.x === -1 && this.canMoveLeft())
+            if(this.poweredUpTime <= 0)
+            {
+                this.endPowerUp();
+            }
+        }
+
+        if(this.halt >= this.speed)
+        {
+            let canMove = false;
+
+            //If we can move in the direction we have set to move in, then set the bool as true
+            if((this.moveDirection.x === 1 && this.canMoveRight())
+            || (this.moveDirection.y === -1 && this.canMoveUp())
+            || (this.moveDirection.y === 1 && this.canMoveDown())
+            || this.moveDirection.x === -1 && this.canMoveLeft()
+            || this.ifInWrapPosition()) //If our position is in the wrap around positions
+            {
+                canMove = true;
+            }
+            
+            //If we can move, move
+            if(canMove)
+            {
+                this.halt = 0; //Reset move timer
+
+                if(this.ifInWrapPosition())
                 {
-                    canMove = true;
+                    if((this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 14)))
+                    || (this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 19)))
+                    || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 14)))
+                    || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 19))))
+                    {
+                        let wrapPos = this.wrapMap.get(this.gridPosition.toString());
+                        this.gridPosition = new Vector2(wrapPos.x, wrapPos.y);
+                        this.position = new Vector2(this.gridPosition.x * 32, this.gridPosition.y * 32);
+                    }
+                    else
+                    {
+                        this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
+                        this.gridPosition.plusEquals(this.moveDirection); //Update grid position
+                    }
                 }
-                
-                //If we can move, move
-                if(canMove)
+                else
                 {
-                    this.halt = 0; //Reset move timer
                     this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
                     this.gridPosition.plusEquals(this.moveDirection); //Update grid position
-                    this.collider.setPosition(this.position.x, this.position.y); //Update collider position
                 }
+                this.collider.setPosition(this.position.x, this.position.y); //Update collider position
             }
-            //Update the projectile manager
-            this.pm.update();
         }
+        //Update the projectile manager
+        this.pm.update();
+    }
 
-        canMoveUp()
+    canMoveUp()
+    {
+        if(this.gridPosition.y - 1 >= 0)
         {
-            if(this.gridPosition.y - 1 >= 0)
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y -1)].isCollidable === false)
             {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y -1)].isCollidable === false)
-                {
-                        return true;
-                }
-            
-            }
-            return false;
-        }
-
-        canMoveDown()
-        {
-            if(this.gridPosition.y + 1 < 31)
-            {   
-                //If it isnt a wall and it isnt the ghost spawn area then we can move down
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false
-                && this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].ID !== 98)
-                {
                     return true;
-                }
             }
-            return false;
+        
         }
+        return false;
+    }
 
-        canMoveLeft()
-        {
-            if(this.gridPosition.x - 1 >= -0)
+    canMoveDown()
+    {
+        if(this.gridPosition.y + 1 < 31)
+        {   
+            //If it isnt a wall and it isnt the ghost spawn area then we can move down
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false
+            && this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].ID !== 98)
             {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x -1, this.gridPosition.y)].isCollidable == false)
-                {
-                    return true;
-                }
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 
-        canMoveRight()
+    canMoveLeft()
+    {
+        if(this.gridPosition.x - 1 >= 0)
         {
-            if(this.gridPosition.x + 1 < 31)
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x -1, this.gridPosition.y)].isCollidable == false)
             {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x +1, this.gridPosition.y)].isCollidable === false)
-                {
-                    return true;
-                }
+                return true;
             }
-            return false;
         }
+        return false;
+    }
+
+    canMoveRight()
+    {
+        if(this.gridPosition.x + 1 < 28)
+        {
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x +1, this.gridPosition.y)].isCollidable === false)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 if (typeof module !== "undefined") {
