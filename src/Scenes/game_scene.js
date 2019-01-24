@@ -61,9 +61,11 @@ class GameScene {
             {
               this.topBar.score += this.player.eatGhost();
               ghost.die();
+              audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
             }
             else
             {
+              audioOptions.manager.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
               this.player.spawnPlayer();
               this.botBar.lives--;
