@@ -17,8 +17,7 @@ class Game {
     this.mManager = new MenuManager();
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
-    this.mManager.addScene("Main Menu", new MainMenuScene());
-    this.mManager.setCurrentScene("Main Menu");
+    this.mManager.setCurrentScene("Game Scene");
     document.body.style.backgroundColor = "#000000";
    
 
@@ -52,7 +51,7 @@ class Game {
   handleInput()
   {
     var returned = this.mManager.current.value.handleInput(this.keyboard);
-
+    
     eval(returned);
   }
 
