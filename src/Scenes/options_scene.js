@@ -7,7 +7,7 @@ class OptionsScene{
 
         this.options = [];
         this.options.push('rebind controls');
-        this.options.push("volume : " + volume.toString()+ "%");
+        this.options.push("volume : " + audioOptions.volume.toString()+ "%");
         this.options.push("main menu");
 
         this.buttonIndex = 0;
@@ -74,15 +74,15 @@ class OptionsScene{
                     break;
                 case 'ArrowLeft' :
                     if(this.buttonIndex === 1){
-                        volume--;
-                        this.options[1] = "> volume : " + volume.toString()+ "%";
+                        audioOptions.volume--;
+                        this.options[1] = "> volume : " + audioOptions.volume.toString()+ "%";
                     }
                     this.keyPressed = true;
                     break;
                 case 'ArrowRight' :
                     if(this.buttonIndex === 1){
-                        volume++;
-                        this.options[1] = "> volume : " + volume.toString()+ "%";
+                        audioOptions.volume++;
+                        this.options[1] = "> volume : " + audioOptions.volume.toString()+ "%";
                     }
                     this.keyPressed = true;
                     break;
