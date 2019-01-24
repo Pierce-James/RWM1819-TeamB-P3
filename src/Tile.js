@@ -58,65 +58,74 @@ class Tile{
     {
       ctx.save();
 
-      switch(this.ID)
-      {
-        case 0:
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(this.x, this.y, this.width, this.height)
-            break;
-        case 1:
-            ctx.drawImage(this.images[0], this.x, this.y);
-            break;
-        case 2:
-            ctx.drawImage(this.images[1], this.x, this.y);
-            break;
-        case 3:
-            ctx.drawImage(this.images[2], this.x, this.y);
-            break;
-        case 4:
-            ctx.drawImage(this.images[3], this.x, this.y);
-            break;
-        case 5:
-            ctx.drawImage(this.images[4], this.x, this.y);
-            break;
-        case 6:
-            ctx.drawImage(this.images[5], this.x, this.y);
-            break;
-        case 7:
-            ctx.drawImage(this.images[6], this.x, this.y);
-            break;
-        case 8:
-            ctx.drawImage(this.images[7], this.x, this.y);
-            break;
-        case 9:
-            ctx.drawImage(this.images[8], this.x, this.y);
-            break;
-        case 10:
-            ctx.drawImage(this.images[9], this.x, this.y);
-            break;
-        case 11:
-            ctx.drawImage(this.images[10], this.x, this.y);
-            break;
-        case 12:
-            ctx.drawImage(this.images[11], this.x, this.y);
-            break;
-        case 13:
-            ctx.drawImage(this.images[12], this.x, this.y);
-            break;
-        case 14:
-            ctx.drawImage(this.images[13], this.x, this.y);
-            break;
-        case 15:
-            ctx.drawImage(this.images[14], this.x, this.y);
-            break;
-        case 16:
-            ctx.drawImage(this.images[15], this.x, this.y);
-            break;
-        case 17:
-            ctx.drawImage(this.images[16], this.x, this.y);
-            break;
-      }
+    //   switch(this.ID)
+    //   {
+    //     case 0:
+    //         ctx.fillStyle = "#000000";
+    //         ctx.fillRect(this.x, this.y, this.width, this.height)
+    //         break;
+    //     case 1:
+    //         ctx.drawImage(this.images[0], this.x, this.y);
+    //         break;
+    //     case 2:
+    //         ctx.drawImage(this.images[1], this.x, this.y);
+    //         break;
+    //     case 3:
+    //         ctx.drawImage(this.images[2], this.x, this.y);
+    //         break;
+    //     case 4:
+    //         ctx.drawImage(this.images[3], this.x, this.y);
+    //         break;
+    //     case 5:
+    //         ctx.drawImage(this.images[4], this.x, this.y);
+    //         break;
+    //     case 6:
+    //         ctx.drawImage(this.images[5], this.x, this.y);
+    //         break;
+    //     case 7:
+    //         ctx.drawImage(this.images[6], this.x, this.y);
+    //         break;
+    //     case 8:
+    //         ctx.drawImage(this.images[7], this.x, this.y);
+    //         break;
+    //     case 9:
+    //         ctx.drawImage(this.images[8], this.x, this.y);
+    //         break;
+    //     case 10:
+    //         ctx.drawImage(this.images[9], this.x, this.y);
+    //         break;
+    //     case 11:
+    //         ctx.drawImage(this.images[10], this.x, this.y);
+    //         break;
+    //     case 12:
+    //         ctx.drawImage(this.images[11], this.x, this.y);
+    //         break;
+    //     case 13:
+    //         ctx.drawImage(this.images[12], this.x, this.y);
+    //         break;
+    //     case 14:
+    //         ctx.drawImage(this.images[13], this.x, this.y);
+    //         break;
+    //     case 15:
+    //         ctx.drawImage(this.images[14], this.x, this.y);
+    //         break;
+    //     case 16:
+    //         ctx.drawImage(this.images[15], this.x, this.y);
+    //         break;
+    //     case 17:
+    //         ctx.drawImage(this.images[16], this.x, this.y);
+    //         break;
+    //   }
 
+      if (this.ID === 0)
+      {
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+      }
+      else{
+        ctx.drawImage(this.images[this.ID - 1], this.x, this.y);
+
+      }
     //   if(this.isCollidable === false)
     //   {
     //   ctx.textAlign = "center"; //Allign text to draw from its centre
