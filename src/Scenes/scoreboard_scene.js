@@ -34,6 +34,15 @@ class ScoreboardScene
     this.flashSpeed = .2;
     this.timeTillFlash = .2;
     this.drawIndicator = false;
+    this.isActive = false;
+  }
+
+  start(){
+    this.isActive = true;
+  }
+
+  stop(){
+    this.isActive = false;
   }
 
   initBoard(deleteExistingBoard)
@@ -70,35 +79,44 @@ class ScoreboardScene
   //Input handle
   handleInput(input)
   { 
-    //If escaped was pressed, return to main menu (game scene for now)
-    if(this.escapedPressed && !this.wasEscapedPressed)
+    if(this.isActive === true)
     {
-      this.escapedPressed = false;
-      this.wasEscapedPressed = false;
-      return this.changeSceneStr;
+      //If escaped was pressed, return to main menu (game scene for now)
+      if(this.escapedPressed && !this.wasEscapedPressed)
+      {
+        this.escapedPressed = false;
+        this.wasEscapedPressed = false;
+        return this.changeSceneStr;
+      }
     }
   }
 
   keyDown(e)
   {
-    this.wasEscapedPressed = this.escapedPressed; //Set previous
-
-    //If enter is pressed, set the bool to true
-    if(e.code === "Enter")
+    if(this.isActive === true)
     {
-      this.escapedPressed = true;
+      this.wasEscapedPressed = this.escapedPressed; //Set previous
+
+      //If enter is pressed, set the bool to true
+      if(e.code === "Enter")
+      {
+        this.escapedPressed = true;
+      }
     }
   }
 
   keyUp(e)
   {
-    //If enter is pressed, set the bool to true
-    if(e.code === "Enter")
+    if(this.isActive === true)
     {
-      this.escapedPressed = false;
-    }
+      //If enter is pressed, set the bool to true
+      if(e.code === "Enter")
+      {
+        this.escapedPressed = false;
+      }
 
-    this.wasEscapedPressed = this.escapedPressed; //Set previous
+      this.wasEscapedPressed = this.escapedPressed; //Set previous
+    }
   }
 
   draw(ctx)

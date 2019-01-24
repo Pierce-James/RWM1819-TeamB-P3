@@ -5,9 +5,18 @@ class GameScene {
     this.tileMap = new Tilemap("src/tilemap.json");
     this.player = new Player(32, 32, this.tileMap);
     this.testGhost = new Ghost("Follow", 100, 160, this.tileMap);
-
+    this.isActive = false;
     this.topBar = new topUI();
     this.botBar = new bottomUI();
+  }
+
+  start(){
+    this.isActive = true;
+  }
+
+  
+  stop(){
+    this.isActive = false;
   }
 
   update(dt) {
