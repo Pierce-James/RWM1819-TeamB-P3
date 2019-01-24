@@ -20,7 +20,7 @@ class GameScene {
     this.ctx = canv.getContext("2d");
 
     this.cameraSystem = new CameraSystem(canv, this.topBar.UICanvas);
-    this.cameraSystem.setFocus(this.player.position);
+    this.cameraSystem.setFocus(this.player.position, 185);
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
     audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
