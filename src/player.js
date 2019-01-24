@@ -28,6 +28,9 @@ class Player {
         this.halt = .4;
         
         this.p = new Projectile("bullet", "simple");
+        this.p.setPosition(this.position.x, this.position.y);
+        this.p.setSpeed(3);
+        this.p.setVelocity(2, 0);
 
         this.pm = new ProjectileManager();
         
@@ -85,73 +88,6 @@ class Player {
 
     handleInput(input)
     {
-        if(input.isButtonPressed("ArrowUp"))
-        {
-
-            if(this.canMoveUp())
-            {
-                if(this.halt>= this.speed)
-                {
-                    this.halt = 0;
-                    this.moveDirection = new Vector2(0,-1);
-                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
-                    this.gridPosition.plusEquals(this.moveDirection);
-                    this.up = true;
-                    this.down = false;
-                    this.left = false;
-                    this.right = false;
-                }
-            }
-        }
-
-        if(input.isButtonPressed("ArrowDown"))
-        {
-            if(this.canMoveDown())
-            {
-                this.halt = 0;
-                this.moveDirection = new Vector2(0,1);
-                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));  
-                this.gridPosition.plusEquals(this.moveDirection); 
-                this.down = true; 
-                this.up = false;
-                this.left = false;
-                this.right = false;
-            }
-        }
-    
-        if(input.isButtonPressed("ArrowLeft"))
-        {
-                if(this.canMoveLeft())
-                {
-                    this.halt = 0;
-                    this.moveDirection = new Vector2(-1,0);
-                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
-                    this.gridPosition.plusEquals(this.moveDirection);
-                    this.left = true;
-                    this.down = false;
-                    this.up = false;
-                    this.right = false;
-                 }        
-        }
-
-        if(input.isButtonPressed("ArrowRight"))
-        {
-            if(this.canMoveRight())
-            {
-                if(this.halt>= this.speed)
-                {
-                    this.halt = 0;
-                    this.moveDirection = new Vector2(1,0);
-                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
-                    this.gridPosition.plusEquals(this.moveDirection);
-                    this.right = true;
-                    this.down = false;
-                    this.left = false;
-                    this.up = false;
-                }
-             }
-        }
-
          if (input.isButtonPressed("Space"))
          {
              //Right
