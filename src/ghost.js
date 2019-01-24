@@ -2,7 +2,7 @@ class Ghost
 {
   constructor(ghostType, x, y, grid, scatterTile){
     this.moveDistance = 32; //32 pixels per move
-    this.moveSpeed = .3; //Moves a cell every .3 seconds
+    this.moveSpeed = .4; //Moves a cell every .3 seconds
     this.timeTillMove = 0; //Time till the ghost can move cell
 
     this.collider = new CollisionCircle(x, y, 16); //Create collider
@@ -493,6 +493,5 @@ class Ghost
       this.spr.draw(this.position.x, this.position.y);
     }
     this.eyes.draw(this.position.x, this.position.y); //Always draw the eyes
-    this.collider.draw(ctx);
   }
 }

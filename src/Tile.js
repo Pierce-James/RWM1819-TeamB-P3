@@ -9,9 +9,8 @@ class Tile{
         this.ID = id;
         this.images = [];
         this.loadImages();
-        //this.isCollidable = type;
+        this.isCollidable = this.ID !== 0 ? true : false;
 
-        this.isCollidable = type;
         this.previous = undefined;
         this.cost = 0;
         this.isVisisted = false;
@@ -118,17 +117,17 @@ class Tile{
             break;
       }
 
-    //   if(this.isCollidable == false)
+    //   if(this.isCollidable === false)
     //   {
     //   ctx.textAlign = "center"; //Allign text to draw from its centre
     //   ctx.fillStyle = "#ffffff"; //Set to white text
     //   ctx.font = "8px Joystix";
 
     //   //Draw the grids position
-    //   //var gridPos = "(" + this.getCol().toString() + "," + this.getRow().toString() + ")";
+    //    var gridPos = "(" + this.getCol().toString() + "," + this.getRow().toString() + ")";
 
-    //   //ctx.fillText(gridPos, this.x + 16, this.y + 16);
-    // }
+    //    ctx.fillText(gridPos, this.x + 16, this.y + 16);
+    //  }
 
       ctx.restore();
     }
