@@ -39,7 +39,26 @@ class GameScene {
 
       if (Collision.CircleVsCircle(this.player.collider, this.blinkyGhost.collider))
       {
-        //Decrement player health
+        if (this.player.isPoweredUp)
+        {
+          this.blinkyGhost.alive = false;
+        }
+        else
+        {
+          this.player.lives--;
+        }
+      }
+
+      if (Collision.CircleVsCircle(this.player.collider, this.pinkyGhost.collider))
+      {
+        if (this.player.isPoweredUp)
+        {
+          this.pinkyGhost.alive = false;
+        }
+        else
+        {
+          this.player.lives--;
+        }
       }
     }
   }

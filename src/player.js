@@ -19,7 +19,7 @@ class Player {
         this.frameIndex = 0;
        
         this.loop = true;
-        this.live = 5;
+        this.lives = 5;
         //Power up state
         this.isPoweredUp = false;
         this.moveDistance = 32;
