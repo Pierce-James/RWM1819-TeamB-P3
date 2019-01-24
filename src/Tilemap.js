@@ -44,8 +44,6 @@ class Tilemap {
 
     BFS(from, goal, depth, useDepth)
     {
-        console.log("Doing BFS from ", from, " To ", goal);
-
         let currentDepth = 1;
         let foundGoal = goal;
 
