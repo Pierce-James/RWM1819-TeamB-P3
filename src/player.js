@@ -23,9 +23,9 @@ class Player {
         //Power up state
         this.isPoweredUp = false;
         this.moveDistance = 32;
-        this.moveDirection = new Vector2(0,0);
-        this.speed = .4;
-        this.halt = .4;
+        this.moveDirection = new Vector2(1,0);
+        this.speed = .2;
+        this.halt = .2;
         
         this.p = new Projectile("bullet", "simple");
         this.p.setPosition(this.position.x, this.position.y);
@@ -88,6 +88,38 @@ class Player {
 
     handleInput(input)
     {
+        if(input.isButtonPressed("ArrowUp"))
+        {
+                if(this.canMoveUp())
+                {         
+                    this.moveDirection = new Vector2(0,-1);       
+               }       
+        }
+
+        if(input.isButtonPressed("ArrowDown"))
+        {
+                if(this.canMoveDown())
+                {
+                     this.moveDirection = new Vector2(0,+1);
+               }   
+        }
+
+        if(input.isButtonPressed("ArrowLeft"))
+        {
+                if(this.canMoveLeft())
+                {
+                    this.moveDirection = new Vector2(-1,0);
+               }   
+        }
+
+        if(input.isButtonPressed("ArrowRight"))
+        {
+                if(this.canMoveRight())
+                {
+                    this.moveDirection = new Vector2(+1,0);
+               }   
+        }
+
          if (input.isButtonPressed("Space"))
          {
              //Right

@@ -27,12 +27,16 @@ class Game {
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.addScene("Options", new OptionsScene());
     this.mManager.addScene("Main Menu", new MainMenuScene());
+
     this.mManager.setCurrentScene("Main Menu");
     this.mManager.current.value.start();
     document.body.style.backgroundColor = "#000000";
 
     this.keyboard = new Keyboard();
-
+   
+    this.pellet = new Pellet();
+    this.pellet = [];
+    
     var img = new Image(256, 32);
     img.src = "ASSETS/SPRITES/Pacman72.png";
   }
@@ -72,7 +76,7 @@ class Game {
 
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+   // this.pellet.draw();
 
     this.mManager.draw(this.ctx);
     //Call draw on the menu manager and pass the context over as canvas is not needed?
