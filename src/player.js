@@ -27,17 +27,10 @@ class Player {
         this.speed = .4;
         this.halt = .4;
         
-   
-
         this.p = new Projectile("bullet", "simple");
-        this.p.setPosition(this.position.x, this.position.y);
-        this.p.setSpeed(5);
-        this.p.setAngle(90);
-        this.p.setVelocity(2, 2);
 
         this.pm = new ProjectileManager();
-        this.pm.addProjectile(this.p);
-
+        
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
         this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8)
@@ -84,11 +77,9 @@ class Player {
                 ctx.translate((this.position.x + (this.width/2)) * -1, (this.position.y + (this.height /2)) * -1);
             }
 
-          
-
-
             this.pS.draw(this.position.x, this.position.y);
             ctx.restore();
+            this.pm.render();
       //ctx.drawImage(this.image, 0,0,32,32, this.position.x, this.position.y, this.width, this.height, true, 5);
     }
 
@@ -96,37 +87,111 @@ class Player {
     {
         if(input.isButtonPressed("ArrowUp"))
         {
-                if(this.canMoveUp())
-                {         
-                    this.moveDirection = new Vector2(0,-1);       
-               }       
+
+            if(this.canMoveUp())
+            {
+                if(this.halt>= this.speed)
+                {
+                    this.halt = 0;
+                    this.moveDirection = new Vector2(0,-1);
+                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+                    this.gridPosition.plusEquals(this.moveDirection);
+                    this.up = true;
+                    this.down = false;
+                    this.left = false;
+                    this.right = false;
+                }
+            }
         }
 
         if(input.isButtonPressed("ArrowDown"))
         {
-                if(this.canMoveDown())
-                {
-                     this.moveDirection = new Vector2(0,+1);
-               }   
+            if(this.canMoveDown())
+            {
+                this.halt = 0;
+                this.moveDirection = new Vector2(0,1);
+                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));  
+                this.gridPosition.plusEquals(this.moveDirection); 
+                this.down = true; 
+                this.up = false;
+                this.left = false;
+                this.right = false;
+            }
         }
-
+    
         if(input.isButtonPressed("ArrowLeft"))
         {
                 if(this.canMoveLeft())
                 {
+                    this.halt = 0;
                     this.moveDirection = new Vector2(-1,0);
-               }   
+                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+                    this.gridPosition.plusEquals(this.moveDirection);
+                    this.left = true;
+                    this.down = false;
+                    this.up = false;
+                    this.right = false;
+                 }        
         }
 
         if(input.isButtonPressed("ArrowRight"))
         {
-                if(this.canMoveRight())
+            if(this.canMoveRight())
+            {
+                if(this.halt>= this.speed)
                 {
-                    this.moveDirection = new Vector2(+1,0);
-               }   
+                    this.halt = 0;
+                    this.moveDirection = new Vector2(1,0);
+                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+                    this.gridPosition.plusEquals(this.moveDirection);
+                    this.right = true;
+                    this.down = false;
+                    this.left = false;
+                    this.up = false;
+                }
+             }
         }
 
-      
+         if (input.isButtonPressed("Space"))
+         {
+             //Right
+             if (this.moveDirection.x === 1)
+             {
+                let p = new Projectile("bullet", "simple");
+                p.setPosition(this.position.x, this.position.y);
+                p.setSpeed(3);
+                p.setVelocity(1, 0);
+                this.pm.addProjectile(p);
+                this.pm.fireProjectiles();
+             } //Left
+             else if (this.moveDirection.x === -1)
+             {
+                let p = new Projectile("bullet", "simple");
+                p.setPosition(this.position.x, this.position.y);
+                p.setSpeed(3);
+                p.setVelocity(-1, 0);
+                this.pm.addProjectile(p);
+                this.pm.fireProjectiles();
+             } //Down
+             else if (this.moveDirection.y === 1)
+             {
+                let p = new Projectile("bullet", "simple");
+                p.setPosition(this.position.x, this.position.y);
+                p.setSpeed(3);
+                p.setVelocity(0, 1);
+                this.pm.addProjectile(p);
+                this.pm.fireProjectiles();
+             } //Up
+             else if (this.moveDirection.y === -1)
+             {
+                let p = new Projectile("bullet", "simple");
+                p.setPosition(this.position.x, this.position.y);
+                p.setSpeed(3);
+                p.setVelocity(0, -1);
+                this.pm.addProjectile(p);
+                this.pm.fireProjectiles();
+             }
+         }
     }
 
         update(dt)
@@ -149,31 +214,29 @@ class Player {
                         canMove = true;
                     }
            
-
-           
                 if(this.moveDirection.y === +1 &&
                     this.canMoveDown())
                     {
                         canMove = true;
                     }
             
-
-           
                 if(this.moveDirection.x === -1 &&
                     this.canMoveLeft())
                     {
                         canMove = true;
                     }
             
-            if(canMove)
-            {
-                this.halt = 0;
-                this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
-                this.gridPosition.plusEquals(this.moveDirection);
+                if(canMove)
+                {
+                    this.halt = 0;
+                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+                    this.gridPosition.plusEquals(this.moveDirection);
+                }
             }
-        }
             //Set collider position every frame
             this.collider.setPosition(this.x, this.y);
+
+            this.pm.update();
         }
 
         canMoveUp()
@@ -224,7 +287,6 @@ class Player {
             }
             return false;
         }
-    
 }
 
 if (typeof module !== "undefined") {
