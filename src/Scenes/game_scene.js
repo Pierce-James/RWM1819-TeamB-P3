@@ -16,7 +16,7 @@ class GameScene {
     this.botBar = new bottomUI();
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
-    audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Waka.mp3");
+    audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
     audioOptions.manager.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
     audioOptions.manager.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
   }
