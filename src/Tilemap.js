@@ -10,7 +10,6 @@ class Tilemap {
         this.isLoaded = false;
         this.GetJSON();
         this.pellets = [];
-
     }
 
     GetJSON()
@@ -133,7 +132,6 @@ class Tilemap {
                 this.tiles[element].render(ctx);
               
             });
-
         }
         Object.keys(this.pellets).forEach(element =>{
             this.pellets[element].draw(ctx);

@@ -32,7 +32,6 @@ class GameScene {
     this.playerHit = false;
   }
   
-
   start(){
     this.isActive = true;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
@@ -50,6 +49,26 @@ class GameScene {
       this.cameraSystem.Pan(offset.x, -offset.y);
 
     }
+  }
+
+  reset(){
+    this.isActive = true;
+    this.player.lives = 3;
+    this.player.alive = true;
+    this.player.position = new Vector2(448, 600);
+    this.blinkyGhost.alive = true;
+    this.inkyGhost.alive = true;
+    this.pinkyGhost.alive = true;
+    this.clydeGhost.alive = true;
+    this.blinkyGhost.position = new Vector2(416, 480);
+    this.pinkyGhost = new Vector2(448, 480);
+    this.clydeGhost = new Vector2(416, 416);
+    this.inkyGhost = new Vector2(448, 416);
+    this.startPlayTimer = false;
+    this.playerHitTimer = 1.5;
+    this.playerHit = false;
+    this.isActive = false;
+    this.tileMap.createPellets();
   }
   
   stop(){
@@ -100,8 +119,6 @@ class GameScene {
       
       this.player.update(dt);
 
-
-
       //Only check for collisions if the player has lives
       if(this.player.lives > 0 && this.player.alive)
       {
@@ -130,11 +147,12 @@ class GameScene {
 
           if (this.player.checkProjectile(ghost.collider))
           {
-            this.topBar.score += this.player.eatGhost();
-            ghost.die();
-            audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
             this.player.projectileActive = false;
+            ghost.die();
+            this.topBar.score += this.player.eatGhost();
+            audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
             this.player.pm.clearProjectiles();
+            break;
           }
         }
       }
