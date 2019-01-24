@@ -97,6 +97,8 @@ class GameScene {
       
       this.player.update(dt);
 
+
+
       //Only check for collisions if the player has lives
       if(this.player.lives > 0 && this.player.alive)
       {
@@ -121,6 +123,15 @@ class GameScene {
               this.player.pS.animating = false;
               this.playerHit = true;
             }
+          }
+
+          if (this.player.checkProjectile(ghost.collider))
+          {
+            this.topBar.score += this.player.eatGhost();
+            ghost.die();
+            audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
+            this.player.projectileActive = false;
+            this.player.pm.clearProjectiles();
           }
         }
       }

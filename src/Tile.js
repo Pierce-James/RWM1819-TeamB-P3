@@ -74,9 +74,11 @@ class Tile{
       }
       else if(this.ID === 99)
       {
+        ctx.save();
         //Draw super pellet
         ctx.fillStyle = "red";
         ctx.fillRect(this.x, this.y, this.width, this.height)
+        ctx.restore();
       }
       else if (this.ID === 97)
       {
@@ -86,26 +88,10 @@ class Tile{
       }
       else if (this.ID === 0)
       {
-        //Draw pellet
-        //ctx.fillStyle = "green";
-        //ctx.fillRect(this.x, this.y, this.width, this.height)
       }
       else{
         ctx.drawImage(this.images[this.ID - 1], this.x, this.y);
       }
-
-    //   if(this.isCollidable === false)
-    //   {
-    //   ctx.textAlign = "center"; //Allign text to draw from its centre
-    //   ctx.fillStyle = "#ffffff"; //Set to white text
-    //   ctx.font = "8px Joystix";
-
-    //   //Draw the grids position
-    //    var gridPos = "(" + this.getCol().toString() + "," + this.getRow().toString() + ")";
-
-    //    ctx.fillText(gridPos, this.x + 16, this.y + 16);
-    //  }
-
       ctx.restore();
     }
 }

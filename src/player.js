@@ -12,12 +12,14 @@ class Player {
        
         this.loop = true;
         this.lives = 3;
+        this.projectileTimer = 0;
         //Power up state
         this.isPoweredUp = false;
         this.moveDistance = 32;
         this.moveDirection = new Vector2(-1,0);
         this.speed = .185;
         this.halt = .2;
+        this.projectileActive = false;
 
         this.pm = new ProjectileManager();
         
@@ -69,6 +71,19 @@ class Player {
         this.deathSprite.animating = true;
         this.pS.animating = false;
         this.deathSprite.animationPlayedOnce = false;
+    }
+
+    checkProjectile(c2)
+    {
+        for (let p of this.pm.projectiles)
+        {
+            let c1 = new CollisionCircle(p.x, p.y, p.width / 2);
+            if (Collision.CircleVsCircle(c1, c2))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     powerUp()
@@ -125,7 +140,10 @@ class Player {
 
         }
         ctx.restore();
-        this.pm.render();
+        if (this.projectileActive)
+        {
+            this.pm.render();
+        }
     }
 
     drawRotated(angle, ctx)
@@ -138,12 +156,17 @@ class Player {
     //Spawns a projectile
     spawnProjectile(direction)
     {
-        let p = new Projectile("bullet", "simple");
-        p.setPosition(this.position.x, this.position.y);
-        p.setSpeed(3);
-        p.setVelocity(direction.x, direction.y);
-        this.pm.addProjectile(p);
+        if (!this.projectileActive)
+        {
+            let p = new Projectile("bullet", "simple");
+            p.setPosition(this.position.x + 16, this.position.y + 16);
+            p.setSpeed(3);
+            p.setVelocity(direction.x, direction.y);
+            p.setTimeToLive(1);
+            this.pm.addProjectile(p);
+        }
         this.pm.fireProjectiles();
+        this.projectileActive = true;
     }
 
     handleInput(input)
@@ -176,6 +199,24 @@ class Player {
                 if(this.poweredUpTime <= 0)
                 {
                     this.endPowerUp();
+                }
+            }
+            if (this.projectileActive)
+            {
+                this.projectileTimer += 1 / 60;
+            }
+
+
+            for (let p of this.pm.projectiles)
+            {
+                if (this.projectileActive)
+                {
+                    if (this.projectileTimer > p.ttl)
+                    {
+                        this.pm.clearProjectiles();
+                        this.projectileTimer = 0;
+                        this.projectileActive = false;
+                    }
                 }
             }
 
