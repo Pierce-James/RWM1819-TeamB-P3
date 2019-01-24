@@ -71,7 +71,8 @@ class Player {
         }
         else
         {
-            this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
+            this.position.x = this.spawnPosition.x;
+            this.position.y = this.spawnPosition.y;
             this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
             this.collider.setPosition(this.position.x, this.position.y);
             this.moveDirection = new Vector2(-1, 0);
@@ -199,7 +200,8 @@ class Player {
                         {
                             let wrapPos = this.wrapMap.get(this.gridPosition.toString());
                             this.gridPosition = new Vector2(wrapPos.x, wrapPos.y);
-                            this.position = new Vector2(this.gridPosition.x * 32, this.gridPosition.y * 32);
+                            this.position.x = this.gridPosition.x * 32;
+                            this.position.y = this.gridPosition.y * 32;
                         }
                         else
                         {
