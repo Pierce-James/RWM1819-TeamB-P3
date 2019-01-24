@@ -33,7 +33,7 @@ class Tilemap {
             {
                 for (let j = 0; j < 28; j++)
                 {
-                    this.tiles[new Vector2(j, i)] = new Tile(j * 32, i * 32, 32, 32, element[i][j] == 1 ? true : false);
+                    this.tiles[new Vector2(j, i)] = new Tile(j * 32, i * 32, 32, 32, element[i][j]);
                 }
             }
         })

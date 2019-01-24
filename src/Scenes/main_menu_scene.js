@@ -42,7 +42,7 @@ class MainMenuScene {
     }
 
     update(dt)
-    {/*
+    {
       //Add to our time to flash
       this.timeTillFlash += dt;
   
@@ -51,7 +51,7 @@ class MainMenuScene {
       {
         this.timeTillFlash = 0;
         this.drawIndicator = !this.drawIndicator; //Flip the bool
-      }*/
+      }
     }
 
     //Input handle
@@ -129,8 +129,10 @@ class MainMenuScene {
     ctx.save(); //Save the ctx
     ctx.fillstyle = "#000000";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    this.menuButtons.setFrame(this.buttonIndex);
+    if(this.drawIndicator)
+        this.menuButtons.setFrame(this.buttonIndex);
+    else
+        this.menuButtons.setFrame(0);
     this.menuButtons.draw();
     this.title.draw();
 
