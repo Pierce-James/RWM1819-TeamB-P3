@@ -64,18 +64,9 @@ class Player {
     //Call this when the player dies
     spawnPlayer()
     {
-        if(this.lives <= 0)
-        {
-            this.alive = false;
-            this.deathSprite.animating = true;
-        }
-        else
-        {
-            this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
-            this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
-            this.collider.setPosition(this.position.x, this.position.y);
-            this.moveDirection = new Vector2(-1, 0);
-        }
+        this.alive = false;
+        this.deathSprite.animating = true;
+        this.deathSprite.animationPlayedOnce = false;
     }
 
     powerUp()
@@ -114,7 +105,19 @@ class Player {
         else
         {
             if(this.deathSprite.animationPlayedOnce === false)
+            {
                 this.deathSprite.draw(this.position.x, this.position.y);
+            }
+            else if(this.lives > 0)
+            {
+                this.alive = true;
+                this.deathSprite.animating = false;
+                this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
+                this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
+                this.collider.setPosition(this.position.x, this.position.y);
+                this.moveDirection = new Vector2(-1, 0);
+            }
+
         }
         ctx.restore();
         this.pm.render();
