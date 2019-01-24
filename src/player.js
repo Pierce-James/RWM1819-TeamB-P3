@@ -46,6 +46,7 @@ class Player {
         this.wrapMap.set(this.wrapAroundPositions[2].toString(), this.wrapAroundPositions[0]);
         this.wrapMap.set(this.wrapAroundPositions[3].toString(), this.wrapAroundPositions[1]);
         this.alive = true;
+        this.resetingAfterDeath = true;
     }
 
     ifInWrapPosition()
@@ -110,6 +111,7 @@ class Player {
             }
             else if(this.lives > 0)
             {
+                this.resetingAfterDeath = true;
                 this.alive = true;
                 this.deathSprite.animating = false;
                 this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);

@@ -21,6 +21,8 @@ class GameScene {
     audioOptions.manager.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
     audioOptions.manager.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
 
+    this.startPlayTimer = false;
+    this.playerHitTimer = 1.5;
     this.playerHit = false;
   }
   
@@ -36,10 +38,32 @@ class GameScene {
     audioOptions.manager.stopAudio();
   }
 
+  beginDelay(dt)
+  {
+    if(this.player.resetingAfterDeath && this.playerHit === false)
+    {
+      this.playerHitTimer -= dt;
+
+      return true;
+    }
+    return false;
+  }
+
   update(dt) {
     
+    //Checks if the beginDelay is not currently happening
+    if(this.beginDelay(dt))
+    {
+      //If the delay timer has reached 0, resume the game
+      if(this.playerHitTimer <= 0)
+      {
+        this.startPlayTimer = false;
+        this.player.resetingAfterDeath = false;
+        this.player.pS.animating = true;
+      }
+    }
 
-    if(this.tileMap.isLoaded) //Only update if the tilemap is ready
+    else if(this.tileMap.isLoaded) //Only update if the tilemap is ready
     {
       //Only update the ghosts if the player has no lives left
       if(this.player.lives > 0 && this.player.alive)
@@ -69,10 +93,7 @@ class GameScene {
               this.player.lives--;
               this.player.spawnPlayer();
               this.botBar.lives--;
-              for(let g of this.ghosts)
-              {
-                g.spawn();
-              }
+              this.playerHitTimer = 1.5;
               this.playerHit = true;
             }
           }
@@ -86,6 +107,7 @@ class GameScene {
           {
             ghost.spawn();
           }
+          this.startPlayTimer = true;
           this.playerHit = false;
       }
     }
