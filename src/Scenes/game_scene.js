@@ -2,31 +2,39 @@
 class GameScene {
   constructor() {
     //Add game objects here, player, ghosts etc.
-    this.player = new Player();
     this.tileMap = new Tilemap("src/tilemap.json");
-    this.testGhost = new Ghost("Follow", 100, 160, this.tileMap);
+
+    this.player = new Player(32, 32, this.tileMap);
+    this.isActive = false;
+    this.blinkyGhost = new Ghost("Blinky", 384, 416, this.tileMap, new Vector2(25,1)); //Scatters to top right
+    this.pinkyGhost = new Ghost("Pinky", 448, 416, this.tileMap, new Vector2(1,1)); //Scatters to top left
+    this.clydeGhost = new Ghost("Clyde", 448, 384, this.tileMap, new Vector2(1,29)); //Scatters to bottom left
 
     this.topBar = new topUI();
     this.botBar = new bottomUI();
   }
 
+  start(){
+    this.isActive = true;
+  }
+
+  
+  stop(){
+    this.isActive = false;
+  }
+
   update(dt) {
    
-    this.testGhost.update(dt);
-    this.player.update(dt);
+    if(this.tileMap.isLoaded) //Only update if the tilemap is ready
+    {
+      this.blinkyGhost.update(dt, this.player);
+      this.pinkyGhost.update(dt, this.player);
+      this.clydeGhost.update(dt, this.player)
+      this.player.update(dt);
 
-    if (Collision.CircleVsCircle(this.player.collider, this.testGhost.collider) === true)
-    { 
-      //Check if player has powerup
-      //Kill either ghost or player
-      if (this.player.isPoweredUp)
+      if (Collision.CircleVsCircle(this.player.collider, this.blinkyGhost.collider))
       {
-        //this.testGhost.die();
-      }
-      else
-      {
-        this.lives--;
-        //Respawn;
+        //Decrement player health
       }
     }
   }
@@ -40,7 +48,9 @@ class GameScene {
     //Draw using ctx
     this.tileMap.render(ctx);
     this.player.render(ctx);
-    this.testGhost.draw(ctx);
+    this.blinkyGhost.draw(ctx);
+    this.pinkyGhost.draw(ctx);
+    this.clydeGhost.draw(ctx);
 
     this.topBar.draw();
     this.botBar.draw();

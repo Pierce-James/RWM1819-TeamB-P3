@@ -63,4 +63,11 @@ class bottomUI{
             this.fruits[j].draw(rightSide, 0, this.UICanvas);
         }
     }
+
+    updateLives(lives){
+        this.lives = lives;
+    }
+    updateFruits(collectedFruits){
+        //add fruits to the list here
+    }
 }
