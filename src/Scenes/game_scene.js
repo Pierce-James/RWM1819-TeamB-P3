@@ -32,6 +32,10 @@ class GameScene {
   stop(){
     this.isActive = false;
     audioOptions.manager.stopAudio();
+    var top = document.getElementById("Top of UI");
+    top.parentNode.removeChild(top);
+    var bottom = document.getElementById("Bottom of UI");
+    bottom.parentNode.removeChild(bottom);
   }
 
   update(dt) {
@@ -76,6 +80,10 @@ class GameScene {
 
   handleInput(input)
   {
+    if(this.player.lives <= 0)
+    {
+      return "this.mManager.setCurrentScene('Scoreboard')";
+    }
     this.player.handleInput(input);
   }
 
