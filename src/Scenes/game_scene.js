@@ -98,8 +98,10 @@ class GameScene {
               audioOptions.manager.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
               this.player.spawnPlayer();
+              this.player.pS.setFrame(0);
               this.botBar.lives--;
               this.playerHitTimer = 1.5;
+              this.player.pS.animating = false;
               this.playerHit = true;
             }
           }

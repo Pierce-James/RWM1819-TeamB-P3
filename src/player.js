@@ -23,7 +23,7 @@ class Player {
         
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
-        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8, 50)
+        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, false, 8, 50)
 
         var img = new Image(320, 32);
         img.src = "./ASSETS/SPRITES/Pacman_death_72.png";
@@ -67,6 +67,7 @@ class Player {
     {
         this.alive = false;
         this.deathSprite.animating = true;
+        this.pS.animating = false;
         this.deathSprite.animationPlayedOnce = false;
     }
 
@@ -128,7 +129,7 @@ class Player {
     drawRotated(angle, ctx)
     {
         ctx.translate(this.position.x + 16, this.position.y + 16);
-        ctx.rotate(angle * Math.PI /180);
+        ctx.rotate((this.alive === false ? angle + 90 : angle) * Math.PI /180);
         ctx.translate((this.position.x + 16) * -1, (this.position.y + 16) * -1);
     }
 
