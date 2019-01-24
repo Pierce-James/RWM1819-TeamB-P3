@@ -32,6 +32,7 @@ class Game {
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.addScene("Options", new OptionsScene());
+    this.mManager.addScene("Pause Scene", new PauseScene());
     this.mManager.setCurrentScene("Main Menu");
     document.body.style.backgroundColor = "#000000";
     this.mManager.current.value.start();

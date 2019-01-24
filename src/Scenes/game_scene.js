@@ -16,11 +16,16 @@ class GameScene {
     this.topBar = new topUI();
     this.botBar = new bottomUI();
 
+<<<<<<< Updated upstream
     var canv = document.getElementById("mycanvas");
     this.ctx = canv.getContext("2d");
 
     this.cameraSystem = new CameraSystem(canv, this.topBar.UICanvas);
     this.cameraSystem.setFocus(this.player.position);
+=======
+    document.addEventListener("keyup", this.keyUp.bind(this));
+    this.keyPressed = false;
+>>>>>>> Stashed changes
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
     audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
@@ -31,10 +36,19 @@ class GameScene {
     this.playerHitTimer = 1.5;
     this.playerHit = false;
   }
+
+  keyUp(e)
+  {
+    if(e.code === "Escape")
+    {
+      this.keyPressed = true;
+    }
+  }
   
 
   start(){
     this.isActive = true;
+    this.keyPressed = false;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
     this.ctx.save();
     if(retro === false)
@@ -151,11 +165,24 @@ class GameScene {
 
   handleInput(input)
   {
+<<<<<<< Updated upstream
     if(this.player.lives <= 0)
     {
       return "this.mManager.setCurrentScene('Scoreboard')";
     }
     this.player.handleInput(input);
+=======
+    if(this.isActive)
+    {
+      this.player.handleInput(input);
+
+      if(this.keyPressed)
+      {
+        return "this.mManager.setCurrentScene('Pause Scene')";
+      }
+      
+    }
+>>>>>>> Stashed changes
   }
 
   draw(ctx) {

@@ -16,13 +16,13 @@ class Pellet
 
     draw(ctx)
     {
-        //ctx.save();
+        ctx.save();
         
         //ctx.fillRect(this.x, this.y, this.width, this.height)
         this.pellet.draw();
-        //ctx.fillStyle = "green";
+        ctx.fillStyle = "black";
       //  ctx.fillRect(this.x, this.y, this.width, this.height)
-       // ctx.restore();
+        ctx.restore();
     }
 
 }

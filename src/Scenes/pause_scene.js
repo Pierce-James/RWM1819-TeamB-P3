@@ -30,9 +30,16 @@ class PauseScene{
 
     handleInput(input)
     {
+        console.log("???????")
         if(this.isActive === true)
         {
+            console.log(input)
+            if(input.current.Space)
+            { 
+                return "this.mManager.setCurrentScene('Game Scene')";
+            }
             if(this.exitPressed)
+
             {
                 this.exitPressed = false;
                 switch(this.buttonIndex)
@@ -47,7 +54,7 @@ class PauseScene{
 
     keyDown() 
     {
-
+        console.log("yaasss");
         if(this.isActive === true)
         {
             if(this.keyPressed === false)
@@ -95,9 +102,6 @@ class PauseScene{
         }   
     }
 
-
-
-
     update() 
     {
 
@@ -113,17 +117,10 @@ class PauseScene{
       ctx.fillStyle = "#FFFFFF"; //Set to blue text
       ctx.font = "60px Joystix";
   
-      ctx.fillText("Pause", 1280 / 2, 50);
-
+      ctx.fillText("Pause", 1280 / 2, 200);
       ctx.font = "30px Joystix";
-
       ctx.fillText(this.pause[0], 1280 / 2, 500);
-
       ctx.fillText(this.pause[1], 1280 / 2, 600);
-  
       ctx.restore(); //Restore it
-    }
-
-
-    
+    } 
 }
