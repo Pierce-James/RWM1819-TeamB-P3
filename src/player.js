@@ -69,6 +69,7 @@ class Player {
     {
         this.alive = false;
         this.deathSprite.animating = true;
+        this.isPoweredUp = false;
         this.pS.animating = false;
         this.deathSprite.animationPlayedOnce = false;
     }
@@ -101,6 +102,7 @@ class Player {
     endPowerUp()
     {
         this.ghostEatenPoints = 100;
+        this.isPoweredUp = false;
     }
 
     render(ctx, input)
