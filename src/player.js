@@ -199,10 +199,11 @@ class Player {
                     this.halt = 0;
                     this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
                     this.gridPosition.plusEquals(this.moveDirection);
+
                 }
             }
             //Set collider position every frame
-            this.collider.setPosition(this.x, this.y);
+            this.collider.setPosition(this.position.x, this.position.y);
 
             this.pm.update();
         }

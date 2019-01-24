@@ -41,10 +41,9 @@ class GameScene {
       this.pinkyGhost.update(dt, this.player);
       this.clydeGhost.update(dt, this.player)
       this.inkyGhost.update(dt, this.player);
-
-
       this.player.update(dt);
 
+      //Check collision with blinky
       if (Collision.CircleVsCircle(this.player.collider, this.blinkyGhost.collider))
       {
         if (this.player.isPoweredUp)
@@ -62,6 +61,30 @@ class GameScene {
         if (this.player.isPoweredUp)
         {
           this.pinkyGhost.alive = false;
+        }
+        else
+        {
+          this.player.lives--;
+        }
+      }
+
+      if (Collision.CircleVsCircle(this.player.collider, this.clydeGhost.collider))
+      {
+        if (this.player.isPoweredUp)
+        {
+          this.clydeGhost.alive = false;
+        }
+        else
+        {
+          this.player.lives--;
+        }
+      }
+
+      if (Collision.CircleVsCircle(this.player.collider, this.inkyGhost.collider))
+      {
+        if(this.player.isPoweredUp)
+        {
+          this.inkyGhost.alive = false;
         }
         else
         {
