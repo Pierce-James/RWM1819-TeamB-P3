@@ -2,20 +2,12 @@ class Player {
 
     constructor(x, y, grid)
     {
-        this.x = x;
-        this.y = y;
         this.image = new Image();
-        this.width = 32;
-        this.height = 32;
-        this.up = false;
-        this.down = false;
-        this.left = false;
-        this.right = false;
+
         this.velocity = new Vector2(0,0);
         //Create circle collider
-        this.position = new Vector2(this.x,this.y);
-        this.collider = new CollisionCircle(this.position.x, this.position.y, this.width / 2);
-        this.load();
+        this.position = new Vector2(x, y);
+        this.collider = new CollisionCircle(this.position.x, this.position.y, 16);
         this.frameIndex = 0;
        
         this.loop = true;
@@ -40,11 +32,17 @@ class Player {
 
         this.gridPosition = new Vector2(this.position.x/ 32, this.position.y /32);
         this.gridRef = grid;
+        
+        //Daryl's stuff, dont delete
     }
 
-    load()
+    //Call this when the player dies
+    spawnPlayer()
     {
-        this.image.src = "./ASSETS/SPRITES/Pacman72.png"
+    }
+
+    powerUp()
+    {
 
     }
 
@@ -52,114 +50,47 @@ class Player {
     {
         ctx.save();
 
-            if(this.moveDirection.x === 1)
-            {
-                ctx.translate(this.position.x + (this.width/2), this.position.y + (this.height /2));
-                ctx.rotate(0 * Math.PI /180);
-                ctx.translate((this.position.x + (this.width/2)) * -1, (this.position.y + (this.height /2)) * -1);
-            }
-       
-            if(this.moveDirection.y === -1)
-            {
-                ctx.translate(this.position.x + (this.width/2), this.position.y + (this.height /2));
-                ctx.rotate(270 * Math.PI /180);
-                ctx.translate((this.position.x + (this.width/2)) * -1, (this.position.y + (this.height /2)) * -1);
-            }
+        //Draw pac man rotated depending on the direction he is moving in
+        if(this.moveDirection.y === 1){ this.drawRotated(90, ctx); }
+        else if(this.moveDirection.x === -1){ this.drawRotated(180, ctx); }
+        else if(this.moveDirection.x === 1){ this.drawRotated(0, ctx); }
+        else if(this.moveDirection.y === -1){ this.drawRotated(270, ctx); }
 
-            if(this.moveDirection.y === +1)
-            {
-                ctx.translate(this.position.x + (this.width/2), this.position.y + (this.height /2));
-                ctx.rotate(90 * Math.PI /180);
-                ctx.translate((this.position.x + (this.width/2)) * -1, (this.position.y + (this.height /2)) * -1);
-            }
+        //Draw pacman sprite
+        this.pS.draw(this.position.x, this.position.y);
+        ctx.restore();
+        this.pm.render();
+    }
 
-            if(this.moveDirection.x === -1)
-            {
-                ctx.translate(this.position.x + (this.width/2), this.position.y + (this.height /2));
-                ctx.rotate(180 * Math.PI /180);
-                ctx.translate((this.position.x + (this.width/2)) * -1, (this.position.y + (this.height /2)) * -1);
-            }
+    drawRotated(angle, ctx)
+    {
+        ctx.translate(this.position.x + 16, this.position.y + 16);
+        ctx.rotate(angle * Math.PI /180);
+        ctx.translate((this.position.x + 16) * -1, (this.position.y + 16) * -1);
+    }
 
-            this.pS.draw(this.position.x, this.position.y);
-            ctx.restore();
-            this.pm.render();
-      //ctx.drawImage(this.image, 0,0,32,32, this.position.x, this.position.y, this.width, this.height, true, 5);
+    //Spawns a projectile
+    spawnProjectile(direction)
+    {
+        let p = new Projectile("bullet", "simple");
+        p.setPosition(this.position.x, this.position.y);
+        p.setSpeed(3);
+        p.setVelocity(direction.x, direction.y);
+        this.pm.addProjectile(p);
+        this.pm.fireProjectiles();
     }
 
     handleInput(input)
     {
-        if(input.isButtonPressed("ArrowUp"))
-        {
-                if(this.canMoveUp())
-                {         
-                    this.moveDirection = new Vector2(0,-1);       
-               }       
-        }
+        if(input.isButtonPressed("ArrowUp") && this.canMoveUp()){this.moveDirection = new Vector2(0,-1);  }
+        if(input.isButtonPressed("ArrowDown") && this.canMoveDown()){this.moveDirection = new Vector2(0,1);  }
+        if(input.isButtonPressed("ArrowLeft") && this.canMoveLeft()){this.moveDirection = new Vector2(-1,0);  }
+        if(input.isButtonPressed("ArrowRight") && this.canMoveRight()){this.moveDirection = new Vector2(1,0);  }
 
-        if(input.isButtonPressed("ArrowDown"))
+        if (input.isButtonPressed("Space"))
         {
-                if(this.canMoveDown())
-                {
-                     this.moveDirection = new Vector2(0,+1);
-               }   
+            this.spawnProjectile(this.moveDirection);
         }
-
-        if(input.isButtonPressed("ArrowLeft"))
-        {
-                if(this.canMoveLeft())
-                {
-                    this.moveDirection = new Vector2(-1,0);
-               }   
-        }
-
-        if(input.isButtonPressed("ArrowRight"))
-        {
-                if(this.canMoveRight())
-                {
-                    this.moveDirection = new Vector2(+1,0);
-               }   
-        }
-
-         if (input.isButtonPressed("Space"))
-         {
-             //Right
-             if (this.moveDirection.x === 1)
-             {
-                let p = new Projectile("bullet", "simple");
-                p.setPosition(this.position.x, this.position.y);
-                p.setSpeed(3);
-                p.setVelocity(1, 0);
-                this.pm.addProjectile(p);
-                this.pm.fireProjectiles();
-             } //Left
-             else if (this.moveDirection.x === -1)
-             {
-                let p = new Projectile("bullet", "simple");
-                p.setPosition(this.position.x, this.position.y);
-                p.setSpeed(3);
-                p.setVelocity(-1, 0);
-                this.pm.addProjectile(p);
-                this.pm.fireProjectiles();
-             } //Down
-             else if (this.moveDirection.y === 1)
-             {
-                let p = new Projectile("bullet", "simple");
-                p.setPosition(this.position.x, this.position.y);
-                p.setSpeed(3);
-                p.setVelocity(0, 1);
-                this.pm.addProjectile(p);
-                this.pm.fireProjectiles();
-             } //Up
-             else if (this.moveDirection.y === -1)
-             {
-                let p = new Projectile("bullet", "simple");
-                p.setPosition(this.position.x, this.position.y);
-                p.setSpeed(3);
-                p.setVelocity(0, -1);
-                this.pm.addProjectile(p);
-                this.pm.fireProjectiles();
-             }
-         }
     }
 
         update(dt)
@@ -169,42 +100,26 @@ class Player {
             if(this.halt >= this.speed)
             {
                 let canMove = false;
+
+                //If we can move in the direction we have set to move in, then set the bool as true
+                if((this.moveDirection.x === 1 && this.canMoveRight())
+                || (this.moveDirection.y === -1 && this.canMoveUp())
+                || (this.moveDirection.y === 1 && this.canMoveDown())
+                || this.moveDirection.x === -1 && this.canMoveLeft())
+                {
+                    canMove = true;
+                }
                 
-                if(this.moveDirection.x === 1 &&
-                    this.canMoveRight())
-                    {
-                        canMove = true;
-                    }
-                
-                if(this.moveDirection.y === -1 &&
-                    this.canMoveUp())
-                    {
-                        canMove = true;
-                    }
-           
-                if(this.moveDirection.y === +1 &&
-                    this.canMoveDown())
-                    {
-                        canMove = true;
-                    }
-            
-                if(this.moveDirection.x === -1 &&
-                    this.canMoveLeft())
-                    {
-                        canMove = true;
-                    }
-            
+                //If we can move, move
                 if(canMove)
                 {
-                    this.halt = 0;
-                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
-                    this.gridPosition.plusEquals(this.moveDirection);
-
+                    this.halt = 0; //Reset move timer
+                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
+                    this.gridPosition.plusEquals(this.moveDirection); //Update grid position
+                    this.collider.setPosition(this.position.x, this.position.y); //Update collider position
                 }
             }
-            //Set collider position every frame
-            this.collider.setPosition(this.position.x, this.position.y);
-
+            //Update the projectile manager
             this.pm.update();
         }
 
@@ -224,10 +139,12 @@ class Player {
         canMoveDown()
         {
             if(this.gridPosition.y + 1 < 31)
-            {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false)
+            {   
+                //If it isnt a wall and it isnt the ghost spawn area then we can move down
+                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false
+                && this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].ID !== 98)
                 {
-                return true;
+                    return true;
                 }
             }
             return false;
