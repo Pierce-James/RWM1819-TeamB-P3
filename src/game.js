@@ -27,8 +27,8 @@ class Game {
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.addScene("Options", new OptionsScene());
     this.mManager.addScene("Main Menu", new MainMenuScene());
-   // this.mManager.addScene("Pause", new PauseScene());
-    this.mManager.setCurrentScene("Game Scene");
+
+    this.mManager.setCurrentScene("Main Menu");
     this.mManager.current.value.start();
     document.body.style.backgroundColor = "#000000";
 
