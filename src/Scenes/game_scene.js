@@ -37,7 +37,15 @@ class GameScene {
     this.isActive = true;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
     this.ctx.save();
-    //this.cameraSystem.Zoom(2);
+    if(retro === false)
+    {
+      this.cameraSystem.Zoom(2);
+      var canv = document.getElementById("mycanvas");
+      var canvCentre = new Vector2(canv.width/2, canv.height/2);
+      var offset = new Vector2(this.player.position.x-canvCentre.x, this.player.position.y-canvCentre.y);
+      this.cameraSystem.Pan(offset.x, -offset.y);
+
+    }
   }
 
   
@@ -141,7 +149,10 @@ class GameScene {
 
   draw(ctx) {
     //Draw using ctx
-    //this.cameraSystem.draw();
+    if(retro === false)
+    {
+      this.cameraSystem.draw();
+    }
     this.tileMap.render(ctx);
     for(let ghost of this.ghosts)
     {

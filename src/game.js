@@ -6,7 +6,7 @@
   'SHOOT':'Space'
 }*/
 var audioOptions = {'volume':75};
-var retro = false;
+var retro = true;
 
 class Game {
   constructor() {
