@@ -13,20 +13,31 @@ class Player {
         this.right = false;
         this.velocity = new Vector2(0,0);
         //Create circle collider
-        this.collider = new CollisionCircle(this.x, this.y, this.width);
+        this.position = new Vector2(this.x,this.y);
+        this.collider = new CollisionCircle(this.position.x, this.position.y, this.width / 2);
         this.load();
         this.frameIndex = 0;
        
         this.loop = true;
-
-       // this.wall = type;
-
+        this.live = 5;
+        //Power up state
+        this.isPoweredUp = false;
         this.moveDistance = 32;
         this.moveDirection = new Vector2(0,0);
         this.speed = .4;
-          
         this.halt = .4;
-        this.position = new Vector2(this.x,this.y);
+        
+   
+
+        this.p = new Projectile("bullet", "simple");
+        this.p.setPosition(this.position.x, this.position.y);
+        this.p.setSpeed(5);
+        this.p.setAngle(90);
+        this.p.setVelocity(2, 2);
+
+        this.pm = new ProjectileManager();
+        this.pm.addProjectile(this.p);
+
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
         this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8)
