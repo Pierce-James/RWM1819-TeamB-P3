@@ -5,7 +5,7 @@
   'RIGHT':'ArrowRight',
   'SHOOT':'Space'
 }*/
-var volume = 100;
+var audioOptions = {'volume':75};
 
 class Game {
   constructor() {
@@ -21,24 +21,25 @@ class Game {
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
     this.ctx.imageSmoothingEnabled = false;
+
+    audioOptions.manager = new AudioManager();
+    audioOptions.manager.init();
+
     //Creating the Menu Manager
     this.mManager = new MenuManager();
+    this.mManager.addScene("Main Menu", new MainMenuScene());
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.addScene("Options", new OptionsScene());
-    this.mManager.addScene("Main Menu", new MainMenuScene());
-
     this.mManager.setCurrentScene("Main Menu");
-    this.mManager.current.value.start();
     document.body.style.backgroundColor = "#000000";
+    this.mManager.current.value.start();
 
     this.keyboard = new Keyboard();
    
     this.pellet = new Pellet();
     this.pellet = [];
     
-    var img = new Image(256, 32);
-    img.src = "ASSETS/SPRITES/Pacman72.png";
   }
 
   run() {
