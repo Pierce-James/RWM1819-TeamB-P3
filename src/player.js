@@ -25,7 +25,7 @@ class Player {
         
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
-        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8, 50)
+        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, false, 8, 50)
 
         var img = new Image(320, 32);
         img.src = "./ASSETS/SPRITES/Pacman_death_72.png";
@@ -48,6 +48,7 @@ class Player {
         this.wrapMap.set(this.wrapAroundPositions[2].toString(), this.wrapAroundPositions[0]);
         this.wrapMap.set(this.wrapAroundPositions[3].toString(), this.wrapAroundPositions[1]);
         this.alive = true;
+        this.resetingAfterDeath = true;
     }
 
     ifInWrapPosition()
@@ -66,18 +67,10 @@ class Player {
     //Call this when the player dies
     spawnPlayer()
     {
-        if(this.lives <= 0)
-        {
-            this.alive = false;
-            this.deathSprite.animating = true;
-        }
-        else
-        {
-            this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
-            this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
-            this.collider.setPosition(this.position.x, this.position.y);
-            this.moveDirection = new Vector2(-1, 0);
-        }
+        this.alive = false;
+        this.deathSprite.animating = true;
+        this.pS.animating = false;
+        this.deathSprite.animationPlayedOnce = false;
     }
 
     checkProjectile(c2)
@@ -129,7 +122,20 @@ class Player {
         else
         {
             if(this.deathSprite.animationPlayedOnce === false)
+            {
                 this.deathSprite.draw(this.position.x, this.position.y);
+            }
+            else if(this.lives > 0)
+            {
+                this.resetingAfterDeath = true;
+                this.alive = true;
+                this.deathSprite.animating = false;
+                this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
+                this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
+                this.collider.setPosition(this.position.x, this.position.y);
+                this.moveDirection = new Vector2(-1, 0);
+            }
+
         }
         ctx.restore();
         if (this.projectileActive)
@@ -141,7 +147,7 @@ class Player {
     drawRotated(angle, ctx)
     {
         ctx.translate(this.position.x + 16, this.position.y + 16);
-        ctx.rotate(angle * Math.PI /180);
+        ctx.rotate((this.alive === false ? angle + 90 : angle) * Math.PI /180);
         ctx.translate((this.position.x + 16) * -1, (this.position.y + 16) * -1);
     }
 
