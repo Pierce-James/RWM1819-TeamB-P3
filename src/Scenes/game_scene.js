@@ -14,15 +14,23 @@ class GameScene {
 
     this.topBar = new topUI();
     this.botBar = new bottomUI();
+
+    audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
+    audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Waka.mp3");
+    audioOptions.manager.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
+    audioOptions.manager.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
   }
+  
 
   start(){
     this.isActive = true;
+    audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
   }
 
   
   stop(){
     this.isActive = false;
+    audioOptions.manager.stopAudio();
   }
 
   update(dt) {
