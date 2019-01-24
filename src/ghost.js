@@ -2,7 +2,7 @@ class Ghost
 {
   constructor(ghostType, x, y, grid, scatterTile){
     this.moveDistance = 32; //32 pixels per move
-    this.moveSpeed = .4; //Moves a cell every .3 seconds
+    this.moveSpeed = .2; //Moves a cell every .2 seconds
     this.timeTillMove = 0; //Time till the ghost can move cell
 
     this.collider = new CollisionCircle(x, y, 16); //Create collider
@@ -19,6 +19,9 @@ class Ghost
     this.timeTillScatter = 0;
 
     this.seekPath = []; //Our seek path
+    this.cornerTiles = [new Vector2(26,1), new Vector2(1,1), new Vector2(1,29), new Vector2(26,29)];
+
+    this.removeElement(this.cornerTiles, this.scatterTile);
 
     //Setting the image of the ghost
     var img = new Image(256, 32);
@@ -32,9 +35,20 @@ class Ghost
     else if(ghostType === "Inky")
       img.src = "ASSETS/SPRITES/Blue_ghost_72.png";
     this.spr = new Sprite(this.position.x, this.position.y, 32, 32, img, 32, 32, true, 4);
-    var eyeImg = new Image(256, 32);
+    var eyeImg = new Image(128, 32);
     eyeImg.src = "ASSETS/SPRITES/Eyes_72.png";
     this.eyes = new Sprite(this.position.x, this.position.y, 32, 32, eyeImg, 32, 32, false, 4);
+
+    //Powerup sprites
+    var powerUpImg = new Image(128, 32);
+    powerUpImg.src = "ASSETS/SPRITES/Blue_ghost_death_72.png"
+    this.powerUpSprite = new Sprite(this.position.x, this.position.y, 32, 32, powerUpImg, 32, 32, true, 4);
+    var powerUpEndingImg = new Image(128, 32);
+    powerUpEndingImg.src = "ASSETS/SPRITES/White_Blue_ghost_death_72.png"
+    this.powerUpEndingSprite = new Sprite(this.position.x, this.position.y, 32, 32, powerUpEndingImg, 32, 32, true, 4);
+    this.playerIsPowered = false;
+    this.blueTime = 6;
+    this.blueTimeLeft = 6;
 
     this.ghostType = ghostType;
     this.state = "Scatter"; //Start with scatter state, as the update swaps them immedaitely
@@ -52,6 +66,14 @@ class Ghost
     this.blinkyRef; //This is used by inky
   }
 
+  setBlueGhost()
+  {
+    this.playerIsPowered = true;
+    this.blueTime = 6;
+    this.blueTimeLeft = 6;
+    this.moveSpeed = .3; //Moves a cell every .2 seconds
+  }
+
   update(dt, player){
     if(this.alive && this.canMove) //If alive, do movement and set ghost eyes
     {
@@ -61,8 +83,25 @@ class Ghost
       this.checkIfGhostMoved(dt); //Check if the ghost has moved
       this.setGhostEyes(); //Set the ghost eyes sprite
 
+      //If player powered up, run to your scatter tile
+      if(this.playerIsPowered)
+      {
+        this.blueTimeLeft -= dt;
+        
+        //If there is no blue time left set ghost back to normal behaviour
+        if(this.blueTimeLeft <= 0)
+        {
+          this.playerIsPowered = false;
+          this.moveSpeed = .2; //Moves a cell every .2 seconds
+        }
+        else
+        {
+          this.blinkySeek(this.scatterTile);
+        }
+      }
+
       //Do different updates based on the ghost
-      if(this.ghostType === "Blinky"){
+      else if(this.ghostType === "Blinky"){
         this.blinkyUpdate(dt, this.playersPosition);
       }
       else if(this.ghostType === "Pinky"){
@@ -230,8 +269,6 @@ class Ghost
       aheadPos = new Vector2(targetPos.x, targetPos.y);
     }
 
-    console.log(aheadPos);
-
     //If our seek path is not populated, populate it
     this.seekPath = this.gridRef.BFS(this.gridPosition, aheadPos, 0, false);
     this.targetPos =  this.seekPath.length === 0 ? new Vector2(this.gridPosition.x, this.gridPosition.y) : this.seekPath.shift(); //Get the first element in the array, and remove it from the path
@@ -246,42 +283,36 @@ class Ghost
   pinkySeek(targetPos)
   {
     let aheadGrid = new Vector2(targetPos.x, targetPos.y);
-    // if(this.gridPosition.distance(this.playersPosition) > 4)
-    // {
-      //Loop 4 times
-      for(let i = 1; i < 5; i++)
-      {
-        let dummyGridPos = this.player.moveDirection.multiply(i).plus(this.playersPosition);
 
-        //If the position is in the grid, then check if it is a wall
-        if(dummyGridPos.x < 28 && dummyGridPos.x >= 0 && dummyGridPos.y >= 0 && dummyGridPos.y < 31)
+    //Loop 4 times
+    for(let i = 1; i < 5; i++)
+    {
+      let dummyGridPos = this.player.moveDirection.multiply(i).plus(this.playersPosition);
+
+      //If the position is in the grid, then check if it is a wall
+      if(dummyGridPos.x < 28 && dummyGridPos.x >= 0 && dummyGridPos.y >= 0 && dummyGridPos.y < 31)
+      {
+        if(this.gridRef.tiles[dummyGridPos].isCollidable === false)
         {
-          if(this.gridRef.tiles[dummyGridPos].isCollidable === false)
-          {
-            aheadGrid = dummyGridPos;
-          }
-          else
-          {
-            break;
-          }
+          aheadGrid = dummyGridPos;
+        }
+        else
+        {
+          break;
         }
       }
+    }
 
 
-      //If our seek path is not populated, populate it
-      this.seekPath = this.gridRef.BFS(this.gridPosition, aheadGrid, 0, false);
-      this.targetPos =  this.seekPath.length === 0 ? new Vector2(this.gridPosition.x, this.gridPosition.y) : this.seekPath.shift(); //Get the first element in the array, and remove it from the path
+    //If our seek path is not populated, populate it
+    this.seekPath = this.gridRef.BFS(this.gridPosition, aheadGrid, 0, false);
+    this.targetPos =  this.seekPath.length === 0 ? new Vector2(this.gridPosition.x, this.gridPosition.y) : this.seekPath.shift(); //Get the first element in the array, and remove it from the path
 
-      if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
-      else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
-      else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
-      else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
-      else {this.moveDirection = new Vector2(0, 0);}
-    // }
-    //  else
-    //  {
-    //    this.blinkySeek(this.playersPosition);
-    // }    
+    if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
+    else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
+    else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
+    else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
+    else {this.moveDirection = new Vector2(0, 0);}   
   }
 
   checkToSwapBehaviour(dt, theState, newScatterTime)
@@ -308,7 +339,7 @@ class Ghost
       this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y); //Set our grid position
       this.collider.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
       this.alive = true;
-      console.log("Eyes back at spawn");
+      this.playerIsPowered = false;
     }
     else{
       this.position.plusEquals(this.eyesVelocity.multiply(dt)); //Add the eyes velocity to the position of the ghost
@@ -437,34 +468,6 @@ class Ghost
     return false;
   }
 
-  // //Checks if the ghost must turn if their next cell is now a wall
-  // mustTurn()
-  // {
-
-  //   if(this.moveDirection.x === 1){
-  //     if(this.canMoveRight() === false){
-  //       return true;
-  //     }
-  //   }
-  //   else if(this.moveDirection.x === -1){
-  //     if(this.canMoveLeft() === false){
-  //       return true;
-  //     }
-  //   }
-  //   else if(this.moveDirection.y === -1){
-  //     if(this.canMoveUp() === false){
-  //       return true;
-  //     }
-  //   }
-  //   else if(this.moveDirection.y === 1){
-  //     if(this.canMoveDown() === false){
-  //       return true;
-  //     }
-  //   }
-
-  //   return false;
-  // }
-
   //Sets the ghosts eyes depending on the direction they are going
   setGhostEyes()
   {
@@ -490,7 +493,18 @@ class Ghost
   draw(ctx){
     if(this.alive) //If not dead, draw the ghosts body
     {
-      this.spr.draw(this.position.x, this.position.y);
+      if(this.playerIsPowered){
+        if(this.blueTimeLeft > 3){
+          this.powerUpSprite.draw(this.position.x, this.position.y);
+        }
+        else{
+          this.powerUpEndingSprite.draw(this.position.x, this.position.y);
+        }
+
+      }
+      else{
+        this.spr.draw(this.position.x, this.position.y);
+      }
     }
     this.eyes.draw(this.position.x, this.position.y); //Always draw the eyes
   }
