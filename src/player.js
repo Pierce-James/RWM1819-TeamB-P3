@@ -11,6 +11,7 @@ class Player {
         this.down = false;
         this.left = false;
         this.right = false;
+        this.position = new Vector2(this.x,this.y);
 
         //Create circle collider
         this.collider = new CollisionCircle(this.position.x, this.position.y, this.width / 2);

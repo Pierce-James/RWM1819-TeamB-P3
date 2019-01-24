@@ -2,12 +2,13 @@ class Ghost
 {
   constructor(ghostType, x, y, grid, scatterTile){
     this.moveDistance = 32; //32 pixels per move
-    this.moveSpeed = .3; //Moves a cell every .3 seconds
+    this.moveSpeed = .4; //Moves a cell every .3 seconds
     this.timeTillMove = 0; //Time till the ghost can move cell
 
     this.collider = new CollisionCircle(x, y, 16); //Create collider
     this.moveDirection = new Vector2(0,0);
     this.position = new Vector2(x, y);
+    this.spawnPosition = new Vector2(x, y);
     this.spawnGridPosition = new Vector2(x / 32, y / 32);
     this.targetPos = new Vector2(x, y);
     this.gridPosition = new Vector2(x / 32, y / 32);
@@ -46,6 +47,9 @@ class Ghost
     this.canMove = true;
     this.playersPosition = new Vector2(0,0);
     this.player = undefined;
+
+    //Not to be used by any other ghosts
+    this.blinkyRef; //This is used by inky
   }
 
   update(dt, player){
@@ -67,7 +71,9 @@ class Ghost
       else if(this.ghostType === "Clyde"){
         this.clydeUpdate(dt, this.playersPosition);
       }
-
+      else if(this.ghostType === "Inky"){
+        this.inkyUpdate(dt, this.playersPosition);
+      }
     }
     else //Else move our ghost eyes to the start position
     {
@@ -79,7 +85,7 @@ class Ghost
   {
     if(this.state === "Chase")
     {
-      if(this.gridPosition.distance(playersPosition) < 8)
+      if(this.gridPosition.distance(playersPosition) < 4)
       {
         this.timeTillScatter = this.scatterTime;
       }
@@ -91,9 +97,27 @@ class Ghost
     }
     else if(this.state === "Scatter")
     {
-      if(this.checkToSwapBehaviour(dt, "Chase", 5))
+      if(this.checkToSwapBehaviour(dt, "Chase", 8))
       {
         this.blinkySeek(playersPosition);
+      }
+    }
+  }
+  inkyUpdate(dt, playersPosition)
+  {
+    //If we are chasing the player
+    if(this.state === "Chase")
+    {
+      if(this.checkToSwapBehaviour(dt, "Scatter", 2))
+      {
+        this.blinkySeek(this.scatterTile);
+      }
+    }
+    else if(this.state === "Scatter")
+    {
+      if(this.checkToSwapBehaviour(dt, "Chase", 8))
+      {
+        this.inkySeek(playersPosition);
       }
     }
   }
@@ -151,16 +175,83 @@ class Ghost
     else {this.moveDirection = new Vector2(0, 0);}
   }
 
+  inkySeek(targetPos)
+  {
+    let aheadPos = new Vector2(targetPos.x, targetPos.y);
+    let foundTile = true;
+
+    //Loop 2 times
+    for(let i = 1; i < 3; i++)
+    {
+      let dummyGridPos = this.player.moveDirection.multiply(i).plus(this.playersPosition);
+
+      //If the position is in the grid, then check if it is a wall
+      if(dummyGridPos.x < 28 && dummyGridPos.x >= 0 && dummyGridPos.y >= 0 && dummyGridPos.y < 31)
+      {
+        if(this.gridRef.tiles[dummyGridPos].isCollidable === false)
+        {
+          aheadPos = new Vector2(dummyGridPos.x, dummyGridPos.y); //Get the non grid position of the tile
+          //console.log("Moving ahead of player");
+        }
+        else
+        {
+          foundTile = false;
+          break;
+        }
+      }
+    }
+
+    if(foundTile) //If we foud 2 tiles infront of the player
+    {
+      //Distance to 2 tiles infront of player from blinky
+      let dfptb = this.blinkyRef.gridPosition.distance(aheadPos);
+      let diff = this.blinkyRef.gridPosition.minus(aheadPos);
+      let normalised = diff.normalise().multiply(dfptb * 2); //Get two times the distance from blinky to the the tile
+      let gPos = new Vector2(parseInt(normalised.x), parseInt(normalised.y)); //Get grid position of the line from blinky to two times the distance to the tile
+
+      //If gPos is in the grid
+      if(gPos.x < 28 && gPos.x >= 0 && gPos.y >= 0 && gPos.y < 31)
+      {
+        if(this.gridRef.tiles[gPos].isCollidable === false)
+        {
+          //console.log("Position is in the grid and isnt a wall");
+          aheadPos = new Vector2(gPos.x, gPos.y);
+        }
+        else
+        {
+          aheadPos = new Vector2(targetPos.x, targetPos.y);
+        }
+
+      }
+
+    }
+    else
+    {
+      aheadPos = new Vector2(targetPos.x, targetPos.y);
+    }
+
+    console.log(aheadPos);
+
+    //If our seek path is not populated, populate it
+    this.seekPath = this.gridRef.BFS(this.gridPosition, aheadPos, 0, false);
+    this.targetPos =  this.seekPath.length === 0 ? new Vector2(this.gridPosition.x, this.gridPosition.y) : this.seekPath.shift(); //Get the first element in the array, and remove it from the path
+
+    if(this.targetPos.x > this.gridPosition.x) {this.moveDirection = new Vector2(1, 0);}
+    else if(this.targetPos.x < this.gridPosition.x) {this.moveDirection = new Vector2(-1, 0);}
+    else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
+    else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
+
+  }
+
   pinkySeek(targetPos)
   {
-    if(this.gridPosition.distance(this.playersPosition) > 4)
-    {
-      let aheadGrid = new Vector2(targetPos.x, targetPos.y);
-
+    let aheadGrid = new Vector2(targetPos.x, targetPos.y);
+    // if(this.gridPosition.distance(this.playersPosition) > 4)
+    // {
       //Loop 4 times
       for(let i = 1; i < 5; i++)
       {
-        let dummyGridPos = (new Vector2(1,0)).multiply(i).plus(this.playersPosition);
+        let dummyGridPos = this.player.moveDirection.multiply(i).plus(this.playersPosition);
 
         //If the position is in the grid, then check if it is a wall
         if(dummyGridPos.x < 28 && dummyGridPos.x >= 0 && dummyGridPos.y >= 0 && dummyGridPos.y < 31)
@@ -186,11 +277,11 @@ class Ghost
       else if(this.targetPos.y > this.gridPosition.y) {this.moveDirection = new Vector2(0, 1);}
       else if(this.targetPos.y < this.gridPosition.y) {this.moveDirection = new Vector2(0, -1);}
       else {this.moveDirection = new Vector2(0, 0);}
-    }
-    else
-    {
-      this.blinkySeek(this.playersPosition);
-    }
+    // }
+    //  else
+    //  {
+    //    this.blinkySeek(this.playersPosition);
+    // }    
   }
 
   checkToSwapBehaviour(dt, theState, newScatterTime)
@@ -212,11 +303,12 @@ class Ghost
 
   deadUpdate(dt)
   {
-    if(this.position.distance(this.targetPos) <= 8){ //If our eyes are now back at our spawn position, reset the ghost
-      this.position = new Vector2(this.targetPos.x, this.targetPos.y); //Set our position
+    if(this.position.distance(this.spawnPosition) <= 8){ //If our eyes are now back at our spawn position, reset the ghost
+      this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y); //Set our position
       this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y); //Set our grid position
-      this.collider.position = new Vector2(this.targetPos.x, this.targetPos.y);
+      this.collider.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
       this.alive = true;
+      console.log("Eyes back at spawn");
     }
     else{
       this.position.plusEquals(this.eyesVelocity.multiply(dt)); //Add the eyes velocity to the position of the ghost
@@ -228,18 +320,30 @@ class Ghost
 
     if(this.timeTillMove >= this.moveSpeed)
     {
-      this.timeTillMove = 0;
-      //Add our movement to the ghost
-      this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
-      this.collider.position = new Vector2(this.position.x, this.position.y);
-      this.gridPosition.plusEquals(this.moveDirection);
-
-      this.timesMoved++; //Add to our times moved
-      if(this.timesMoved >= 10)
+      let canMove = false;
+      if((this.moveDirection.x === 1 && this.canMoveRight()) 
+      || (this.moveDirection.x === -1 && this.canMoveLeft())
+      || (this.moveDirection.y === 1 && this.canMoveDown())
+      || (this.moveDirection.y === -1 && this.canMoveUp()))
       {
-        //this.die();
-        this.timesMoved = 0;
-      } 
+        canMove = true;
+      }
+
+      if(canMove)
+      {
+        this.timeTillMove = 0;
+        //Add our movement to the ghost
+        this.position.plusEquals(this.moveDirection.multiply(this.moveDistance));
+        this.collider.position = new Vector2(this.position.x, this.position.y);
+        this.gridPosition.plusEquals(this.moveDirection);
+
+        this.timesMoved++; //Add to our times moved
+        if(this.timesMoved >= 10)
+        {
+          //this.die();
+          this.timesMoved = 0;
+        } 
+      }
       
       if(this.ghostType === "Blinky")
       {
@@ -249,9 +353,18 @@ class Ghost
       {
         this.pinkySeek(this.state === "Chase" ? this.playersPosition : this.scatterTile);
       }
-      if(this.ghostType === "Clyde")
+      else if(this.ghostType === "Clyde")
       {
         this.blinkySeek(this.state === "Chase" ? this.playersPosition : this.scatterTile);
+      }
+      else if(this.ghostType === "Inky")
+      {
+        if(this.state === "Chase"){
+          this.inkySeek(this.playersPosition);
+        }
+        else{
+          this.blinkySeek(this.scatterTile);
+        }
       }
     }
   }
@@ -272,57 +385,57 @@ class Ghost
     this.timeTillMove = 0;
   }
 
-  // canMoveUp()
-  // {
-  //   if(this.gridPosition.y - 1 >= 0)
-  //   {
-  //     if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y - 1)].isCollidable === false)
-  //     {
-  //       return true;
-  //     }
-  //   }
+  canMoveUp()
+  {
+    if(this.gridPosition.y - 1 >= 0)
+    {
+      if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y - 1)].isCollidable === false)
+      {
+        return true;
+      }
+    }
 
-  //   return false;
-  // }
+    return false;
+  }
 
-  // canMoveDown()
-  // {
-  //   if(this.gridPosition.y + 1 < 31)
-  //   {
-  //     if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false)
-  //     {
-  //       return true;
-  //     }
-  //   }
+  canMoveDown()
+  {
+    if(this.gridPosition.y + 1 < 31)
+    {
+      if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false)
+      {
+        return true;
+      }
+    }
 
-  //   return false;
-  // }
+    return false;
+  }
 
-  // canMoveLeft()
-  // {
-  //   if(this.gridPosition.x - 1 >= 0)
-  //   {
-  //     if(this.gridRef.tiles[new Vector2(this.gridPosition.x - 1, this.gridPosition.y)].isCollidable === false)
-  //     {
-  //       return true;
-  //     }
-  //   }
+  canMoveLeft()
+  {
+    if(this.gridPosition.x - 1 >= 0)
+    {
+      if(this.gridRef.tiles[new Vector2(this.gridPosition.x - 1, this.gridPosition.y)].isCollidable === false)
+      {
+        return true;
+      }
+    }
 
-  //   return false;
-  // }
+    return false;
+  }
 
-  // canMoveRight()
-  // {
-  //   if(this.gridPosition.x + 1 < 31)
-  //   {
-  //     if(this.gridRef.tiles[new Vector2(this.gridPosition.x + 1, this.gridPosition.y)].isCollidable === false)
-  //     {
-  //       return true;
-  //     }
-  //   }
+  canMoveRight()
+  {
+    if(this.gridPosition.x + 1 < 28)
+    {
+      if(this.gridRef.tiles[new Vector2(this.gridPosition.x + 1, this.gridPosition.y)].isCollidable === false)
+      {
+        return true;
+      }
+    }
 
-  //   return false;
-  // }
+    return false;
+  }
 
   // //Checks if the ghost must turn if their next cell is now a wall
   // mustTurn()
