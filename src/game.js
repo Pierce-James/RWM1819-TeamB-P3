@@ -36,6 +36,10 @@ class Game {
     this.mManager.current.value.start();
 
     this.keyboard = new Keyboard();
+   
+    this.pellet = new Pellet();
+    this.pellet = [];
+    
   }
 
   run() {
@@ -73,7 +77,7 @@ class Game {
 
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+   // this.pellet.draw();
 
     this.mManager.draw(this.ctx);
     //Call draw on the menu manager and pass the context over as canvas is not needed?
