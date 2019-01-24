@@ -80,7 +80,7 @@ class Ghost
   {
     this.isVunerable = true;
     this.blueTime = 6;
-    this.blueTimeLeft = 16;
+    this.blueTimeLeft = 6;
     this.moveSpeed = .3; //Moves a cell every .2 seconds
     this.targetPos = new Vector2(this.scatterTile.x, this.scatterTile.y);
   }
