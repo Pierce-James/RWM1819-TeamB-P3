@@ -180,7 +180,7 @@ class Player {
         {
             if(this.gridPosition.y - 1 >= 0)
             {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y +1)].isCollidable === false)
+                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y -1)].isCollidable === false)
                 {
                         return true;
                 }
