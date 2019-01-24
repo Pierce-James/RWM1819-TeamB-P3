@@ -31,7 +31,7 @@ class Tile{
 
     loadImages()
     {
-        for (let i = 0; i < 21; i++)
+        for (let i = 0; i < 25; i++)
         {
             this.images.push(new Image());
         }
@@ -57,6 +57,10 @@ class Tile{
         this.images[18].src = "./ASSETS/SPRITES/tile_19.png";
         this.images[19].src = "./ASSETS/SPRITES/tile_20.png";
         this.images[20].src = "./ASSETS/SPRITES/tile_21.png";
+        this.images[21].src = "./ASSETS/SPRITES/tile_22.png";
+        this.images[22].src = "./ASSETS/SPRITES/tile_23.png";
+        this.images[23].src = "./ASSETS/SPRITES/tile_24.png";
+        this.images[24].src = "./ASSETS/SPRITES/tile_25.png";
     }
 
     render(ctx)

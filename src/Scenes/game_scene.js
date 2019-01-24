@@ -17,7 +17,7 @@ class GameScene {
     this.botBar = new bottomUI();
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
-    audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Waka.mp3");
+    audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
     audioOptions.manager.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
     audioOptions.manager.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
 
@@ -36,6 +36,10 @@ class GameScene {
   stop(){
     this.isActive = false;
     audioOptions.manager.stopAudio();
+    var top = document.getElementById("Top of UI");
+    top.parentNode.removeChild(top);
+    var bottom = document.getElementById("Bottom of UI");
+    bottom.parentNode.removeChild(bottom);
   }
 
   beginDelay(dt)
@@ -87,9 +91,11 @@ class GameScene {
             {
               this.topBar.score += this.player.eatGhost();
               ghost.die();
+              audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
             }
             else if(this.playerHit === false)
             {
+              audioOptions.manager.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
               this.player.spawnPlayer();
               this.botBar.lives--;
@@ -115,6 +121,10 @@ class GameScene {
 
   handleInput(input)
   {
+    if(this.player.lives <= 0)
+    {
+      return "this.mManager.setCurrentScene('Scoreboard')";
+    }
     this.player.handleInput(input);
   }
 
