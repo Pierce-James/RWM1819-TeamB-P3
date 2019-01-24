@@ -24,7 +24,8 @@ class Player {
         this.moveDistance = 32;
         this.moveDirection = new Vector2(0,0);
         this.speed = .4;
-        this.halt = 0;
+          
+        this.halt = .4;
         this.position = new Vector2(this.x,this.y);
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
