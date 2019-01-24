@@ -19,9 +19,17 @@ class Ghost
     this.timeTillScatter = 0;
 
     this.seekPath = []; //Our seek path
-    this.cornerTiles = [new Vector2(26,1), new Vector2(1,1), new Vector2(1,29), new Vector2(26,29)];
+    this.otherCornerTiles = [new Vector2(26,1), new Vector2(1,1), new Vector2(1,29), new Vector2(26,29)];
+    this.cornerTiles = [];
 
-    this.removeElement(this.cornerTiles, this.scatterTile);
+    for(var i in this.otherCornerTiles)
+    {
+      if(!this.otherCornerTiles[i].equals(this.scatterTile))
+      {
+        this.cornerTiles.push(this.otherCornerTiles[i]);
+      }
+    }
+
 
     //Setting the image of the ghost
     var img = new Image(256, 32);
@@ -46,7 +54,7 @@ class Ghost
     var powerUpEndingImg = new Image(128, 32);
     powerUpEndingImg.src = "ASSETS/SPRITES/White_Blue_ghost_death_72.png"
     this.powerUpEndingSprite = new Sprite(this.position.x, this.position.y, 32, 32, powerUpEndingImg, 32, 32, true, 4);
-    this.playerIsPowered = false;
+    this.isVunerable = false;
     this.blueTime = 6;
     this.blueTimeLeft = 6;
 
@@ -64,14 +72,17 @@ class Ghost
 
     //Not to be used by any other ghosts
     this.blinkyRef; //This is used by inky
+
+    this.setBlueGhost();
   }
 
   setBlueGhost()
   {
-    this.playerIsPowered = true;
+    this.isVunerable = true;
     this.blueTime = 6;
-    this.blueTimeLeft = 6;
+    this.blueTimeLeft = 16;
     this.moveSpeed = .3; //Moves a cell every .2 seconds
+    this.targetPos = new Vector2(this.scatterTile.x, this.scatterTile.y);
   }
 
   update(dt, player){
@@ -84,19 +95,37 @@ class Ghost
       this.setGhostEyes(); //Set the ghost eyes sprite
 
       //If player powered up, run to your scatter tile
-      if(this.playerIsPowered)
+      if(this.isVunerable)
       {
         this.blueTimeLeft -= dt;
         
         //If there is no blue time left set ghost back to normal behaviour
         if(this.blueTimeLeft <= 0)
         {
-          this.playerIsPowered = false;
+          this.isVunerable = false;
           this.moveSpeed = .2; //Moves a cell every .2 seconds
         }
-        else
+        else //Else seek to our corner of the map
         {
-          this.blinkySeek(this.scatterTile);
+          if(this.gridPosition.distance(player.gridPosition) < 4 
+          && this.gridPosition.distance(this.targetPos) < 4)
+          { 
+            let corner = new Vector2(999,999);
+            let closest = 9999;
+            //Choose  new target
+            for(let tile of this.cornerTiles)
+            {
+              if(tile.distance(this.gridPosition) < closest)
+              {
+                closest = tile.distance(this.gridPosition);
+                corner = tile;
+              }
+            }
+
+            this.targetPos = new Vector2(corner.x, corner.y);
+          }
+
+          this.blinkySeek(this.targetPos);
         }
       }
 
@@ -339,7 +368,7 @@ class Ghost
       this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y); //Set our grid position
       this.collider.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
       this.alive = true;
-      this.playerIsPowered = false;
+      this.isVunerable = false;
     }
     else{
       this.position.plusEquals(this.eyesVelocity.multiply(dt)); //Add the eyes velocity to the position of the ghost
@@ -412,7 +441,6 @@ class Ghost
     this.alive = false;
     this.targetPos = new Vector2(this.spawnGridPosition.x * 32, this.spawnGridPosition.y * 32); //Set our target position to the spawn location
     this.eyesVelocity = this.targetPos.minus(this.position).normalise().multiply(this.eyesSpeed);
-
     this.timeTillMove = 0;
   }
 
@@ -493,7 +521,7 @@ class Ghost
   draw(ctx){
     if(this.alive) //If not dead, draw the ghosts body
     {
-      if(this.playerIsPowered){
+      if(this.isVunerable){
         if(this.blueTimeLeft > 3){
           this.powerUpSprite.draw(this.position.x, this.position.y);
         }
