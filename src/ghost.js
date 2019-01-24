@@ -493,5 +493,6 @@ class Ghost
       this.spr.draw(this.position.x, this.position.y);
     }
     this.eyes.draw(this.position.x, this.position.y); //Always draw the eyes
+    this.collider.draw(ctx);
   }
 }
