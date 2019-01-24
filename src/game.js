@@ -27,13 +27,13 @@ class Game {
 
     //Creating the Menu Manager
     this.mManager = new MenuManager();
+    this.mManager.addScene("Main Menu", new MainMenuScene());
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.addScene("Options", new OptionsScene());
-    this.mManager.addScene("Main Menu", new MainMenuScene());
     this.mManager.setCurrentScene("Main Menu");
-    this.mManager.current.value.start();
     document.body.style.backgroundColor = "#000000";
+    this.mManager.current.value.start();
 
     this.keyboard = new Keyboard();
   }
