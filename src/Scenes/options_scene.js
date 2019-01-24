@@ -140,15 +140,15 @@ class OptionsScene{
       ctx.fillStyle = "#FFFFFF"; //Set to blue text
       ctx.font = "60px Joystix";
   
-      ctx.fillText("options", 1280 / 2, 50);
+      ctx.fillText("options", 850, 100);
 
       ctx.font = "30px Joystix";
 
-      ctx.fillText(this.options[0], 1280 / 2, 500);
+      ctx.fillText(this.options[0], 850, 600);
 
-      ctx.fillText(this.options[1], 1280 / 2, 600);
+      ctx.fillText(this.options[1], 850, 700);
 
-      ctx.fillText(this.options[2], 1280 / 2, 700);
+      ctx.fillText(this.options[2], 850, 800);
   
       ctx.restore(); //Restore it
     }

@@ -31,7 +31,7 @@ class Tile{
 
     loadImages()
     {
-        for (let i = 0; i < 18; i++)
+        for (let i = 0; i < 21; i++)
         {
             this.images.push(new Image());
         }
@@ -53,6 +53,10 @@ class Tile{
         this.images[14].src = "./ASSETS/SPRITES/tile_15.png";
         this.images[15].src = "./ASSETS/SPRITES/tile_16.png";
         this.images[16].src = "./ASSETS/SPRITES/tile_17.png";
+        this.images[17].src = "./ASSETS/SPRITES/tile_18.png";
+        this.images[18].src = "./ASSETS/SPRITES/tile_19.png";
+        this.images[19].src = "./ASSETS/SPRITES/tile_20.png";
+        this.images[20].src = "./ASSETS/SPRITES/tile_21.png";
     }
 
     render(ctx)
@@ -85,10 +89,6 @@ class Tile{
       else{
         ctx.drawImage(this.images[this.ID - 1], this.x, this.y);
       }
-
-
-
-
 
     //   if(this.isCollidable === false)
     //   {
