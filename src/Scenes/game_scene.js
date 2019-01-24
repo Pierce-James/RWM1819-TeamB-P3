@@ -16,6 +16,12 @@ class GameScene {
     this.topBar = new topUI();
     this.botBar = new bottomUI();
 
+    var canv = document.getElementById("mycanvas");
+    this.ctx = canv.getContext("2d");
+
+    this.cameraSystem = new CameraSystem(canv, this.topBar.UICanvas);
+    this.cameraSystem.setFocus(this.player.position);
+
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
     audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
     audioOptions.manager.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
@@ -30,6 +36,16 @@ class GameScene {
   start(){
     this.isActive = true;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
+    this.ctx.save();
+    if(retro === false)
+    {
+      this.cameraSystem.Zoom(2);
+      var canv = document.getElementById("mycanvas");
+      var canvCentre = new Vector2(canv.width/2, canv.height/2);
+      var offset = new Vector2(this.player.position.x-canvCentre.x, this.player.position.y-canvCentre.y);
+      this.cameraSystem.Pan(offset.x, -offset.y);
+
+    }
   }
 
   
@@ -40,6 +56,7 @@ class GameScene {
     top.parentNode.removeChild(top);
     var bottom = document.getElementById("Bottom of UI");
     bottom.parentNode.removeChild(bottom);
+    this.ctx.restore();
   }
 
   beginDelay(dt)
@@ -143,6 +160,10 @@ class GameScene {
 
   draw(ctx) {
     //Draw using ctx
+    if(retro === false)
+    {
+      this.cameraSystem.draw();
+    }
     this.tileMap.render(ctx);
     for(let ghost of this.ghosts)
     {
