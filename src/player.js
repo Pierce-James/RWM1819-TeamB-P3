@@ -11,39 +11,88 @@ class Player {
         this.frameIndex = 0;
        
         this.loop = true;
-        this.lives = 5;
+        this.lives = 3;
         //Power up state
         this.isPoweredUp = false;
         this.moveDistance = 32;
-        this.moveDirection = new Vector2(1,0);
-        this.speed = .2;
+        this.moveDirection = new Vector2(-1,0);
+        this.speed = .185;
         this.halt = .2;
-        
-        this.p = new Projectile("bullet", "simple");
-        this.p.setPosition(this.position.x, this.position.y);
-        this.p.setSpeed(3);
-        this.p.setVelocity(2, 0);
 
         this.pm = new ProjectileManager();
         
         var image = new Image(256,32);
         image.src = "./ASSETS/SPRITES/Pacman72.png"
-        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8)
+        this.pS = new Sprite(this.position.x, this.position.y, 32, 32, image, 32,32, true, 8, 50)
 
-        this.gridPosition = new Vector2(this.position.x/ 32, this.position.y /32);
+        var img = new Image(320, 32);
+        img.src = "./ASSETS/SPRITES/Pacman_death_72.png";
+        this.deathSprite = new Sprite(this.position.x, this.position.y, 32, 32, img, 32, 32, false, 10, 200);
+
+        this.gridPosition = new Vector2(this.position.x / 32, this.position.y /32);
         this.gridRef = grid;
         
         //Daryl's stuff, dont delete
+        this.spawnGridPosition = new Vector2(this.position.x / 32, this.position.y /32);
+        this.spawnPosition = new Vector2(this.position.x, this.position.y);
+        this.poweredUpTime = 6; // Powered up for 6 seconds
+        this.ghostEatenPoints = 100; //This is double when a ghost is eaten, it will reward 200 for the first one
+
+        this.wrapAroundPositions = [new Vector2(0, 14), new Vector2(0, 19), new Vector2(27, 14), new Vector2(27,19)];
+        //Set which positions we wrap around to
+        this.wrapMap = new Map();
+        this.wrapMap.set(this.wrapAroundPositions[0].toString(), this.wrapAroundPositions[2]);
+        this.wrapMap.set(this.wrapAroundPositions[1].toString(), this.wrapAroundPositions[3]);
+        this.wrapMap.set(this.wrapAroundPositions[2].toString(), this.wrapAroundPositions[0]);
+        this.wrapMap.set(this.wrapAroundPositions[3].toString(), this.wrapAroundPositions[1]);
+        this.alive = true;
+    }
+
+    ifInWrapPosition()
+    {
+        for(let pos of this.wrapAroundPositions)
+        {
+            if(pos.equals(this.gridPosition))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //Call this when the player dies
     spawnPlayer()
     {
+        if(this.lives <= 0)
+        {
+            this.alive = false;
+            this.deathSprite.animating = true;
+        }
+        else
+        {
+            this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
+            this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y);
+            this.collider.setPosition(this.position.x, this.position.y);
+            this.moveDirection = new Vector2(-1, 0);
+        }
     }
 
     powerUp()
     {
+        this.isPoweredUp = true;
+        this.poweredUpTime = 6; //Ste our time to be powered up to 6
+    }
 
+    eatGhost()
+    {
+        this.ghostEatenPoints *= 2; //Double the points for consective ghosts
+        return this.ghostEatenPoints; //Return the doubled points
+    }
+
+    endPowerUp()
+    {
+        this.ghostEatenPoints = 100;
     }
 
     render(ctx, input)
@@ -56,8 +105,17 @@ class Player {
         else if(this.moveDirection.x === 1){ this.drawRotated(0, ctx); }
         else if(this.moveDirection.y === -1){ this.drawRotated(270, ctx); }
 
-        //Draw pacman sprite
-        this.pS.draw(this.position.x, this.position.y);
+        //Draw pacman sprite if alive
+        if(this.alive)
+        {
+            this.pS.draw(this.position.x, this.position.y);
+        }
+        //Draw pacman death sprite if dead
+        else
+        {
+            if(this.deathSprite.animationPlayedOnce === false)
+                this.deathSprite.draw(this.position.x, this.position.y);
+        }
         ctx.restore();
         this.pm.render();
     }
@@ -82,21 +140,37 @@ class Player {
 
     handleInput(input)
     {
-        if(input.isButtonPressed("ArrowUp") && this.canMoveUp()){this.moveDirection = new Vector2(0,-1);  }
-        if(input.isButtonPressed("ArrowDown") && this.canMoveDown()){this.moveDirection = new Vector2(0,1);  }
-        if(input.isButtonPressed("ArrowLeft") && this.canMoveLeft()){this.moveDirection = new Vector2(-1,0);  }
-        if(input.isButtonPressed("ArrowRight") && this.canMoveRight()){this.moveDirection = new Vector2(1,0);  }
-
-        if (input.isButtonPressed("Space"))
+        if(this.alive)
         {
-            this.spawnProjectile(this.moveDirection);
+            if(input.isButtonPressed("ArrowUp") && this.canMoveUp()){this.moveDirection = new Vector2(0,-1);  }
+            if(input.isButtonPressed("ArrowDown") && this.canMoveDown()){this.moveDirection = new Vector2(0,1);  }
+            if(input.isButtonPressed("ArrowLeft") && this.canMoveLeft()){this.moveDirection = new Vector2(-1,0);  }
+            if(input.isButtonPressed("ArrowRight") && this.canMoveRight()){this.moveDirection = new Vector2(1,0);  }
+
+            if (input.isButtonPressed("Space"))
+            {
+                this.spawnProjectile(this.moveDirection);
+            }
         }
     }
 
-        update(dt)
+    update(dt)
+    {
+        if(this.alive)
         {
             this.halt += dt;
             
+            //Handle powerup
+            if(this.isPoweredUp)
+            {
+                this.poweredUpTime -= dt;
+
+                if(this.poweredUpTime <= 0)
+                {
+                    this.endPowerUp();
+                }
+            }
+
             if(this.halt >= this.speed)
             {
                 let canMove = false;
@@ -105,7 +179,8 @@ class Player {
                 if((this.moveDirection.x === 1 && this.canMoveRight())
                 || (this.moveDirection.y === -1 && this.canMoveUp())
                 || (this.moveDirection.y === 1 && this.canMoveDown())
-                || this.moveDirection.x === -1 && this.canMoveLeft())
+                || this.moveDirection.x === -1 && this.canMoveLeft()
+                || this.ifInWrapPosition()) //If our position is in the wrap around positions
                 {
                     canMove = true;
                 }
@@ -114,65 +189,87 @@ class Player {
                 if(canMove)
                 {
                     this.halt = 0; //Reset move timer
-                    this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
-                    this.gridPosition.plusEquals(this.moveDirection); //Update grid position
+
+                    if(this.ifInWrapPosition())
+                    {
+                        if((this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 14)))
+                        || (this.moveDirection.x === 1 && this.gridPosition.equals(new Vector2(27, 19)))
+                        || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 14)))
+                        || (this.moveDirection.x === -1 && this.gridPosition.equals(new Vector2(0, 19))))
+                        {
+                            let wrapPos = this.wrapMap.get(this.gridPosition.toString());
+                            this.gridPosition = new Vector2(wrapPos.x, wrapPos.y);
+                            this.position = new Vector2(this.gridPosition.x * 32, this.gridPosition.y * 32);
+                        }
+                        else
+                        {
+                            this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
+                            this.gridPosition.plusEquals(this.moveDirection); //Update grid position
+                        }
+                    }
+                    else
+                    {
+                        this.position.plusEquals(this.moveDirection.multiply(this.moveDistance)); //Add to the position
+                        this.gridPosition.plusEquals(this.moveDirection); //Update grid position
+                    }
                     this.collider.setPosition(this.position.x, this.position.y); //Update collider position
                 }
             }
             //Update the projectile manager
             this.pm.update();
         }
+    }
 
-        canMoveUp()
+    canMoveUp()
+    {
+        if(this.gridPosition.y - 1 >= 0)
         {
-            if(this.gridPosition.y - 1 >= 0)
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y -1)].isCollidable === false)
             {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y -1)].isCollidable === false)
-                {
-                        return true;
-                }
-            
-            }
-            return false;
-        }
-
-        canMoveDown()
-        {
-            if(this.gridPosition.y + 1 < 31)
-            {   
-                //If it isnt a wall and it isnt the ghost spawn area then we can move down
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false
-                && this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].ID !== 98)
-                {
                     return true;
-                }
             }
-            return false;
+        
         }
+        return false;
+    }
 
-        canMoveLeft()
-        {
-            if(this.gridPosition.x - 1 >= -0)
+    canMoveDown()
+    {
+        if(this.gridPosition.y + 1 < 31)
+        {   
+            //If it isnt a wall and it isnt the ghost spawn area then we can move down
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].isCollidable === false
+            && this.gridRef.tiles[new Vector2(this.gridPosition.x, this.gridPosition.y + 1)].ID !== 98)
             {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x -1, this.gridPosition.y)].isCollidable == false)
-                {
-                    return true;
-                }
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 
-        canMoveRight()
+    canMoveLeft()
+    {
+        if(this.gridPosition.x - 1 >= 0)
         {
-            if(this.gridPosition.x + 1 < 31)
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x -1, this.gridPosition.y)].isCollidable == false)
             {
-                if(this.gridRef.tiles[new Vector2(this.gridPosition.x +1, this.gridPosition.y)].isCollidable === false)
-                {
-                    return true;
-                }
+                return true;
             }
-            return false;
         }
+        return false;
+    }
+
+    canMoveRight()
+    {
+        if(this.gridPosition.x + 1 < 28)
+        {
+            if(this.gridRef.tiles[new Vector2(this.gridPosition.x +1, this.gridPosition.y)].isCollidable === false)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 if (typeof module !== "undefined") {

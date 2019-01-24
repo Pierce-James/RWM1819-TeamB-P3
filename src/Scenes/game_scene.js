@@ -4,13 +4,14 @@ class GameScene {
     //Add game objects here, player, ghosts etc.
     this.tileMap = new Tilemap("src/tilemap.json");
 
-    this.player = new Player(32, 32, this.tileMap);
+    this.player = new Player(448, 640, this.tileMap);
     this.isActive = false;
     this.blinkyGhost = new Ghost("Blinky", 384, 416, this.tileMap, new Vector2(26,1)); //Scatters to top right
     this.pinkyGhost = new Ghost("Pinky", 448, 416, this.tileMap, new Vector2(1,1)); //Scatters to top left
     this.clydeGhost = new Ghost("Clyde", 448, 384, this.tileMap, new Vector2(1,29)); //Scatters to bottom left
     this.inkyGhost = new Ghost("Inky", 448, 384, this.tileMap, new Vector2(26,29)); //Scatters to bottom right
     this.inkyGhost.blinkyRef = this.blinkyGhost; //Set the reference to the blinky ghost
+    this.ghosts = [this.blinkyGhost, this.clydeGhost, this.inkyGhost, this.pinkyGhost];
 
     this.topBar = new topUI();
     this.botBar = new bottomUI();
@@ -37,58 +38,37 @@ class GameScene {
    
     if(this.tileMap.isLoaded) //Only update if the tilemap is ready
     {
-      this.blinkyGhost.update(dt, this.player);
-      this.pinkyGhost.update(dt, this.player);
-      this.clydeGhost.update(dt, this.player)
-      this.inkyGhost.update(dt, this.player);
+
+      //Only update the ghosts if the player has no lives left
+      if(this.player.lives > 0)
+      {
+        for(let ghost of this.ghosts)
+        {
+          ghost.update(dt, this.player);
+        }
+      }
+      
       this.player.update(dt);
 
-      //Check collision with blinky
-      if (Collision.CircleVsCircle(this.player.collider, this.blinkyGhost.collider))
+      //Only check for collisions if the player has lives
+      if(this.player.lives > 0)
       {
-        if (this.player.isPoweredUp)
+        for(let ghost of this.ghosts)
         {
-          this.blinkyGhost.alive = false;
-        }
-        else
-        {
-          this.player.lives--;
-        }
-      }
-
-      if (Collision.CircleVsCircle(this.player.collider, this.pinkyGhost.collider))
-      {
-        if (this.player.isPoweredUp)
-        {
-          this.pinkyGhost.alive = false;
-        }
-        else
-        {
-          this.player.lives--;
-        }
-      }
-
-      if (Collision.CircleVsCircle(this.player.collider, this.clydeGhost.collider))
-      {
-        if (this.player.isPoweredUp)
-        {
-          this.clydeGhost.alive = false;
-        }
-        else
-        {
-          this.player.lives--;
-        }
-      }
-
-      if (Collision.CircleVsCircle(this.player.collider, this.inkyGhost.collider))
-      {
-        if(this.player.isPoweredUp)
-        {
-          this.inkyGhost.alive = false;
-        }
-        else
-        {
-          this.player.lives--;
+          if (Collision.CircleVsCircle(this.player.collider, ghost.collider))
+          {
+            if (this.player.isPoweredUp)
+            {
+              this.topBar.score += this.player.eatGhost();
+              ghost.die();
+            }
+            else
+            {
+              this.player.lives--;
+              this.player.spawnPlayer();
+              this.botBar.lives--;
+            }
+          }
         }
       }
     }
@@ -102,11 +82,12 @@ class GameScene {
   draw(ctx) {
     //Draw using ctx
     this.tileMap.render(ctx);
+    for(let ghost of this.ghosts)
+    {
+      ghost.draw(ctx);
+    }
+
     this.player.render(ctx);
-    this.blinkyGhost.draw(ctx);
-    this.pinkyGhost.draw(ctx);
-    this.clydeGhost.draw(ctx);
-    this.inkyGhost.draw(ctx);
 
     this.topBar.draw();
     this.botBar.draw();

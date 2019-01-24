@@ -14,7 +14,7 @@ class Sprite{
         this.currentFrame = 0;
         this.lastFrame = Date.now();
         this.frameTime = FrameInterval;
-        
+        this.animationPlayedOnce = false;
     }
 
     draw(x = this.x, y = this.y, canvas = document.getElementById("mycanvas")){
@@ -27,6 +27,7 @@ class Sprite{
             if(this.currentFrame >= this.numFrames)
             {
                 this.currentFrame = 0;
+                this.animationPlayedOnce = true;
             }
 
         }  
