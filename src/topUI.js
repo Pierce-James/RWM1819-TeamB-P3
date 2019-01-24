@@ -13,7 +13,7 @@ class topUI{
     this.UICanvas = document.createElement('canvas');
     this.UICanvas.id = 'topCanvas';
     this.UICanvas.style.top = this.uiDivTop.style.top;
-    this.UICanvas.width = window.innerWidth;
+    this.UICanvas.width = 896;
     this.UICanvas.height = window.innerHeight;
     this.uiDivTop.appendChild(this.UICanvas);
 
@@ -42,10 +42,10 @@ class topUI{
         ctx.font = "30px Joystix";
     
     
-        ctx.fillText("score", 1280 / 2, 50);
+        ctx.fillText("score", 360, 50);
         ctx.fillText("1up", 100, 50);
         
-        ctx.fillText(this.score.toString(10).padStart(9, '0'), 1280 / 2, 75);
+        ctx.fillText(this.score.toString(10).padStart(9, '0'), 360, 75);
         
         ctx.restore(); //Restore it
 

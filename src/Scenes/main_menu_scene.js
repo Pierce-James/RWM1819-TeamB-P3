@@ -4,7 +4,7 @@ class MainMenuScene {
         var buttonIMG = new Image(2000, 230);
         buttonIMG.src = "ASSETS/SPRITES/Menu_buttons.png";
 
-        this.menuButtons = new Sprite(0, 200, 500, 230, buttonIMG, window.innerWidth, window.innerHeight, false, 4);
+        this.menuButtons = new Sprite(190, 500, 500, 230, buttonIMG, 500*2.5, 230*2.5, false, 4);
         this.buttonIndex = 1;
         this.menuButtons.setFrame(this.buttonIndex);
 
