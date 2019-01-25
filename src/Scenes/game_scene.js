@@ -202,6 +202,7 @@ class GameScene {
     {
       this.tileMap.fruit.pickUp();
       this.topBar.score += this.tileMap.fruit.value;
+      fruitSound.playAudio('eatFruit', false, audioOptions.volume/100);
     }
   }
 
