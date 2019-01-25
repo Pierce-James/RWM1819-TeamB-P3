@@ -43,8 +43,7 @@ class bottomUI{
     this.lifeIcons.push(life5);
 
     this.fruits = [];
-    this.fruits.push(new Fruit(1,2, 'cherry'));
-
+    this.fruits.push(new Fruit(1,2));
     }
 
     draw(){

@@ -126,13 +126,13 @@ class GameScene {
         {
           if (Collision.CircleVsCircle(this.player.collider, ghost.collider))
           {
-            if (this.player.isPoweredUp)
+            if (this.player.isPoweredUp && ghost.alive)
             {
               this.topBar.score += this.player.eatGhost();
               ghost.die();
               audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
             }
-            else if(this.playerHit === false)
+            else if(this.playerHit === false && ghost.alive)
             {
               audioOptions.manager.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
@@ -167,6 +167,53 @@ class GameScene {
           this.startPlayTimer = true;
           this.playerHit = false;
       }
+    }
+
+    this.checkForPickup();
+  }
+
+  checkForPickup()
+  {
+    //Checks if player is on the super pellets grid position, if so, pick it up
+    for(let pel of this.tileMap.superPellets)
+    {
+      //If the pellet isnt already picked up, pick it up
+      if(pel.pickedUp === false && 
+        this.player.gridPosition.x === pel.gridPosition.x &&
+        this.player.gridPosition.y === pel.gridPosition.y)
+      {
+        pel.pickUp();
+        this.player.powerUp(); //Set the player as powered up
+
+        for(let g of this.ghosts)
+        {
+          g.setBlueGhost();
+        }
+
+        this.topBar.score += pel.value; //Add the value of the pellet to the score
+        break;
+      }
+    }
+
+    for(let pel of this.tileMap.pellets)
+    {
+      //If the pellet isnt already picked up, pick it up
+      if(pel.pickedUp === false && 
+        this.player.gridPosition.x === pel.gridPosition.x &&
+        this.player.gridPosition.y === pel.gridPosition.y)
+      {
+        pel.pickUp();
+        this.topBar.score += pel.value;
+        break;
+      }
+    }
+
+    if(this.tileMap.fruit.pickedUp === false &&
+      this.player.gridPosition.x === this.tileMap.fruit.gridPosition.x &&
+      this.player.gridPosition.y === this.tileMap.fruit.gridPosition.y)
+    {
+      this.tileMap.fruit.pickUp();
+      this.topBar.score += this.tileMap.fruit.value;
     }
   }
 

@@ -5,6 +5,7 @@ class Tile{
         this.y = y;
         this.width = w;
         this.height = h;
+        this.position = new Vector2(x, y);
 
         this.ID = id;
         this.images = [];
@@ -78,17 +79,17 @@ class Tile{
       }
       else if(this.ID === 99)
       {
-        ctx.save();
+        //ctx.save();
         //Draw super pellet
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-        ctx.restore();
+        //ctx.fillStyle = "red";
+        //ctx.fillRect(this.x, this.y, this.width, this.height)
+        //ctx.restore();
       }
       else if (this.ID === 97)
       {
         //Draw fruit
-        ctx.fillStyle = "yellow";
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        //ctx.fillStyle = "yellow";
+        //ctx.fillRect(this.x, this.y, this.width, this.height)
       }
       else if (this.ID === 0)
       {

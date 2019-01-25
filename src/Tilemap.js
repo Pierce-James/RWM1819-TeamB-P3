@@ -10,6 +10,11 @@ class Tilemap {
         this.isLoaded = false;
         this.GetJSON();
         this.pellets = [];
+<<<<<<< HEAD
+=======
+        this.superPellets = [];
+        this.fruit = undefined;
+>>>>>>> f1d7d43e382432d9be456363990c04815de8b94a
     }
 
     GetJSON()
@@ -137,6 +142,13 @@ class Tilemap {
             this.pellets[element].draw(ctx);
        
         });
+
+        Object.keys(this.superPellets).forEach(element =>{
+            this.superPellets[element].draw(ctx);
+       
+        });
+
+        this.fruit.draw();
     }
 
     IsLoaded()
@@ -149,8 +161,15 @@ class Tilemap {
         Object.keys(this.tiles).forEach(element =>{
             if (this.tiles[element].ID === 0)
             {
-                this.pellets.push(new Pellet(this.tiles[element].x + 11 , this.tiles[element].y + 11 ));
-              //  this.pellets
+                this.pellets.push(new Pellet(this.tiles[element].position));
+            }
+            else if(this.tiles[element].ID === 99)
+            {
+                this.superPellets.push(new SuperPellet(this.tiles[element].position));
+            }
+            else if(this.tiles[element].ID === 97)
+            {
+                this.fruit = new Fruit(this.tiles[element].position.x, this.tiles[element].position.y);
             }
         })
     }
