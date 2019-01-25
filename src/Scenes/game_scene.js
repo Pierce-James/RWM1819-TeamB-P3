@@ -24,7 +24,8 @@ class GameScene {
     this.keyPressed = false;
 
     this.cameraSystem.setFocus(this.player.position, 185);
-
+    document.addEventListener("keyup", this.keyUp.bind(this));
+    this.keyPressed = false;
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
     audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
@@ -47,7 +48,6 @@ class GameScene {
 
   start(){
     this.isActive = true;
-    this.keyPressed = false;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
     var top = document.getElementById("Top of UI");
     top.style.display = "block";
@@ -206,6 +206,7 @@ class GameScene {
     if(this.tileMap.fruit.pickedUp === false &&
       this.player.gridPosition.x === this.tileMap.fruit.gridPosition.x &&
       this.player.gridPosition.y === this.tileMap.fruit.gridPosition.y)
+    if(this.player.lives <= 0)
     {
       this.tileMap.fruit.pickUp();
       this.topBar.score += this.tileMap.fruit.value;

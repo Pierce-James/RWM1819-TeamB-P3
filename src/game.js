@@ -36,8 +36,12 @@ class Game {
     this.mManager.setCurrentScene("Main Menu");
     document.body.style.backgroundColor = "#000000";
     this.mManager.current.value.start();
-
-    this.keyboard = new Keyboard();   
+  
+    this.keyboard = new Keyboard();
+   
+    //this.pellet = new Pellet();
+    this.pellet = [];
+    
   }
 
   run() {
@@ -67,8 +71,10 @@ class Game {
 
     if(returned !== undefined)
     {
-      console.log(returned);
+      
+
       this.mManager.current.value.stop();
+    
       if(returned === "this.mManager.setCurrentScene('Scoreboard')" && this.mManager.current.key === "Game Scene")
       {
         var scoreVal = this.mManager.current.value.topBar.score;

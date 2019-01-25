@@ -14,7 +14,7 @@ class PauseScene{
         this.keyPressed = false;
         this.exitPressed = false;
         this.wasExitPressed = false;
-        this.changeSceneStr = "this.mManager.setCurrentScene('GameScene')";
+        this.changeSceneStr = "this.mManager.setCurrentScene('Game Scene')";
         document.addEventListener("keydown", this.keyDown.bind(this));
         document.addEventListener("keyup", this.keyUp.bind(this));
         this.isActive = false;
@@ -30,13 +30,14 @@ class PauseScene{
 
     handleInput(input)
     {
-        console.log("???????")
+       
         if(this.isActive === true)
         {
             console.log(input)
             if(input.current.Space)
             { 
                 return "this.mManager.setCurrentScene('Game Scene')";
+                
             }
             if(this.exitPressed)
 
@@ -52,9 +53,8 @@ class PauseScene{
     }
 
 
-    keyDown() 
+    keyDown(e) 
     {
-        console.log("yaasss");
         if(this.isActive === true)
         {
             if(this.keyPressed === false)
@@ -81,23 +81,14 @@ class PauseScene{
         }
     }
 
-    keyUp() 
+    keyUp(e) 
     {
         if(this.isActive === true)
         {
-            if(this.isActive === true)
-            {        
-                switch(e.code){
-                case 'ArrowUp':
-                    this.keyPressed = false;
-                    break;
-                case 'ArrowDown' :
-                    this.keyPressed = false;
-                    break;
-                  //  this.enterPressed = true;
-                  //  this.keyPressed = false;
-                   
-                } 
+            
+            if(this.keyPressed.Space)
+            {
+
             }
         }   
     }
