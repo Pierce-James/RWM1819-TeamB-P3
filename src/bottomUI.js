@@ -43,7 +43,7 @@ class bottomUI{
     this.lifeIcons.push(life5);
 
     this.fruits = [];
-    this.fruits.push(new Fruit(1,2));
+    //this.fruits.push(new Fruit(1,2));
     }
 
     draw(){
@@ -59,7 +59,7 @@ class bottomUI{
         for(var j = 0; j < this.fruits.length; j++)
         {
             rightSide-=50;
-            this.fruits[j].draw(rightSide, 0, this.UICanvas);
+            this.fruits[j].uiDraw(rightSide, 0, this.UICanvas);
         }
     }
 
