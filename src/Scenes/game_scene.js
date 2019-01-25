@@ -16,16 +16,15 @@ class GameScene {
     this.topBar = new topUI();
     this.botBar = new bottomUI();
 
-<<<<<<< Updated upstream
     var canv = document.getElementById("mycanvas");
     this.ctx = canv.getContext("2d");
 
     this.cameraSystem = new CameraSystem(canv, this.topBar.UICanvas);
-    this.cameraSystem.setFocus(this.player.position);
-=======
     document.addEventListener("keyup", this.keyUp.bind(this));
     this.keyPressed = false;
->>>>>>> Stashed changes
+
+    this.cameraSystem.setFocus(this.player.position, 185);
+
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
     audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
@@ -50,6 +49,10 @@ class GameScene {
     this.isActive = true;
     this.keyPressed = false;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
+    var top = document.getElementById("Top of UI");
+    top.style.display = "block";
+    var bottom = document.getElementById("Bottom of UI");
+    bottom.style.display = "block";
     this.ctx.save();
     if(retro === false)
     {
@@ -61,15 +64,14 @@ class GameScene {
 
     }
   }
-
   
   stop(){
     this.isActive = false;
     audioOptions.manager.stopAudio();
     var top = document.getElementById("Top of UI");
-    top.parentNode.removeChild(top);
+    top.style.display = "none";
     var bottom = document.getElementById("Bottom of UI");
-    bottom.parentNode.removeChild(bottom);
+    bottom.style.display = "none";
     this.ctx.restore();
   }
 
@@ -120,13 +122,13 @@ class GameScene {
         {
           if (Collision.CircleVsCircle(this.player.collider, ghost.collider))
           {
-            if (this.player.isPoweredUp)
+            if (this.player.isPoweredUp && ghost.alive)
             {
               this.topBar.score += this.player.eatGhost();
               ghost.die();
               audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
             }
-            else if(this.playerHit === false)
+            else if(this.playerHit === false && ghost.alive)
             {
               audioOptions.manager.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
@@ -161,17 +163,58 @@ class GameScene {
           this.playerHit = false;
       }
     }
+
+    this.checkForPickup();
+  }
+
+  checkForPickup()
+  {
+    //Checks if player is on the super pellets grid position, if so, pick it up
+    for(let pel of this.tileMap.superPellets)
+    {
+      //If the pellet isnt already picked up, pick it up
+      if(pel.pickedUp === false && 
+        this.player.gridPosition.x === pel.gridPosition.x &&
+        this.player.gridPosition.y === pel.gridPosition.y)
+      {
+        pel.pickUp();
+        this.player.powerUp(); //Set the player as powered up
+
+        for(let g of this.ghosts)
+        {
+          g.setBlueGhost();
+        }
+
+        this.topBar.score += pel.value; //Add the value of the pellet to the score
+        break;
+      }
+    }
+
+    for(let pel of this.tileMap.pellets)
+    {
+      //If the pellet isnt already picked up, pick it up
+      if(pel.pickedUp === false && 
+        this.player.gridPosition.x === pel.gridPosition.x &&
+        this.player.gridPosition.y === pel.gridPosition.y)
+      {
+        pel.pickUp();
+        this.topBar.score += pel.value;
+        break;
+      }
+    }
+
+    if(this.tileMap.fruit.pickedUp === false &&
+      this.player.gridPosition.x === this.tileMap.fruit.gridPosition.x &&
+      this.player.gridPosition.y === this.tileMap.fruit.gridPosition.y)
+    {
+      this.tileMap.fruit.pickUp();
+      this.topBar.score += this.tileMap.fruit.value;
+    }
   }
 
   handleInput(input)
   {
-<<<<<<< Updated upstream
-    if(this.player.lives <= 0)
-    {
-      return "this.mManager.setCurrentScene('Scoreboard')";
-    }
-    this.player.handleInput(input);
-=======
+   
     if(this.isActive)
     {
       this.player.handleInput(input);
@@ -180,9 +223,14 @@ class GameScene {
       {
         return "this.mManager.setCurrentScene('Pause Scene')";
       }
+
+      if(this.player.lives <= 0)
+      {
+        return "this.mManager.setCurrentScene('Scoreboard')";
+      }
+     
       
     }
->>>>>>> Stashed changes
   }
 
   draw(ctx) {

@@ -75,6 +75,7 @@ class Ghost
   }
   spawn()
   {
+    this.playerIsPowered = false;
     this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y); //Set our position
     this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y); //Set our grid position
     this.collider.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
