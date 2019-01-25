@@ -21,11 +21,17 @@ class GameScene {
 
     this.cameraSystem = new CameraSystem(canv, this.topBar.UICanvas);
     this.cameraSystem.setFocus(this.player.position, 185);
+    this.fruitSound = new AudioManager();
+    this.fruitSound.init();
+    this.ghostDeathSound = new AudioManager();
+    this.ghostDeathSound.init();
+    this.DeathSound = new AudioManager();
+    this.DeathSound.init();
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
-    audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
-    audioOptions.manager.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
-    audioOptions.manager.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
+    this.fruitSound.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
+    this.ghostDeathSound.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
+    this.DeathSound.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
 
     this.startPlayTimer = false;
     this.playerHitTimer = 1.5;
@@ -35,7 +41,6 @@ class GameScene {
     this.leveledUp = false;
   }
   
-
   start(){
     this.isActive = true;
     audioOptions.manager.playAudio('gameSceneMusic', true, audioOptions.volume/100);
@@ -139,8 +144,6 @@ class GameScene {
       
       this.player.update(dt);
 
-
-
       //Only check for collisions if the player has lives
       if(this.player.lives > 0 && this.player.alive && this.pickupsLeft > 0)
       {
@@ -152,11 +155,11 @@ class GameScene {
             {
               this.topBar.score += this.player.eatGhost();
               ghost.die();
-              audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
+              this.ghostDeathSound.playAudio('killGhost', false, audioOptions.volume/100);
             }
             else if(this.playerHit === false && ghost.alive)
             {
-              audioOptions.manager.playAudio('killPacMan', false, audioOptions.volume/100);
+              this.DeathSound.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
               this.player.spawnPlayer();
               this.player.pS.setFrame(0);
@@ -169,11 +172,14 @@ class GameScene {
 
           if (this.player.checkProjectile(ghost.collider))
           {
-            this.topBar.score += this.player.eatGhost();
+            this.player.projectileActive = false;
             ghost.die();
+            this.topBar.score += this.player.eatGhost();
             audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
+            this.ghostDeathSound.playAudio('killGhost', false, audioOptions.volume/100);
             this.player.projectileActive = false;
             this.player.pm.clearProjectiles();
+            break;
           }
         }
       }
@@ -244,6 +250,7 @@ class GameScene {
       }
       this.pickupsLeft--; //Take away from pickups
       this.topBar.score += this.tileMap.fruit.value;
+      this.fruitSound.playAudio('eatFruit', false, audioOptions.volume/100);
     }
 
     //If there are no pickups left, reset the level by resetting the player and ghosts
