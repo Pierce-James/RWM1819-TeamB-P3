@@ -134,7 +134,6 @@ class Tilemap {
                 this.tiles[element].render(ctx);
               
             });
-
         }
         Object.keys(this.pellets).forEach(element =>{
             this.pellets[element].draw(ctx);
