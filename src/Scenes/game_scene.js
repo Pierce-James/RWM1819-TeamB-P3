@@ -21,11 +21,17 @@ class GameScene {
 
     this.cameraSystem = new CameraSystem(canv, this.topBar.UICanvas);
     this.cameraSystem.setFocus(this.player.position, 185);
+    this.fruitSound = new AudioManager();
+    this.fruitSound.init();
+    this.ghostDeathSound = new AudioManager();
+    this.ghostDeathSound.init();
+    this.DeathSound = new AudioManager();
+    this.DeathSound.init();
 
     audioOptions.manager.loadSoundFile('gameSceneMusic', "ASSETS/AUDIO/Waka.mp3");
-    audioOptions.manager.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
-    audioOptions.manager.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
-    audioOptions.manager.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
+    this.fruitSound.loadSoundFile('eatFruit', "ASSETS/AUDIO/Fruit.mp3");
+    this.ghostDeathSound.loadSoundFile('killGhost', "ASSETS/AUDIO/GhostDeath.mp3");
+    this.DeathSound.loadSoundFile('killPacMan', "ASSETS/AUDIO/Death.mp3");
 
     this.startPlayTimer = false;
     this.playerHitTimer = 1.5;
@@ -130,11 +136,11 @@ class GameScene {
             {
               this.topBar.score += this.player.eatGhost();
               ghost.die();
-              audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
+              this.ghostDeathSound.playAudio('killGhost', false, audioOptions.volume/100);
             }
             else if(this.playerHit === false && ghost.alive)
             {
-              audioOptions.manager.playAudio('killPacMan', false, audioOptions.volume/100);
+              this.DeathSound.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
               this.player.spawnPlayer();
               this.player.pS.setFrame(0);
@@ -151,6 +157,8 @@ class GameScene {
             ghost.die();
             this.topBar.score += this.player.eatGhost();
             audioOptions.manager.playAudio('killGhost', false, audioOptions.volume/100);
+            this.ghostDeathSound.playAudio('killGhost', false, audioOptions.volume/100);
+            this.player.projectileActive = false;
             this.player.pm.clearProjectiles();
             break;
           }
@@ -214,6 +222,7 @@ class GameScene {
     {
       this.tileMap.fruit.pickUp();
       this.topBar.score += this.tileMap.fruit.value;
+      fruitSound.playAudio('eatFruit', false, audioOptions.volume/100);
     }
   }
 
