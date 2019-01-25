@@ -78,9 +78,22 @@ class Player {
 
     resetPlayer()
     {
-        this.alive = false;
+        this.alive = true;
         this.isPoweredUp = false;
         this.pS.animating = false;
+        this.gridPosition.x = this.spawnGridPosition.x;
+        this.gridPosition.y = this.spawnGridPosition.y;
+        this.position.x = this.spawnPosition.x;
+        this.position.y = this.spawnPosition.y;
+        this.moveDirection.x = -1;
+        this.moveDirection.y = 0;
+        this.lives = 3;
+        this.poweredUpTime = 6; // Powered up for 6 seconds
+        this.ghostEatenPoints = 100;
+        this.resetingAfterDeath = true;
+        this.deathSprite.animating = false;
+        this.deathSprite.setFrame(0);
+        this.deathSprite.animationPlayedOnce = false;
     }
 
     checkProjectile(c2)

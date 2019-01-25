@@ -74,6 +74,12 @@ class Game {
   
         this.mManager.scenes.get("Scoreboard").addToScoreBoard(scoreVal);
       }
+
+      //If we are in the main menu and we are going to the game scene, then call restart
+      else if(returned === "this.mManager.setCurrentScene('Game Scene')" && this.mManager.current.key === "Main Menu")
+      {
+        this.mManager.scenes.get("Game Scene").restartGameScene();
+      }
       eval(returned);
       this.mManager.current.value.start();
     }
