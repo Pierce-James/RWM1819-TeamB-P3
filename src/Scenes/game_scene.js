@@ -36,6 +36,9 @@ class GameScene {
     this.startPlayTimer = false;
     this.playerHitTimer = 1.5;
     this.playerHit = false;
+
+    this.pickupsLeft = 285; //280 pellets, 4 super pellets, 1 fruit!
+    this.leveledUp = false;
   }
   
   start(){
@@ -57,24 +60,13 @@ class GameScene {
     }
   }
 
-  reset(){
-    this.isActive = true;
-    this.player.lives = 3;
-    this.player.alive = true;
-    this.player.position = new Vector2(448, 600);
-    this.blinkyGhost.alive = true;
-    this.inkyGhost.alive = true;
-    this.pinkyGhost.alive = true;
-    this.clydeGhost.alive = true;
-    this.blinkyGhost.position = new Vector2(416, 480);
-    this.pinkyGhost = new Vector2(448, 480);
-    this.clydeGhost = new Vector2(416, 416);
-    this.inkyGhost = new Vector2(448, 416);
-    this.startPlayTimer = false;
-    this.playerHitTimer = 1.5;
-    this.playerHit = false;
-    this.isActive = false;
-    this.tileMap.createPellets();
+  //This method is called when the player clears all of the pellets
+  levelUp()
+  {
+    this.player.spawnPlayer(); //Set this to true to start the delay
+    this.leveledUp = true;
+    this.playerHitTimer = 1.5; //Delay timer
+    this.player.pS.animating = false;
   }
   
   stop(){
@@ -89,7 +81,7 @@ class GameScene {
 
   beginDelay(dt)
   {
-    if(this.player.resetingAfterDeath && this.playerHit === false)
+    if((this.player.resetingAfterDeath && this.playerHit === false) || this.leveledUp)
     {
       this.playerHitTimer -= dt;
 
@@ -99,7 +91,7 @@ class GameScene {
   }
 
   update(dt) {
-    
+
     //Checks if the beginDelay is not currently happening
     if(this.beginDelay(dt))
     {
@@ -109,13 +101,40 @@ class GameScene {
         this.startPlayTimer = false;
         this.player.resetingAfterDeath = false;
         this.player.pS.animating = true;
+
+        //Called if the player eats all the pellets
+        if(this.leveledUp)
+        {
+          this.leveledUp = false;
+
+          //Respawn the ghosts
+          for(let g of this.ghosts){
+            g.spawn();
+          }
+
+          for(let pel of this.tileMap.superPellets){
+            pel.reset();
+          }
+
+          this.tileMap.fruit.reset();
+          this.tileMap.fruit.increase();
+          
+          for(let pel of this.tileMap.pellets){
+            pel.reset();
+          }
+
+          this.pickupsLeft = 285; //Reset the pickups left
+          this.player.lives = 3; //Reset the players lives
+          this.botBar.lives = 3;
+        }
       }
     }
+    
 
     else if(this.tileMap.isLoaded) //Only update if the tilemap is ready
     {
       //Only update the ghosts if the player has no lives left
-      if(this.player.lives > 0 && this.player.alive)
+      if(this.player.lives > 0 && this.player.alive && this.pickupsLeft > 0)
       {
         for(let ghost of this.ghosts)
         {
@@ -126,7 +145,7 @@ class GameScene {
       this.player.update(dt);
 
       //Only check for collisions if the player has lives
-      if(this.player.lives > 0 && this.player.alive)
+      if(this.player.lives > 0 && this.player.alive && this.pickupsLeft > 0)
       {
         for(let ghost of this.ghosts)
         {
@@ -176,8 +195,8 @@ class GameScene {
           this.playerHit = false;
       }
     }
-
-    this.checkForPickup();
+    if(this.pickupsLeft > 0)
+      this.checkForPickup();
   }
 
   checkForPickup()
@@ -197,7 +216,7 @@ class GameScene {
         {
           g.setBlueGhost();
         }
-
+        this.pickupsLeft--; //Take away from pickups left
         this.topBar.score += pel.value; //Add the value of the pellet to the score
         break;
       }
@@ -211,6 +230,7 @@ class GameScene {
         this.player.gridPosition.y === pel.gridPosition.y)
       {
         pel.pickUp();
+        this.pickupsLeft--; //Take away from pickups
         this.topBar.score += pel.value;
         break;
       }
@@ -221,8 +241,22 @@ class GameScene {
       this.player.gridPosition.y === this.tileMap.fruit.gridPosition.y)
     {
       this.tileMap.fruit.pickUp();
+      let newFruit = new Fruit(0, 0);
+      newFruit.currentFruit = this.tileMap.fruit.currentFruit - 1;
+      newFruit.increase();
+      if(this.botBar.fruits.length < 8)
+      {
+        this.botBar.fruits.push(newFruit);
+      }
+      this.pickupsLeft--; //Take away from pickups
       this.topBar.score += this.tileMap.fruit.value;
-      fruitSound.playAudio('eatFruit', false, audioOptions.volume/100);
+      this.fruitSound.playAudio('eatFruit', false, audioOptions.volume/100);
+    }
+
+    //If there are no pickups left, reset the level by resetting the player and ghosts
+    if(this.pickupsLeft <= 0)
+    {
+      this.levelUp();
     }
   }
 

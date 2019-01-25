@@ -71,7 +71,16 @@ class Player {
         this.deathSprite.animating = true;
         this.isPoweredUp = false;
         this.pS.animating = false;
+        this.gridPosition.x = this.spawnGridPosition.x;
+        this.gridPosition.y = this.spawnGridPosition.y;
         this.deathSprite.animationPlayedOnce = false;
+    }
+
+    resetPlayer()
+    {
+        this.alive = false;
+        this.isPoweredUp = false;
+        this.pS.animating = false;
     }
 
     checkProjectile(c2)
@@ -180,7 +189,7 @@ class Player {
             if(input.isButtonPressed("ArrowLeft") && this.canMoveLeft()){this.moveDirection = new Vector2(-1,0);  }
             if(input.isButtonPressed("ArrowRight") && this.canMoveRight()){this.moveDirection = new Vector2(1,0);  }
 
-            if (input.isButtonPressed("Space"))
+            if (input.isButtonPressed("Space") && retro === false) //If space is pressed and retro mode is off
             {
                 this.spawnProjectile(this.moveDirection);
             }
