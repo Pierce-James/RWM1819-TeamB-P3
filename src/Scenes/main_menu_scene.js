@@ -47,6 +47,7 @@ class MainMenuScene {
 
     stop(){
         this.isActive = false;
+        audioOptions.mainTheme.pause()
         //audioOptions.manager.stopAudio();
     }
 
