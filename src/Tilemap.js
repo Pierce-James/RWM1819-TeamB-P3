@@ -10,11 +10,8 @@ class Tilemap {
         this.isLoaded = false;
         this.GetJSON();
         this.pellets = [];
-<<<<<<< HEAD
-=======
         this.superPellets = [];
         this.fruit = undefined;
->>>>>>> f1d7d43e382432d9be456363990c04815de8b94a
     }
 
     GetJSON()
