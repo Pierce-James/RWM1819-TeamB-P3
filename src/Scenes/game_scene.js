@@ -42,6 +42,8 @@ class GameScene {
 
     this.gameOver = false;
     this.gameEnding = false;
+    this.gamePaused = false;
+    document.addEventListener("keyup", this.keyUp.bind(this));
   }
   
   start(){
@@ -57,8 +59,8 @@ class GameScene {
       this.cameraSystem.Zoom(2);
       var canv = document.getElementById("mycanvas");
       var canvCentre = new Vector2(canv.width/2, canv.height/2);
-      var offset = new Vector2(this.player.position.x-canvCentre.x, this.player.position.y-canvCentre.y);
-      this.cameraSystem.Pan(offset.x, -offset.y);
+      this.offset = new Vector2(this.player.position.x-canvCentre.x, this.player.position.y-canvCentre.y);
+      this.cameraSystem.Pan(this.offset.x, -this.offset.y);
 
     }
   }
@@ -66,6 +68,7 @@ class GameScene {
   restartGameScene()
   {
     this.player.resetPlayer(); //Reset the player
+    this.cameraSystem.setFocus(this.player.position, 185);
     this.botBar.fruits = []; //Reset the UI fruits
     //Reset the fruit to be a cherry again
     this.tileMap.fruit.currentFruit = -1;
@@ -115,6 +118,7 @@ class GameScene {
     top.style.display = "none";
     var bottom = document.getElementById("Bottom of UI");
     bottom.style.display = "none";
+    this.cameraSystem.Zoom(1);
     this.ctx.restore();
   }
 
@@ -310,11 +314,27 @@ class GameScene {
 
   handleInput(input)
   {
-    if(this.gameOver)
+    if(this.isActive)
     {
-      return "this.mManager.setCurrentScene('Scoreboard')";
+      if(this.gameOver)
+      {
+        return "this.mManager.setCurrentScene('Scoreboard')";
+      }
+      else if(this.gamePaused)
+      {
+        this.gamePaused = false;
+        return "this.mManager.setCurrentScene('Pause Scene')"
+      }
+      this.player.handleInput(input);
     }
-    this.player.handleInput(input);
+  }
+
+  keyUp(e)
+  { 
+    if(this.isActive)
+    {
+      this.gamePaused = e.code === "Escape" ? true : false;
+    }
   }
 
   draw(ctx) {

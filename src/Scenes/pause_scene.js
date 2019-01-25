@@ -11,13 +11,13 @@ class PauseScene{
         this.pause.push("Exit");
         
         this.buttonIndex = 0;
-        this.keyPressed = false;
+        this.buttonReturns = ["this.mManager.setCurrentScene('Game Scene')", "this.mManager.setCurrentScene('Main Menu')"];
+
         this.exitPressed = false;
-        this.wasExitPressed = false;
-        this.changeSceneStr = "this.mManager.setCurrentScene('GameScene')";
-        document.addEventListener("keydown", this.keyDown.bind(this));
+       
         document.addEventListener("keyup", this.keyUp.bind(this));
         this.isActive = false;
+        this.pause[this.buttonIndex] = '> ' + this.pause[this.buttonIndex];
     }
 
     start() {
@@ -30,77 +30,53 @@ class PauseScene{
 
     handleInput(input)
     {
+       
         if(this.isActive === true)
         {
-            if(this.exitPressed)
-            {
-                this.exitPressed = false;
-                switch(this.buttonIndex)
-                {
-                    case 2:
-                        return "this.mManager.setCurrentScene('Main Menu')";
-                }
-            }
+           if(this.exitPressed)
+           {
+               this.exitPressed = false;
+               return this.buttonReturns[this.buttonIndex];
+           }
         }
     }
 
 
-    keyDown() 
+    keyUp(e) 
     {
-
         if(this.isActive === true)
         {
-            if(this.keyPressed === false)
-            {
           switch(e.code){
+                case 'Enter':
+                    this.exitPressed = true;
+                    break;
                 case 'ArrowUp':
                     this.pause[this.buttonIndex] = this.pause[this.buttonIndex].substr(2)
                     this.buttonIndex--;
                     if(this.buttonIndex < 0)
-                        this.buttonIndex = 2;
+                    {
+                        this.buttonIndex = 1;
+                      //  ctx.fillText(">", 350, 500);
+                    }
                     this.pause[this.buttonIndex] = '> ' + this.pause[this.buttonIndex];
-                    this.keyPressed = true;
                     break;
                 case 'ArrowDown' :
-                    this.pause[this.buttonIndex] = this.pause[this.buttonIndex].substr(2)
+                    this.pause[this.buttonIndex] =  this.pause[this.buttonIndex].substr(2)
                     this.buttonIndex++;
-                    if(this.buttonIndex>=3)
+                    if(this.buttonIndex > 1)
+                    {
                         this.buttonIndex = 0;
+                       // ctx.fillText(">", 350, 600);
+                    }
                     this.pause[this.buttonIndex] = '> ' + this.pause[this.buttonIndex];
-                    this.keyPressed = true;
                     break;
-                }
             }
         }
     }
 
-    keyUp() 
-    {
-        if(this.isActive === true)
-        {
-            if(this.isActive === true)
-            {        
-                switch(e.code){
-                case 'ArrowUp':
-                    this.keyPressed = false;
-                    break;
-                case 'ArrowDown' :
-                    this.keyPressed = false;
-                    break;
-                  //  this.enterPressed = true;
-                  //  this.keyPressed = false;
-                   
-                } 
-            }
-        }   
-    }
-
-
-
-
     update() 
     {
-
+      
     }
 
     draw(ctx)
@@ -113,17 +89,11 @@ class PauseScene{
       ctx.fillStyle = "#FFFFFF"; //Set to blue text
       ctx.font = "60px Joystix";
   
-      ctx.fillText("Pause", 1280 / 2, 50);
-
+      ctx.fillText("Pause", 1280 / 2, 200);
       ctx.font = "30px Joystix";
-
       ctx.fillText(this.pause[0], 1280 / 2, 500);
-
       ctx.fillText(this.pause[1], 1280 / 2, 600);
-  
+      
       ctx.restore(); //Restore it
-    }
-
-
-    
+    } 
 }
