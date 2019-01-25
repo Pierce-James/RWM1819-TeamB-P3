@@ -6,7 +6,7 @@ class OptionsScene{
         document.body.classList.add("Joystix");
 
         this.options = [];
-        this.options.push('rebind controls');
+        this.options.push('retro mode : ' + retro.toString());
         this.options.push("volume : " + audioOptions.volume.toString()+ "%");
         this.options.push("main menu");
 
@@ -21,6 +21,8 @@ class OptionsScene{
         document.addEventListener("keydown", this.keyDown.bind(this));
         document.addEventListener("keyup", this.keyUp.bind(this));
         this.isActive = false;
+        
+        this.options[this.buttonIndex] = '> ' + this.options[this.buttonIndex];
 
     }
 
@@ -41,6 +43,10 @@ class OptionsScene{
             {
                 this.enterPressed = false;
                 switch(this.buttonIndex){
+                    case 0:
+                        retro = !retro;
+                        this.options[0] = '> retro mode : ' + retro.toString();
+                        break;
                     case 2:
                         return "this.mManager.setCurrentScene('Main Menu')";
                 }
