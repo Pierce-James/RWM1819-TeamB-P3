@@ -60,6 +60,40 @@ class GameScene {
     }
   }
 
+  restartGameScene()
+  {
+    this.player.resetPlayer(); //Reset the player
+    this.botBar.fruits = []; //Reset the UI fruits
+    //Reset the fruit to be a cherry again
+    this.tileMap.fruit.currentFruit = -1;
+    this.tileMap.fruit.reset(); //Reset the fruits bool to draw
+    this.tileMap.fruit.increase();
+
+    //Respawn the ghosts
+    for(let g of this.ghosts)
+    {
+      g.spawn();
+    }
+
+    this.topBar.score = 0;
+    this.botBar.lives = 3;
+    //Reset the normal pellets
+    for(let pel of this.tileMap.pellets){
+      pel.reset();
+    }
+    //Reset the super pellets
+    for(let pel of this.tileMap.superPellets){
+      pel.reset();
+    }
+
+    this.startPlayTimer = false; //Reset the start game timer
+    this.playerHitTimer = 1.5; //Set the timer to be 1.5 seconds
+    this.playerHit = false; //Playe rhit is false
+
+    this.pickupsLeft = 285; //280 pellets, 4 super pellets, 1 fruit!
+    this.leveledUp = false; //Set this as leveled up to false
+  }
+
   //This method is called when the player clears all of the pellets
   levelUp()
   {
