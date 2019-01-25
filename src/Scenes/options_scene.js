@@ -80,14 +80,22 @@ class OptionsScene{
                     break;
                 case 'ArrowLeft' :
                     if(this.buttonIndex === 1){
-                        audioOptions.volume--;
+                        audioOptions.volume-=5;
+                        if(volume<0)
+                        {
+                            audioOptions.volume = 0;
+                        }
                         this.options[1] = "> volume : " + audioOptions.volume.toString()+ "%";
                     }
                     this.keyPressed = true;
                     break;
                 case 'ArrowRight' :
                     if(this.buttonIndex === 1){
-                        audioOptions.volume++;
+                        audioOptions.volume+=5;
+                        if(volume>100)
+                        {
+                            audioOptions.volume = 100;
+                        }
                         this.options[1] = "> volume : " + audioOptions.volume.toString()+ "%";
                     }
                     this.keyPressed = true;
