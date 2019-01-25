@@ -84,6 +84,13 @@ class Ghost
     this.moveSpeed = .3; //Moves a cell every .2 seconds
     this.targetPos = new Vector2(this.scatterTile.x, this.scatterTile.y);
   }
+  spawn()
+  {
+    this.playerIsPowered = false;
+    this.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y); //Set our position
+    this.gridPosition = new Vector2(this.spawnGridPosition.x, this.spawnGridPosition.y); //Set our grid position
+    this.collider.position = new Vector2(this.spawnPosition.x, this.spawnPosition.y);
+  }
 
   update(dt, player){
     if(this.alive && this.canMove) //If alive, do movement and set ghost eyes

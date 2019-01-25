@@ -6,7 +6,7 @@ class bottomUI{
     this.uiDivBot.style.position = 'fixed';
     this.uiDivBot.style.bottom = '0%';
     this.uiDivBot.style.width = '100%';
-    this.uiDivBot.style.height = '10%';
+    this.uiDivBot.style.height = '7%';
     this.uiDivBot.style.backgroundColor = '#000000';
     document.body.appendChild(this.uiDivBot);
 
@@ -14,13 +14,13 @@ class bottomUI{
     this.UICanvas.id = 'bottomCanvas';
     this.UICanvas.style.top = this.uiDivBot.style.top;
     //this.UICanvas.width = document.getElementById('mycanvas').offsetWidth;
-    this.UICanvas.width = window.innerWidth;
+    this.UICanvas.width = 725;
     this.UICanvas.height = window.innerHeight;
     this.uiDivBot.appendChild(this.UICanvas);
 
     //should display pac mans for lives
     //and icons of all the fruit picked up so far
-    this.lives = 5;
+    this.lives = 3;
     this.lifeIcons = [];
 
     var img = new Image(256, 32);
@@ -43,8 +43,7 @@ class bottomUI{
     this.lifeIcons.push(life5);
 
     this.fruits = [];
-    this.fruits.push(new Fruit(1,2, 'cherry'));
-
+    //this.fruits.push(new Fruit(1,2));
     }
 
     draw(){
@@ -60,7 +59,7 @@ class bottomUI{
         for(var j = 0; j < this.fruits.length; j++)
         {
             rightSide-=50;
-            this.fruits[j].draw(rightSide, 0, this.UICanvas);
+            this.fruits[j].uiDraw(rightSide, 0, this.UICanvas);
         }
     }
 

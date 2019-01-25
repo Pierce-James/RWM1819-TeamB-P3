@@ -5,7 +5,8 @@
   'RIGHT':'ArrowRight',
   'SHOOT':'Space'
 }*/
-var volume = 100;
+var audioOptions = {'volume':75};
+var retro = true;
 
 class Game {
   constructor() {
@@ -21,24 +22,21 @@ class Game {
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
     this.ctx.imageSmoothingEnabled = false;
+
+    audioOptions.manager = new AudioManager();
+    audioOptions.manager.init();
+
     //Creating the Menu Manager
     this.mManager = new MenuManager();
+    this.mManager.addScene("Main Menu", new MainMenuScene());
     this.mManager.addScene("Game Scene", new GameScene());
     this.mManager.addScene("Scoreboard", new ScoreboardScene());
     this.mManager.addScene("Options", new OptionsScene());
-    this.mManager.addScene("Main Menu", new MainMenuScene());
-
     this.mManager.setCurrentScene("Main Menu");
-    this.mManager.current.value.start();
     document.body.style.backgroundColor = "#000000";
+    this.mManager.current.value.start();
 
-    this.keyboard = new Keyboard();
-   
-    this.pellet = new Pellet();
-    this.pellet = [];
-    
-    var img = new Image(256, 32);
-    img.src = "ASSETS/SPRITES/Pacman72.png";
+    this.keyboard = new Keyboard();   
   }
 
   run() {
@@ -59,7 +57,7 @@ class Game {
     this.handleInput(); //Handle input in the current scenes
 
     //Update the menu manager and pass in dt for any time related functions
-    this.mManager.update(dt);
+    this.mManager.update(dt) ;
   }
 
   handleInput()
@@ -68,7 +66,20 @@ class Game {
 
     if(returned !== undefined)
     {
+      console.log(returned);
       this.mManager.current.value.stop();
+      if(returned === "this.mManager.setCurrentScene('Scoreboard')" && this.mManager.current.key === "Game Scene")
+      {
+        var scoreVal = this.mManager.current.value.topBar.score;
+  
+        this.mManager.scenes.get("Scoreboard").addToScoreBoard(scoreVal);
+      }
+
+      //If we are in the main menu and we are going to the game scene, then call restart
+      else if(returned === "this.mManager.setCurrentScene('Game Scene')" && this.mManager.current.key === "Main Menu")
+      {
+        this.mManager.scenes.get("Game Scene").restartGameScene();
+      }
       eval(returned);
       this.mManager.current.value.start();
     }

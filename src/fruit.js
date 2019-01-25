@@ -1,51 +1,80 @@
 class Fruit
 {
-    constructor(X, Y, fruitType){
+    constructor(X, Y){
         this.x = X;
         this.y = Y;
-        this.type = fruitType;
+        this.gridPosition = new Vector2(X / 32, Y / 32);
         this.value = 100;
-        
-        var img = new Image(256, 32);
-        switch(fruitType){
-            case 'cherry':
-                this.value = 100;
-                img.src = "ASSETS/SPRITES/Cherry_72.png";
-                break;
-            case 'strawberry':
-                this.value = 300;
-                img.src = "ASSETS/SPRITES/Strawberry_72.png";
-                break;
-            case 'orange':
-                this.value = 500;
-                img.src = "ASSETS/SPRITES/Orange_72.png";
-                break;
-            case 'apple':
-                this.value = 700;
-                img.src = "ASSETS/SPRITES/Apple_72.png";
-                break;
-            case 'melon':
-                this.value = 1000;
-                img.src = "ASSETS/SPRITES/Melon_72.png";
-                break;
-            case 'galaxian':
-                this.value = 2000;
-                img.src = "ASSETS/SPRITES/Galaxian_Boss_72.png";
-                break;
-            case 'bell':
-                this.value = 3000;
-                img.src = "ASSETS/SPRITES/Bell_72.png";
-                break;
-            case 'key':
-                this.value = 5000;
-                img.src = "ASSETS/SPRITES/Key_72.png";
-                break;
-        }
-        this.spr = new Sprite(this.x, this.y, 32, 32, img, 32, 32);
 
+        this.pickedUp = false;
+
+        //Temp variable, not needed after ocnstructor
+        this.fruits = new Map();
+        this.tempFruits = [["Cherry", 100], ["Strawberry",300], ["Orange",500], 
+        ["Apple",700], ["Melon",1000], ["Galaxian_Boss", 2000], ["Bell", 3000], ["Key",5000]];
+
+        for(let ind of this.tempFruits)
+        {
+            this.fruits.set(ind[0], ind[1]);
+        }
+
+        this.fruitImgs = new Map();
+
+        for(let fruit of this.tempFruits)
+        {
+            let image = new Image(32, 32);
+            image.src = "ASSETS/SPRITES/" + fruit[0] + "_72.png";
+            this.fruitImgs.set(fruit[0], image); //Add the key and image to the list
+        }
+    
+        //Set the sprite to be a cherry
+        this.spr = new Sprite(this.x, this.y, 32, 32, this.fruitImgs.get("Cherry"), 32, 32);
+        this.value = 100;
+        this.currentFruit = 0; //The current index of fruit
+    }
+
+    pickUp()
+    {
+        this.pickedUp = true;
+    }
+
+    reset()
+    {
+        this.pickedUp = false;
+    }
+
+    //Set when a game scene is restart
+    restart()
+    {
+        this.value = this.fruits.get("Cherry");
+        this.spr.src = this.fruitImgs.get("Cherry");
+    }
+
+    increase()
+    {
+        this.currentFruit++;
+        if(this.currentFruit > 7){
+            this.currentFruit = 7;
+        }
+        this.value = this.fruits.get(this.tempFruits[this.currentFruit][0]);
+        this.spr.src = this.fruitImgs.get(this.tempFruits[this.currentFruit][0]);
+    }
+
+    switchFruit(fruitType)
+    {
+        this.value = this.fruits.get(fruitType);
+        this.spr.src = this.fruitImgs.get(fruitType);
     }
 
     draw(x = this.x, y = this.y, canvas = document.getElementById("mycanvas"))
+    {
+        if(this.pickedUp === false)
+        {
+            this.spr.draw(x, y, canvas);
+        }
+    }
+
+    uiDraw(x = this.x, y = this.y, canvas = document.getElementById("mycanvas"))
     {
         this.spr.draw(x, y, canvas);
     }

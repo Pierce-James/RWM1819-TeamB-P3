@@ -6,8 +6,8 @@ class OptionsScene{
         document.body.classList.add("Joystix");
 
         this.options = [];
-        this.options.push('rebind controls');
-        this.options.push("volume : " + volume.toString()+ "%");
+        this.options.push('retro mode : ' + retro.toString());
+        this.options.push("volume : " + audioOptions.volume.toString()+ "%");
         this.options.push("main menu");
 
         this.buttonIndex = 0;
@@ -21,6 +21,8 @@ class OptionsScene{
         document.addEventListener("keydown", this.keyDown.bind(this));
         document.addEventListener("keyup", this.keyUp.bind(this));
         this.isActive = false;
+        
+        this.options[this.buttonIndex] = '> ' + this.options[this.buttonIndex];
 
     }
 
@@ -41,6 +43,10 @@ class OptionsScene{
             {
                 this.enterPressed = false;
                 switch(this.buttonIndex){
+                    case 0:
+                        retro = !retro;
+                        this.options[0] = '> retro mode : ' + retro.toString();
+                        break;
                     case 2:
                         return "this.mManager.setCurrentScene('Main Menu')";
                 }
@@ -74,15 +80,15 @@ class OptionsScene{
                     break;
                 case 'ArrowLeft' :
                     if(this.buttonIndex === 1){
-                        volume--;
-                        this.options[1] = "> volume : " + volume.toString()+ "%";
+                        audioOptions.volume--;
+                        this.options[1] = "> volume : " + audioOptions.volume.toString()+ "%";
                     }
                     this.keyPressed = true;
                     break;
                 case 'ArrowRight' :
                     if(this.buttonIndex === 1){
-                        volume++;
-                        this.options[1] = "> volume : " + volume.toString()+ "%";
+                        audioOptions.volume++;
+                        this.options[1] = "> volume : " + audioOptions.volume.toString()+ "%";
                     }
                     this.keyPressed = true;
                     break;
@@ -140,15 +146,15 @@ class OptionsScene{
       ctx.fillStyle = "#FFFFFF"; //Set to blue text
       ctx.font = "60px Joystix";
   
-      ctx.fillText("options", 1280 / 2, 50);
+      ctx.fillText("options", 850, 100);
 
       ctx.font = "30px Joystix";
 
-      ctx.fillText(this.options[0], 1280 / 2, 500);
+      ctx.fillText(this.options[0], 850, 600);
 
-      ctx.fillText(this.options[1], 1280 / 2, 600);
+      ctx.fillText(this.options[1], 850, 700);
 
-      ctx.fillText(this.options[2], 1280 / 2, 700);
+      ctx.fillText(this.options[2], 850, 800);
   
       ctx.restore(); //Restore it
     }

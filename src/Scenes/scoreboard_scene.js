@@ -33,15 +33,19 @@ class ScoreboardScene
     this.timeTillFlash = .2;
     this.drawIndicator = false;
     this.isActive = false;
+
+    audioOptions.manager.loadSoundFile('scoreBoardMusic', "ASSETS/AUDIO/Scoreboard.mp3");
   }
 
   start(){
     this.isActive = true;
+    audioOptions.manager.playAudio('scoreBoardMusic', true, audioOptions.volume/100);
   }
 
   stop(){
     this.isActive = false;
     this.escapedPressed = false;
+    audioOptions.manager.stopAudio();
   }
 
   initBoard(deleteExistingBoard)

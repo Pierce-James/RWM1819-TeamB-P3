@@ -9,6 +9,9 @@ class Tilemap {
         this.cols = 28;
         this.isLoaded = false;
         this.GetJSON();
+        this.pellets = [];
+        this.superPellets = [];
+        this.fruit = undefined;
     }
 
     GetJSON()
@@ -19,7 +22,8 @@ class Tilemap {
             map.tileData = JSON.parse(this.responseText);
             console.log(map.tileData);
             map.isLoaded = true;
-            map.createTiles().bind(map);
+            map.createTiles();
+            map.createPellets();
         }.bind(req, this));
 
         req.open("GET", this.filepath);
@@ -128,12 +132,42 @@ class Tilemap {
         {
             Object.keys(this.tiles).forEach(element =>{
                 this.tiles[element].render(ctx);
+              
             });
         }
+        Object.keys(this.pellets).forEach(element =>{
+            this.pellets[element].draw(ctx);
+       
+        });
+
+        Object.keys(this.superPellets).forEach(element =>{
+            this.superPellets[element].draw(ctx);
+       
+        });
+
+        this.fruit.draw();
     }
 
     IsLoaded()
     {
         return this.isLoaded;
+    }
+
+    createPellets()
+    {
+        Object.keys(this.tiles).forEach(element =>{
+            if (this.tiles[element].ID === 0)
+            {
+                this.pellets.push(new Pellet(this.tiles[element].position));
+            }
+            else if(this.tiles[element].ID === 99)
+            {
+                this.superPellets.push(new SuperPellet(this.tiles[element].position));
+            }
+            else if(this.tiles[element].ID === 97)
+            {
+                this.fruit = new Fruit(this.tiles[element].position.x, this.tiles[element].position.y);
+            }
+        })
     }
 }

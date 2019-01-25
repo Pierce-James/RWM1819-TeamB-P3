@@ -5,6 +5,7 @@ class Tile{
         this.y = y;
         this.width = w;
         this.height = h;
+        this.position = new Vector2(x, y);
 
         this.ID = id;
         this.images = [];
@@ -31,7 +32,7 @@ class Tile{
 
     loadImages()
     {
-        for (let i = 0; i < 18; i++)
+        for (let i = 0; i < 29; i++)
         {
             this.images.push(new Image());
         }
@@ -53,6 +54,18 @@ class Tile{
         this.images[14].src = "./ASSETS/SPRITES/tile_15.png";
         this.images[15].src = "./ASSETS/SPRITES/tile_16.png";
         this.images[16].src = "./ASSETS/SPRITES/tile_17.png";
+        this.images[17].src = "./ASSETS/SPRITES/tile_18.png";
+        this.images[18].src = "./ASSETS/SPRITES/tile_19.png";
+        this.images[19].src = "./ASSETS/SPRITES/tile_20.png";
+        this.images[20].src = "./ASSETS/SPRITES/tile_21.png";
+        this.images[21].src = "./ASSETS/SPRITES/tile_22.png";
+        this.images[22].src = "./ASSETS/SPRITES/tile_23.png";
+        this.images[23].src = "./ASSETS/SPRITES/tile_24.png";
+        this.images[24].src = "./ASSETS/SPRITES/tile_25.png";
+        this.images[25].src = "./ASSETS/SPRITES/tile_26.png";
+        this.images[26].src = "./ASSETS/SPRITES/tile_27.png";
+        this.images[27].src = "./ASSETS/SPRITES/tile_28.png";
+        this.images[28].src = "./ASSETS/SPRITES/tile_29.png";
     }
 
     render(ctx)
@@ -66,42 +79,24 @@ class Tile{
       }
       else if(this.ID === 99)
       {
+        //ctx.save();
         //Draw super pellet
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        //ctx.fillStyle = "red";
+        //ctx.fillRect(this.x, this.y, this.width, this.height)
+        //ctx.restore();
       }
       else if (this.ID === 97)
       {
         //Draw fruit
-        ctx.fillStyle = "yellow";
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        //ctx.fillStyle = "yellow";
+        //ctx.fillRect(this.x, this.y, this.width, this.height)
       }
       else if (this.ID === 0)
       {
-        //Draw pellet
-        ctx.fillStyle = "green";
-        ctx.fillRect(this.x, this.y, this.width, this.height)
       }
       else{
         ctx.drawImage(this.images[this.ID - 1], this.x, this.y);
       }
-
-
-
-
-
-    //   if(this.isCollidable === false)
-    //   {
-    //   ctx.textAlign = "center"; //Allign text to draw from its centre
-    //   ctx.fillStyle = "#ffffff"; //Set to white text
-    //   ctx.font = "8px Joystix";
-
-    //   //Draw the grids position
-    //    var gridPos = "(" + this.getCol().toString() + "," + this.getRow().toString() + ")";
-
-    //    ctx.fillText(gridPos, this.x + 16, this.y + 16);
-    //  }
-
       ctx.restore();
     }
 }
