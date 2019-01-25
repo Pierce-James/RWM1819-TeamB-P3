@@ -91,6 +91,9 @@ class Player {
         this.poweredUpTime = 6; // Powered up for 6 seconds
         this.ghostEatenPoints = 100;
         this.resetingAfterDeath = true;
+        this.deathSprite.animating = false;
+        this.deathSprite.setFrame(0);
+        this.deathSprite.animationPlayedOnce = false;
     }
 
     checkProjectile(c2)

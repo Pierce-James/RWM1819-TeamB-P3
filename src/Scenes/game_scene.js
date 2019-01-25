@@ -39,6 +39,9 @@ class GameScene {
 
     this.pickupsLeft = 285; //280 pellets, 4 super pellets, 1 fruit!
     this.leveledUp = false;
+
+    this.gameOver = false;
+    this.gameEnding = false;
   }
   
   start(){
@@ -92,6 +95,8 @@ class GameScene {
 
     this.pickupsLeft = 285; //280 pellets, 4 super pellets, 1 fruit!
     this.leveledUp = false; //Set this as leveled up to false
+    this.gameOver = false;
+    this.gameEnding = false;
   }
 
   //This method is called when the player clears all of the pellets
@@ -115,7 +120,7 @@ class GameScene {
 
   beginDelay(dt)
   {
-    if((this.player.resetingAfterDeath && this.playerHit === false) || this.leveledUp)
+    if((this.player.resetingAfterDeath && this.playerHit === false) || this.leveledUp || this.gameEnding)
     {
       this.playerHitTimer -= dt;
 
@@ -135,6 +140,10 @@ class GameScene {
         this.startPlayTimer = false;
         this.player.resetingAfterDeath = false;
         this.player.pS.animating = true;
+        if(this.player.lives <= 0)
+        {
+          this.gameOver = true;
+        }
 
         //Called if the player eats all the pellets
         if(this.leveledUp)
@@ -195,6 +204,11 @@ class GameScene {
             {
               this.DeathSound.playAudio('killPacMan', false, audioOptions.volume/100);
               this.player.lives--;
+
+              if(this.player.lives <= 0)
+              {
+                this.gameEnding = true;
+              }
               this.player.spawnPlayer();
               this.player.pS.setFrame(0);
               this.botBar.lives--;
@@ -296,7 +310,7 @@ class GameScene {
 
   handleInput(input)
   {
-    if(this.player.lives <= 0)
+    if(this.gameOver)
     {
       return "this.mManager.setCurrentScene('Scoreboard')";
     }
