@@ -81,7 +81,7 @@ class OptionsScene{
                 case 'ArrowLeft' :
                     if(this.buttonIndex === 1){
                         audioOptions.volume-=5;
-                        if(volume<0)
+                        if(audioOptions.volume<0)
                         {
                             audioOptions.volume = 0;
                         }
@@ -92,7 +92,7 @@ class OptionsScene{
                 case 'ArrowRight' :
                     if(this.buttonIndex === 1){
                         audioOptions.volume+=5;
-                        if(volume>100)
+                        if(audioOptions.volume>100)
                         {
                             audioOptions.volume = 100;
                         }
