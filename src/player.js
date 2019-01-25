@@ -270,6 +270,10 @@ class Player {
             //Update the projectile manager
             this.pm.update();
         }
+        else{
+            this.pm.clearProjectiles();
+            this.pm.projectileActive = false;
+        }
     }
 
     canMoveUp()
